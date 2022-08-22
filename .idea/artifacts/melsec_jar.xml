@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="melsec:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/melsec_jar</output-path>
+    <root id="archive" name="melsec.jar">
+      <element id="module-output" name="melsec" />
+    </root>
+  </artifact>
+</component>
