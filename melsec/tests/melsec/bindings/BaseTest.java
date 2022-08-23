@@ -1,4 +1,4 @@
-package bindings;
+package melsec.bindings;
 
 public class BaseTest {
   protected static final String NAME_1 = "plc_object_1";

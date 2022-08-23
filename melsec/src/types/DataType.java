@@ -1,6 +1,6 @@
-package melsec.bindings;
+package types;
 
-public enum PlcDataType {
+public enum DataType {
   U1,
   U2,
   U4,

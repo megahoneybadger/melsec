@@ -1,80 +1,45 @@
 package melsec.bindings;
 
+import types.DataType;
+import types.IDeviceCode;
+import types.WordDeviceCode;
+
 import java.text.MessageFormat;
 
-public class PlcString extends PlcObject {
-  private int size;
-  private String value;
+public record PlcString(IDeviceCode device, int address, int size,
+                        String value, String id )  implements IPlcWord {
 
-  public String value(){
-    return this.value;
+  public PlcString {
+    value = ( null == value ) ? EMPTY_STRING : value;
+    id = ( null == id ) ? EMPTY_STRING : id;
+
+    value = value.substring(0, Math.min( value.length(), size ));
   }
 
-  public int size(){
-    return size;
+  @Override
+  public DataType type() {
+    return DataType.String;
   }
 
   public int length(){
     return this.value.length();
   }
 
-  @Override
-  public PlcDataType type(){
-    return PlcDataType.String;
+  public PlcString( int size ) {
+    this( WordDeviceCode.W, 0, size, EMPTY_STRING, EMPTY_STRING );
   }
 
-  public PlcString( int size ) throws InvalidDeviceCodeException {
-    super( DeviceCode.W, 0 );
-
-    this.size = size;
-    this.value = "";
+  public PlcString( IDeviceCode device, int address, int size ) {
+    this( device, address, size, EMPTY_STRING, EMPTY_STRING );
   }
 
-  public PlcString( DeviceCode code, int address, int size ) throws InvalidDeviceCodeException {
-    this( code, address, size,  "" );
-  }
-
-  public PlcString( DeviceCode code, int address, int size, String value ) throws InvalidDeviceCodeException {
-    super( code, address );
-
-    this.size = size;
-    this.value = ( null == value ) ? "" : value;
-  }
-
-  protected void validateDevice( DeviceCode device ) throws InvalidDeviceCodeException {
-    device.ensureWord();
-  }
-
-
-
-  @Override
-  public boolean equals(Object obj ) {
-    if( null == obj )
-      return false;
-
-    if( this == obj )
-      return true;
-
-    if( !( obj instanceof PlcString ) )
-      return false;
-
-    var s = ( PlcString )obj;
-
-    if( size != s.size )
-      return false;
-
-    if( !value.equals( s.value ))
-      return false;
-
-    return super.equals( obj );
+  public PlcString(IDeviceCode device, int address, int size, String value ) {
+    this( device, address, size, value, EMPTY_STRING );
   }
 
   @Override
   public String toString(){
-    return MessageFormat.format( "{5} [{0}@{1}] [{2}] {3}:{4}",
-      super.device, device.toStringAddress( address ),
-      value(), size(), length(), type() );
+    return MessageFormat.format( "A{3} [{0}@{1}] [{2}]",
+      device, device.toStringAddress( address ), value(), size() );
   }
-
-
 }

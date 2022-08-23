@@ -1,24 +1,31 @@
 package melsec.bindings;
 
-public class PlcF4 extends PlcNumber<Float> {
+import types.DataType;
+import types.IDeviceCode;
+import types.WordDeviceCode;
+
+public record PlcF4(IDeviceCode device, int address, Float value, String id )
+  implements IPlcNumber<Float> {
 
   @Override
-  public PlcDataType type(){
-    return PlcDataType.F4;
+  public DataType type(){
+    return DataType.F4;
   }
 
-  public PlcF4( String name, float v )
-    throws InvalidDeviceCodeException, InvalidNumberException {
-    super( name, v );
+  @Override
+  public int size(){
+    return 4;
   }
 
-  public PlcF4( DeviceCode device, int address )
-    throws InvalidDeviceCodeException, InvalidNumberException {
+  public PlcF4() {
+    this( WordDeviceCode.W, 0 );
+  }
+
+  public PlcF4( IDeviceCode device, int address ) {
     this( device, address, 0f );
   }
 
-  public PlcF4( DeviceCode device, int address, float value )
-    throws InvalidDeviceCodeException, InvalidNumberException {
-    super( device, address, value );
+  public PlcF4( IDeviceCode device, int address, Float value ) {
+    this( device, address, value, EMPTY_STRING );
   }
 }

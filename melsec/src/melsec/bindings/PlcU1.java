@@ -1,29 +1,31 @@
 package melsec.bindings;
 
-public class PlcU1 extends PlcNumber<Integer> {
+import types.DataType;
+import types.IDeviceCode;
+import types.WordDeviceCode;
+
+public record PlcU1(IDeviceCode device, int address, Integer value, String id )
+  implements IPlcNumber<Integer> {
 
   @Override
-  public PlcDataType type(){
-    return PlcDataType.U1;
+  public DataType type(){
+    return DataType.U1;
   }
 
-  public PlcU1(String name, int v )
-    throws InvalidDeviceCodeException, InvalidNumberException {
-    super( name, v );
+  @Override
+  public int size(){
+    return 1;
   }
 
-  public PlcU1(DeviceCode device, int address )
-    throws InvalidDeviceCodeException, InvalidNumberException {
+  public PlcU1() {
+    this( WordDeviceCode.W, 0 );
+  }
+
+  public PlcU1( IDeviceCode device, int address ) {
     this( device, address, 0 );
   }
 
-  public PlcU1(DeviceCode device, int address, int value )
-    throws InvalidDeviceCodeException, InvalidNumberException {
-    super( device, address, value );
-  }
-
-  protected void validateNumber( Integer value ) throws InvalidNumberException {
-    if( value < 0 || value > 0xFF )
-      throw new InvalidNumberException( value, "U1" );
+  public PlcU1( IDeviceCode device, int address, Integer value ) {
+    this( device, address, value, EMPTY_STRING );
   }
 }
