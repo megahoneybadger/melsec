@@ -1,12 +1,16 @@
 package melsec.bindings;
 
-import types.BitDeviceCode;
-import types.DataType;
-import types.IDeviceCode;
+import melsec.types.BitDeviceCode;
+import melsec.types.DataType;
+import melsec.types.IDeviceCode;
 
 import java.text.MessageFormat;
 
 public record PlcBit(IDeviceCode device, int address, boolean value, String id ) implements IPlcObject {
+
+  public PlcBit {
+    id = ( null == id ) ? EMPTY_STRING : id;
+  }
 
   public DataType type(){
     return DataType.Bit;

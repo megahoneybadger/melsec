@@ -1,4 +1,4 @@
-package types;
+package melsec.types;
 
 public enum DataType {
   U1,

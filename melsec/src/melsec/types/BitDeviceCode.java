@@ -1,6 +1,4 @@
-package types;
-
-import types.IDeviceCode;
+package melsec.types;
 
 import java.text.MessageFormat;
 

@@ -1,6 +1,9 @@
 package melsec.bindings;
 
-import types.*;
+import melsec.types.DataType;
+import melsec.types.IDeviceCode;
+import melsec.types.WordDeviceCode;
+
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -28,12 +31,20 @@ public final class PlcStruct implements IPlcWord {
     return address;
   }
 
+  @Override
+  public String id() {
+    return id;
+  }
+
   public int count(){
     return items.size();
   }
 
   @Override
   public int size(){
+    if( items.size() == 0 )
+      return 0;
+
     var last = items.get( items.size() - 1 );
 
     return last.address() + last.size() - address;
@@ -43,12 +54,7 @@ public final class PlcStruct implements IPlcWord {
     return items.isEmpty();
   }
 
-  @Override
-  public String id() {
-    return null;
-  }
-
-  public Iterable<IPlcWord> items(){
+  public List<IPlcWord> items(){
     return items.stream().toList();
   }
 
@@ -110,8 +116,6 @@ public final class PlcStruct implements IPlcWord {
 
     var st = ( PlcStruct )o;
 
-    ((PlcStruct) o).id = "fuck u";
-
     if( st.count() != size() )
       return false;
 
@@ -149,7 +153,7 @@ public final class PlcStruct implements IPlcWord {
     }
 
     public Builder id( String s ) {
-      id = s;
+      id = ( null == s ) ? EMPTY_STRING : s;
 
       return this;
     }

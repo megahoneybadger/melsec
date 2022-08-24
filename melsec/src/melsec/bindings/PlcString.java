@@ -1,8 +1,8 @@
 package melsec.bindings;
 
-import types.DataType;
-import types.IDeviceCode;
-import types.WordDeviceCode;
+import melsec.types.DataType;
+import melsec.types.IDeviceCode;
+import melsec.types.WordDeviceCode;
 
 import java.text.MessageFormat;
 

@@ -1,8 +1,8 @@
 package melsec.bindings;
 
-import types.DataType;
-import types.IDeviceCode;
-import types.WordDeviceCode;
+import melsec.types.DataType;
+import melsec.types.IDeviceCode;
+import melsec.types.WordDeviceCode;
 
 public record PlcF8(IDeviceCode device, int address, Double value, String id )
   implements IPlcNumber<Double> {

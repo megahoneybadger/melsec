@@ -1,7 +1,7 @@
 package melsec.bindings;
 
-import types.DataType;
-import types.IDeviceCode;
+import melsec.types.DataType;
+import melsec.types.IDeviceCode;
 
 public interface IPlcObject {
 

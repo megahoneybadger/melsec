@@ -1,49 +1,30 @@
-import comm.Communicator;
-import melsec.bindings.*;
-import types.BitDeviceCode;
-import types.ErrorCode;
-import types.OperationHandler;
-import types.OperationLog;
+
+import melsec.net.Endpoint;
+import melsec.net.Connection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+  public static void main(String[] args) throws UnknownHostException {
 
-        var comm = new Communicator();
-        comm
-          .reader()
-          .add( new PlcU1( BitDeviceCode.L, 10 ),
-            new OperationHandler() {
-                public void completed(IPlcObject result, OperationLog log) {
+    var logger = LogManager.getLogger("HelloWorld");
 
-                }
+    LoggerContext context= (LoggerContext) LogManager.getContext();
+    Configuration config= context.getConfiguration();
 
-                public void failed(ErrorCode error, OperationLog log) {
 
-                }
-            });
+
+
+      //var conn = new Connection();
 //
-//        var st = PlcStruct
-//          .builder( WordDeviceCode.D, 10, "GLASS" )
-//          .u1( 10, "Age" )
-//          .u1( 20, "Height" )
-//          .u1( 30 )
-//          .string( 20, "fuck u", "Description" )
-//          .string( 10, "this is a vey long string", null )
-//          .u2( 125 )
-//          .u4( 542365 )
-//          .offset( 5 )
-//          .u2( 156 )
-//          .offset( 2 )
-//          .u2( 200 )
-//          .build();
-//
-//        var size = st.size();
-//
-//        System.out.println( st );
-//
-//        System.out.println( "----" );
-    }
+  }
 
 
 }
+
 

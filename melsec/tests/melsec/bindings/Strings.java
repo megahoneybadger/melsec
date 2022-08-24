@@ -1,10 +1,9 @@
 package melsec.bindings;
 
-import org.junit.Test;
-import types.DataType;
-import types.WordDeviceCode;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
+import melsec.types.*;
 
 public class Strings extends BaseTest {
 
@@ -41,7 +40,7 @@ public class Strings extends BaseTest {
     assertEquals( s.device(), WordDeviceCode.D );
     assertEquals( s.size(), SIZE_1 );
     assertEquals( s.address(), ADDRESS_1 );
-    assertEquals( s.value(), STRING_1 );
+    assertEquals( s.value(), STRING_1.substring( 0, SIZE_1 ) );
 
     assertTrue( s.id().isEmpty() );
     assertEquals( s.type(), DataType.String );

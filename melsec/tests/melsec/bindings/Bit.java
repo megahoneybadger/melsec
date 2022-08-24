@@ -1,10 +1,11 @@
 package melsec.bindings;
 
-import org.junit.Test;
-import types.BitDeviceCode;
-import types.DataType;
 
-import static org.junit.Assert.*;
+import melsec.types.*;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class Bit extends BaseTest {
 
@@ -26,6 +27,18 @@ public class Bit extends BaseTest {
     assertEquals( bit.address(), 0 );
 
     assertEquals( bit.id(), NAME_1 );
+    assertTrue( bit.value() );
+    assertEquals( bit.type(), DataType.Bit );
+  }
+
+  @Test
+  public void Should_CreateBit_WithNullName(){
+    var bit = new PlcBit( BitDeviceCode.B, 0, true, null );
+
+    assertEquals( bit.device(), BitDeviceCode.B );
+    assertEquals( bit.address(), 0 );
+
+    assertTrue( bit.id().isEmpty() );
     assertTrue( bit.value() );
     assertEquals( bit.type(), DataType.Bit );
   }

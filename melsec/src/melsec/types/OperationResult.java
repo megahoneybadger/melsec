@@ -1,22 +1,23 @@
-package types;
+package melsec.types;
 
 import melsec.bindings.IPlcObject;
+import melsec.io.IOErrorCode;
 
 public record OperationResult( boolean success, CommandCode command,
-                               IPlcObject result, ErrorCode error ) {
+                               IPlcObject result, IOErrorCode error ) {
   boolean failure(){
     return !this.success;
   }
 
   public OperationResult( CommandCode command, IPlcObject result ){
-    this( true, command, result, ErrorCode.None );
+    this( true, command, result, IOErrorCode.None );
   }
 
-  public OperationResult( CommandCode command, ErrorCode error ){
+  public OperationResult( CommandCode command, IOErrorCode error ){
     this( false, command, null, error );
   }
 
-  public static OperationResult error( CommandCode command, ErrorCode err ){
+  public static OperationResult error( CommandCode command, IOErrorCode err ){
     return new OperationResult( command, err );
   }
 
