@@ -1,12 +1,11 @@
-import melsec.net.Connection;
-import melsec.net.Endpoint;
-
-import java.net.InetAddress;
-import java.util.Scanner;
-
 public class Ideas {
 
   public void todo(){
+
+//    var s = LogManager.ROOT_LOGGER_NAME;
+//    var log = LogManager.getLogger( "sucker" );
+//
+//    log.error( "fuck u asshole john" );
 
 //    var ep = new Endpoint( InetAddress.getByName( "127.0.0.1" ) , 5000 );
 //
@@ -101,4 +100,6 @@ public class Ideas {
 //
 //        System.out.println( "----" );
   }
+
+
 }

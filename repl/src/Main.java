@@ -1,30 +1,23 @@
+import dispatcher.CommandLineDispatcher;
+import melsec.config.PlcConfig;
+import melsec.Driver;
 
-import melsec.net.Endpoint;
-import melsec.net.Connection;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+
 
 public class Main {
   public static void main(String[] args) throws UnknownHostException {
 
-    var logger = LogManager.getLogger("HelloWorld");
+    var config = PlcConfig
+      .builder()
+      .address( "127.21.5.7" )
+      .port( 5000 )
+      .build();
 
-    LoggerContext context= (LoggerContext) LogManager.getContext();
-    Configuration config= context.getConfiguration();
+    var driver = new Driver( config );
 
-
-
-
-      //var conn = new Connection();
-//
+    new CommandLineDispatcher( driver ).run();
   }
-
-
 }
 
 

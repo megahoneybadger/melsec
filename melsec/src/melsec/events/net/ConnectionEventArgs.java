@@ -1,10 +1,11 @@
-package melsec.net.events;
+package melsec.events.net;
 
 import melsec.net.Endpoint;
+import melsec.events.IEventArgs;
 
 import java.text.MessageFormat;
 
-public record ConnectionEventArgs( Endpoint endpoint, String id ) {
+public record ConnectionEventArgs( Endpoint endpoint, String id ) implements IEventArgs {
 
   @Override
   public String toString(){

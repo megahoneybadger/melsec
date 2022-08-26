@@ -1,9 +1,10 @@
 package melsec.net;
 
-import melsec.net.events.IConnectionEventListener;
+import melsec.events.EventDispatcher;
+import melsec.events.EventType;
+import melsec.events.net.ConnectionEventArgs;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -11,6 +12,7 @@ import java.security.SecureRandom;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static melsec.events.EventType.*;
 import static melsec.net.Connection.State.*;
 
 public class Connection {
@@ -28,8 +30,8 @@ public class Connection {
   private State state;
   private Timer timer;
 
-  private ConnectionEvents events;
-  //private List<IConnectionEventListener> listeners;
+  private EventDispatcher events;
+
 
   public Endpoint endpoint(){
     return endpoint;
@@ -39,56 +41,42 @@ public class Connection {
     return id;
   }
 
-  public Connection( Endpoint ep ){
+  public Connection(Endpoint ep, EventDispatcher ev ){
     endpoint = ep;
+    events = ev;
     syncObject = new Object();
-
-    events = new ConnectionEvents( this );
 
     id = Integer
       .valueOf( new SecureRandom().nextInt( 1000 ))
       .toString();
 
+    run = true;
     state = Disconnected;
 
     timer = new Timer();
 
     processintThread = new Thread( () -> processor() );
     processintThread.start();
+
+    scheduleConnect( 100 );
   }
 
-  public void start(){
-    synchronized( syncObject  )
-    {
-      if( run )
-        return;
+  public void dispose(){
+    //boolean hadOpenConnection = false;
 
-      run = true;
-
-      scheduleConnect( 100 );
-    }
-  }
-
-  public void stop(){
-    synchronized( syncObject ) {
-      if (!run)
+    synchronized ( syncObject ){
+      if( !run )
         return;
 
       run = false;
 
-//      if( null != connections ) {
-//        connections.dispose();
-//        connections = null;
-//      }
+      timer.cancel();
+
+      syncObject.notifyAll();
     }
-  }
 
-  public void subscribe( IConnectionEventListener listener ){
-    events.add( listener );
-  }
-
-  public void unsubscribe( IConnectionEventListener listener ){
-    events.remove( listener );
+    events.enqueue( ConnectionDisposed,
+      new ConnectionEventArgs( endpoint(), id() ));
   }
 
   private void scheduleConnect( int delay ){
@@ -109,8 +97,6 @@ public class Connection {
       if( !run || state == Connecting )
         return;
 
-      events.connecting();
-
       state = Connecting;
 
       try{
@@ -121,7 +107,7 @@ public class Connection {
 
         socket.connect(address, socket, new CompletionHandler<>() {
           public void completed(Void result, AsynchronousSocketChannel channel) {
-            events.established();
+            //events.established();
 
             synchronized ( syncObject ){
               state = Connected;
@@ -142,6 +128,9 @@ public class Connection {
         connect();
       }
     }
+
+    events.enqueue( ConnectionConnecting,
+      new ConnectionEventArgs( endpoint(), id() ));
   }
 
   private void processor(){
@@ -152,6 +141,8 @@ public class Connection {
           break;
       }
     }
+
+    System.out.println( "connection processor stopped" );
   }
 
   enum State {
