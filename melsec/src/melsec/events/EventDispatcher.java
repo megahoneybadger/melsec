@@ -28,7 +28,7 @@ public final class EventDispatcher implements IEventDispatcher  {
   private LinkedList<Message> queue;
 
   Logger logger(){
-    return LogManager.getLogger( "driver" );
+    return LogManager.getLogger();
   }
 
   public EventDispatcher(){
@@ -140,7 +140,7 @@ public final class EventDispatcher implements IEventDispatcher  {
   }
 
   private void fire( Message message ){
-
+    var args = message.args();
 
     switch ( message.type() ){
       case DriverStarted -> {
@@ -151,8 +151,20 @@ public final class EventDispatcher implements IEventDispatcher  {
         logger().trace( "driver stopped" );
         driverStopped.fire();
       }
-      case ConnectionConnecting -> channelConnecting.fire( ( ConnectionEventArgs ) message.args() );
-      case ConnectionDisposed -> channelDisposed.fire( ( ConnectionEventArgs ) message.args() );
+      case ConnectionConnecting ->{
+        logger().debug( "connection#{} trying to connect to {}",
+          (( ConnectionEventArgs )args ).id(), args );
+        channelConnecting.fire( ( ConnectionEventArgs ) args );
+      }
+      case ConnectionEstablished ->{
+        logger().trace( "connection#{} established",
+          (( ConnectionEventArgs )args ).id() );
+        channelConnecting.fire( ( ConnectionEventArgs ) args );
+      }
+      case ConnectionDisposed -> {
+        logger().debug( "connection#{} disposed", (( ConnectionEventArgs )args ).id() );
+        channelDisposed.fire( ( ConnectionEventArgs ) args );
+      }
     }
   }
 

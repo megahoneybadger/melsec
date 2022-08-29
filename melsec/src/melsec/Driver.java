@@ -1,6 +1,5 @@
 package melsec;
 
-import melsec.config.PlcConfig;
 import melsec.events.IEventDispatcher;
 import melsec.io.IOHandler;
 import melsec.io.IORequest;
@@ -11,22 +10,51 @@ import static melsec.events.EventType.*;
 
 public class Driver {
 
-  private PlcConfig config;
+  // region Class members
+  /**
+   *
+   */
+  private Config config;
+  /**
+   *
+   */
   private Object syncObject;
+  /**
+   *
+   */
   private boolean run;
+  /**
+   *
+   */
   private Connection connection;
+  /**
+   *
+   */
   private EventDispatcher events;
+  // endregion
 
+  //region Class properties
+  /**
+   *
+   * @return
+   */
   public IEventDispatcher events(){
     return events;
   }
+  //endregion
 
-  public Driver(PlcConfig c ){
+  //region Class initializer
+  public Driver( Config c ){
     config = c;
     syncObject = new Object();
     events = new EventDispatcher();
   }
+  //endregion
 
+  //region Class public methods
+  /**
+   *
+   */
   public void start(){
     synchronized( syncObject  )
     {
@@ -39,9 +67,10 @@ public class Driver {
     }
 
     events.enqueue( DriverStarted );
-
   }
-
+  /**
+   *
+    */
   public void stop(){
     synchronized( syncObject )
     {
@@ -58,7 +87,12 @@ public class Driver {
 
     events.enqueue( DriverStopped );
   }
-
+  /**
+   *
+   * @param r
+   * @param handler
+   */
   public void exec( IORequest r, IOHandler handler) {
   }
+  //endregion
 }

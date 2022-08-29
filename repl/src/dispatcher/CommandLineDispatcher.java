@@ -12,23 +12,23 @@ import java.util.Scanner;
 
 public class CommandLineDispatcher {
 
-  private Driver communicator;
+  private final Driver communicator;
   private boolean run;
 
   public CommandLineDispatcher( Driver c ){
     communicator = c;
 
-    c.events().subscribe( ( IDriverStartedEvent ) args ->
-      System.out.println( "driver started" ));
-
-    c.events().subscribe( (IDriverStoppedEvent ) args ->
-      System.out.println( "driver stopped" ));
-
-    c.events().subscribe( ( IConnectionConnectingEvent) args ->
-      System.out.println( "channel connecting" ));
-
-    c.events().subscribe( (IConnectionDisposedEvent ) args ->
-      System.out.println( "connection disposed" ));
+//    c.events().subscribe( ( IDriverStartedEvent ) args ->
+//      System.out.println( "driver started" ));
+//
+//    c.events().subscribe( (IDriverStoppedEvent ) args ->
+//      System.out.println( "driver stopped" ));
+//
+//    c.events().subscribe( ( IConnectionConnectingEvent) args ->
+//      System.out.println( "channel connecting" ));
+//
+//    c.events().subscribe( (IConnectionDisposedEvent ) args ->
+//      System.out.println( "connection disposed" ));
 
   }
 
@@ -44,7 +44,7 @@ public class CommandLineDispatcher {
 
       var parts = line.split( " " );
 
-      if( null == parts || 0 == parts.length )
+      if( 0 == parts.length )
         continue;
 
       var command = parts[ 0 ];

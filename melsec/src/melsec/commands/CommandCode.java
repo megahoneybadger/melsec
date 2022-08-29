@@ -1,4 +1,4 @@
-package melsec.types;
+package melsec.commands;
 
 public enum CommandCode {
   BatchRead,
