@@ -35,6 +35,10 @@ public record PlcU1(IDeviceCode device, int address, Integer value, String id )
     this( device, address, 0 );
   }
 
+  public PlcU1( IDeviceCode device, int address, String id ) {
+    this( device, address, 0, id );
+  }
+
   public PlcU1( IDeviceCode device, int address, Integer value ) {
     this( device, address, value, EMPTY_STRING );
   }

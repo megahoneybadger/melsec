@@ -28,9 +28,15 @@ public record PlcBit(IDeviceCode device, int address, boolean value, String id )
     this( device, address, value, EMPTY_STRING );
   }
 
+  public PlcBit( IDeviceCode device, int address, String id ) {
+    this( device, address, false, id );
+  }
+
   public String toString() {
-    return MessageFormat.format("bit [{0}@{1}] [{2}] ",
-      device, device.toStringAddress(address), value());
+    var id = this.id.isEmpty() ? EMPTY_STRING : " " + this.id;
+
+    return MessageFormat.format("bit [{0}@{1}{3}] {2} ",
+      device, device.toStringAddress(address), value(), id);
   }
 }
 

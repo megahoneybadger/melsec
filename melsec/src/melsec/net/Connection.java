@@ -1,6 +1,6 @@
 package melsec.net;
 
-import melsec.commands.ICommand;
+import melsec.io.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
 import org.apache.logging.log4j.LogManager;
@@ -8,10 +8,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.security.SecureRandom;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -211,14 +213,14 @@ public class Connection {
   //region Class 'IO' methods
   /**
    *
-   * @param command
+   * @param commands
    */
-  public void enqueue( ICommand command ){
+  public void enqueue( List<ICommand> commands ){
     synchronized ( syncObject ){
       if( !run )
         return;
 
-      queue.add( command );
+      queue.addAll( commands );
       syncObject.notify();
     }
   }
@@ -227,37 +229,52 @@ public class Connection {
    */
   private void processor(){
     while( true ){
-      ICommand command = null;
-
       synchronized ( syncObject ){
         if( !run )
           break;
 
-        if( queue.size() > 0/*&& null == currentPendingCommand*/ ){
-          command = queue.remove();
+        if( queue.size() > 0 ){
+          send( queue.remove() ) ;
         } else {
           try {
             syncObject.wait();
           } catch (InterruptedException e) {
-            logger().error( "failed to put connection#{} process to sleep", id() );
+            logger().error( "failed to put connection#{} processor to sleep", id() );
           }
         }
-      }
-
-      if( null != command ){
-        send( command );
       }
     }
 
     logger().debug( "connection#{} processor stopped", id() );
   }
-
   /**
    *
    * @param command
    */
   private void send( ICommand command ){
+    try {
+      var buffer = ByteBuffer.wrap( command.encode() );
 
+      var l = Thread.holdsLock(syncObject);
+
+      socket.write( buffer, command, new CompletionHandler<>() {
+        @Override
+        public void completed( Integer count, ICommand command ) {
+          //recv( command );
+          var l2 = Thread.holdsLock(syncObject);
+        }
+
+        @Override
+        public void failed(Throwable e, ICommand command) {
+          //drop( c, e );
+        }
+      } );
+
+
+    } catch( Exception e ) {
+      logger().error( e.getMessage() );
+      //command.complete
+    }
   }
   //endregion
 

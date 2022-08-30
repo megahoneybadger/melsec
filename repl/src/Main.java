@@ -1,20 +1,20 @@
 import dispatcher.CommandLineDispatcher;
 import melsec.Config;
 import melsec.Driver;
+import melsec.bindings.PlcBit;
+import melsec.bindings.PlcU1;
+import melsec.io.IORequest;
 import melsec.log.ConsoleLogger;
-import melsec.log.LogLevel;
+import melsec.types.BitDeviceCode;
 
-import java.lang.reflect.Array;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.*;
+import static melsec.types.BitDeviceCode.*;
+import static melsec.types.WordDeviceCode.*;
 
 
 public class Main {
-  public static void main(String[] args) throws UnknownHostException {
+  public static void main(String[] args) throws UnknownHostException, InterruptedException {
 
     var config = Config
       .builder()
@@ -25,8 +25,26 @@ public class Main {
       .build();
 
     var driver = new Driver( config );
+    driver.start();
+
+    Thread.sleep( 500 );
+
+    var request = IORequest
+      .builder()
+      .read( new PlcBit( B, 100, "RecvGlassRequestBit1"  ) )
+      .read( new PlcBit( B, 200, "RecvGlassRequestBit2"  ) )
+      .read( new PlcU1( W, 300, "GlassId" ) )
+      .write( new PlcBit( B, 401, "RecvGlassReplyBit" ) )
+      .complete( x -> System.out.println( "io done" ) )
+      .build();
+
+    driver.exec( request );
 
     new CommandLineDispatcher( driver ).run();
+
+
+
+
   }
 }
 

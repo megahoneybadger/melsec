@@ -1,7 +1,6 @@
 package melsec;
 
 import melsec.events.IEventDispatcher;
-import melsec.io.IOHandler;
 import melsec.io.IORequest;
 import melsec.net.Connection;
 import melsec.events.EventDispatcher;
@@ -44,6 +43,10 @@ public class Driver {
   //endregion
 
   //region Class initializer
+  /**
+   *
+   * @param c
+   */
   public Driver( Config c ){
     config = c;
     syncObject = new Object();
@@ -56,8 +59,7 @@ public class Driver {
    *
    */
   public void start(){
-    synchronized( syncObject  )
-    {
+    synchronized( syncObject  ) {
       if( run )
         return;
 
@@ -72,8 +74,7 @@ public class Driver {
    *
     */
   public void stop(){
-    synchronized( syncObject )
-    {
+    synchronized( syncObject ){
       if( !run )
         return;
 
@@ -88,11 +89,15 @@ public class Driver {
     events.enqueue( DriverStopped );
   }
   /**
-   *
    * @param r
-   * @param handler
    */
-  public void exec( IORequest r, IOHandler handler) {
+  public void exec( IORequest r ) {
+    synchronized( syncObject ){
+      if( !run )
+        return;
+
+      connection.enqueue( r.toCommands() );
+    }
   }
   //endregion
 }
