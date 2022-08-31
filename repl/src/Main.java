@@ -3,6 +3,7 @@ import melsec.Config;
 import melsec.Driver;
 import melsec.bindings.PlcBit;
 import melsec.bindings.PlcU1;
+import melsec.bindings.PlcU2;
 import melsec.io.IORequest;
 import melsec.log.ConsoleLogger;
 import melsec.types.BitDeviceCode;
@@ -33,7 +34,7 @@ public class Main {
       .builder()
       .read( new PlcBit( B, 100, "RecvGlassRequestBit1"  ) )
       .read( new PlcBit( B, 200, "RecvGlassRequestBit2"  ) )
-      .read( new PlcU1( W, 300, "GlassId" ) )
+      .read( new PlcU2( W, 300, "GlassId" ) )
       .write( new PlcBit( B, 401, "RecvGlassReplyBit" ) )
       .complete( x -> System.out.println( "io done" ) )
       .build();

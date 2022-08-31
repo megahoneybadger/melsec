@@ -22,11 +22,6 @@ public record PlcU1(IDeviceCode device, int address, Integer value, String id )
     return DataType.U1;
   }
 
-  @Override
-  public int size(){
-    return 1;
-  }
-
   public PlcU1() {
     this( WordDeviceCode.W, 0 );
   }

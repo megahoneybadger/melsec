@@ -12,11 +12,6 @@ public record PlcU4(IDeviceCode device, int address, Long value, String id )
     return DataType.U4;
   }
 
-  @Override
-  public int size(){
-    return 4;
-  }
-
   public PlcU4() {
     this( WordDeviceCode.W, 0 );
   }

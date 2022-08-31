@@ -40,15 +40,15 @@ public final class PlcStruct implements IPlcWord {
     return items.size();
   }
 
-  @Override
-  public int size(){
-    if( items.size() == 0 )
-      return 0;
-
-    var last = items.get( items.size() - 1 );
-
-    return last.address() + last.size() - address;
-  }
+//  @Override
+//  public int size(){
+//    if( items.size() == 0 )
+//      return 0;
+//
+//    var last = items.get( items.size() - 1 );
+//
+//    return last.address() + last.size() - address;
+//  }
 
   public boolean isEmpty(){
     return items.isEmpty();
@@ -116,8 +116,8 @@ public final class PlcStruct implements IPlcWord {
 
     var st = ( PlcStruct )o;
 
-    if( st.count() != size() )
-      return false;
+//    if( st.count() != size() )
+//      return false;
 
     for( var i = 0; i < st.count(); ++i ){
       if( !st.items.get( i ).equals( items.get( i ) ) )

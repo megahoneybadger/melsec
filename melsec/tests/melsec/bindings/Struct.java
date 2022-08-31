@@ -33,7 +33,6 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.R );
     assertEquals( s.address(), 0 );
-    assertEquals( s.size(), 0 );
     assertTrue( s.id().isEmpty() );
     assertEquals( s.type(), DataType.Struct );
   }
@@ -47,7 +46,6 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.W );
     assertEquals( s.address(), ADDRESS_1 );
-    assertEquals( s.size(), 0 );
     assertTrue( s.id().isEmpty() );
     assertEquals( s.type(), DataType.Struct );
   }
@@ -61,7 +59,6 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.W );
     assertEquals( s.address(), 0 );
-    assertEquals( s.size(), 0 );
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
   }
@@ -75,7 +72,7 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.W );
     assertEquals( s.address(), 0 );
-    assertEquals( s.size(), 0 );
+    //assertEquals( s.size(), 0 );
     assertTrue( s.id().isEmpty() );
     assertEquals( s.type(), DataType.Struct );
   }
@@ -88,7 +85,7 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.D );
     assertEquals( s.address(), ADDRESS_1 );
-    assertEquals( s.size(), 0 );
+    //assertEquals( s.size(), 0 );
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
   }
@@ -113,7 +110,7 @@ public class Struct extends BaseTest {
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
 
-    assertEquals( s.size(), 3 );
+    //assertEquals( s.size(), 3 );
     assertEquals( s.count(), 3 );
     Assertions.assertIterableEquals( s.items(), expected );
   }
@@ -148,7 +145,7 @@ public class Struct extends BaseTest {
 
     assertEquals( s.device(), WordDeviceCode.D );
     assertEquals( s.address(), ADDRESS_1 );
-    assertEquals( s.size(), 50 );
+    //assertEquals( s.size(), 50 );
     assertEquals( s.count(), 9 );
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
@@ -175,7 +172,7 @@ public class Struct extends BaseTest {
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
 
-    assertEquals( s.size(), 1 );
+    //assertEquals( s.size(), 1 );
     assertEquals( s.count(), 1 );
     Assertions.assertIterableEquals( s.items(), expected );
   }
@@ -199,7 +196,7 @@ public class Struct extends BaseTest {
     assertEquals( s.id(), STRING_1 );
     assertEquals( s.type(), DataType.Struct );
 
-    assertEquals( s.size(), 1 );
+    //assertEquals( s.size(), 1 );
     assertEquals( s.count(), 1 );
     Assertions.assertIterableEquals( s.items(), expected );
   }

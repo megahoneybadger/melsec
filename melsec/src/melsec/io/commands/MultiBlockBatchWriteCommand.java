@@ -4,8 +4,11 @@ import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBit;
 import melsec.io.IOCompleteEventHandler;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,14 +41,25 @@ public class MultiBlockBatchWriteCommand extends ICommand {
     return list;
   }
 
-  //region Class 'Coding' methods
+  //region Class 'Encoding' methods
   /**
    *
    * @param ds
    * @throws IOException
    */
   @Override
-  protected void encode(DataOutputStream ds) throws IOException {
+  protected void encode(DataOutput ds) throws IOException {
+
+  }
+  //endregion
+
+  //region Class 'Decoding' methods
+  /**
+   *
+   * @param reader
+   */
+  @Override
+  protected void decode( DataInput reader ){
 
   }
   //endregion

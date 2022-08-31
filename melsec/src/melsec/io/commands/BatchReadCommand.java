@@ -1,7 +1,10 @@
 package melsec.io.commands;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class BatchReadCommand extends ICommand {
   @Override
@@ -16,7 +19,11 @@ public class BatchReadCommand extends ICommand {
    * @throws IOException
    */
   @Override
-  protected void encode(DataOutputStream ds) throws IOException {
+  protected void encode(DataOutput ds) throws IOException {
+
+  }
+  @Override
+  protected void decode( DataInput reader ){
 
   }
   //endregion

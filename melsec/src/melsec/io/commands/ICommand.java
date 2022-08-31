@@ -1,10 +1,11 @@
 package melsec.io.commands;
 
 import melsec.exceptions.EncodingException;
+import melsec.utils.EndianDataInputStream;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public abstract class ICommand {
 
@@ -44,6 +45,25 @@ public abstract class ICommand {
    * @param ds
    * @throws IOException
    */
-  protected abstract void encode( DataOutputStream ds ) throws IOException;
+  protected abstract void encode( DataOutput ds ) throws IOException;
+  /**
+   *
+   * @param buffer
+   */
+  public void decode( byte [] buffer ){
+    try( var bs = new ByteArrayInputStream( buffer )){
+      try( var ds = new EndianDataInputStream( bs )){
+        decode( ds );
+      }
+    }
+    catch( Exception e ){
+      // throw new RtException( RtException.Code.CommandDecodingError, e.toString() );
+    }
+  }
+  /**
+   *
+   * @param reader
+   */
+  protected abstract void decode( DataInput reader ) throws IOException;
   //endregion
 }

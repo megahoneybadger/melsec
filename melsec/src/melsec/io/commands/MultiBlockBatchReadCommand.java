@@ -1,13 +1,13 @@
 package melsec.io.commands;
 
-import melsec.bindings.IPlcObject;
-import melsec.bindings.IPlcWord;
-import melsec.bindings.PlcBit;
+import melsec.bindings.*;
 import melsec.io.IOCompleteEventHandler;
 import melsec.types.DataType;
+import melsec.utils.EndianDataInputStream;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +30,11 @@ public class MultiBlockBatchReadCommand extends ICommand {
   /**
    *
    */
-  private List<PlcBit> bits;
+  private List<IPlcObject> bits;
   /**
    *
    */
-  private List<IPlcWord> words;
+  private List<IPlcObject> words;
   /**
    *
    */
@@ -50,6 +50,25 @@ public class MultiBlockBatchReadCommand extends ICommand {
   public CommandCode code() {
     return CommandCode.MultiBlockBatchRead;
   }
+  /**
+   *
+   * @param o
+   * @return
+   */
+  private static int getPointsCount( IPlcObject o ){
+    return switch( o.type() ){
+      case Bit, U1, U2, I1, I2 -> 1;
+      case U4, I4, F4 -> 2;
+      case U8, I8, F8 -> 4;
+      case String -> {
+        var s = ( PlcString ) o;
+        var extra = ( s.size() % 2 == 0 ) ? 0 : 1;
+        var points = s.size() / 2;
+        yield ( points + extra );
+      }
+      default -> 0;
+    };
+  }
   //endregion
 
   //region Class initialization
@@ -64,13 +83,11 @@ public class MultiBlockBatchReadCommand extends ICommand {
     bits = StreamSupport
       .stream( targets.spliterator(), false )
       .filter( x -> x.type() == DataType.Bit )
-      .map( x -> ( PlcBit )x )
       .collect( Collectors.toList() );
 
     words = StreamSupport
       .stream( targets.spliterator(), false )
       .filter( x -> x.type() != DataType.Bit )
-      .map( x -> ( IPlcWord )x )
       .collect( Collectors.toList() );
   }
   /**
@@ -89,11 +106,10 @@ public class MultiBlockBatchReadCommand extends ICommand {
     var points = 0;
 
     for( var item: items ){
-      var itemPoints = ( item instanceof IPlcWord w ) ? w.size() : 1;
+      var itemPoints = getPointsCount( item );
 
       var shouldCreateCommand =
-        ( blocks >= MAX_BLOCKS ) ||
-          ( points + itemPoints > MAX_POINTS );
+        ( blocks >= MAX_BLOCKS ) || ( points + itemPoints > MAX_POINTS );
 
       if( shouldCreateCommand ){
         res.add( new MultiBlockBatchReadCommand( new ArrayList<>( group ), handler ) );
@@ -113,14 +129,14 @@ public class MultiBlockBatchReadCommand extends ICommand {
   }
   //endregion
 
-  //region Class 'Coding' methods
+  //region Class 'Encoding' methods
   /**
    *
    * @param writer
    * @throws IOException
    */
   @Override
-  protected void encode( DataOutputStream writer ) throws IOException {
+  protected void encode( DataOutput writer ) throws IOException {
     int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
     Coder.encodeHeader( writer, iTotalSize );
 
@@ -137,6 +153,10 @@ public class MultiBlockBatchReadCommand extends ICommand {
 
     // Number of bit device blocks
     writer.writeByte( bits.size() );
+
+    encode( writer, words );
+
+    encode( writer, bits );
   }
   /**
    *
@@ -144,7 +164,7 @@ public class MultiBlockBatchReadCommand extends ICommand {
    * @param list
    * @throws IOException
    */
-  private void encode( DataOutputStream writer, Iterable<IPlcObject> list ) throws IOException {
+  private void encode( DataOutput writer, Iterable<IPlcObject> list ) throws IOException {
     for( var item: list ){
       // Word device number
       writer.write( Coder.toBytes( item.address(), 3 ) );
@@ -153,9 +173,86 @@ public class MultiBlockBatchReadCommand extends ICommand {
       writer.write( item.device().getValue() );
 
       // Number of device points
-      var size = ( item instanceof IPlcWord w ) ? w.size() : 1;
+      var size = getPointsCount( item );
       writer.write( Coder.toBytes( size, 2 ) );
     }
+  }
+  //endregion
+
+  //region Class 'Decoding' methods
+  /**
+   *
+   * @param reader
+   */
+  @Override
+  protected void decode( DataInput reader ) throws IOException {
+
+    reader.skipBytes( 7 );
+
+    var dataSize = Coder.toUShort( reader.readShort() );
+    var completionCode = Coder.toUShort( reader.readShort() );
+
+//    if( 0 != completionCode )
+//      throw new RtException( RtException.Code.BadCompletionCode, completionCode );
+
+    var list = new ArrayList<>();
+
+    list.addAll( decodeWords( reader ));
+    list.addAll( decodeBits( reader ));
+  }
+  /**
+   *
+    * @param reader
+   * @return
+   */
+  private List<PlcBit> decodeBits( DataInput reader ) throws IOException {
+    var list = new ArrayList<PlcBit>();
+
+    for( var proto: bits ){
+      var val = ( 1 == ( 1 & reader.readUnsignedShort() ));
+      list.add( ( PlcBit ) PlcObjectCopier.with( proto, val ) );
+    }
+
+    return list;
+  }
+  /**
+   *
+   * @param reader
+   * @return
+   */
+  private List<IPlcWord> decodeWords( DataInput reader ) throws IOException {
+    var list = new ArrayList<IPlcWord>();
+
+    for( var proto: words ){
+      var o = ( proto.type() == DataType.Struct ) ?
+        decodeStruct( reader, ( PlcStruct ) proto ) :
+        decodeWord( reader, ( IPlcWord ) proto );
+
+      list.add( o );
+    }
+
+    return list;
+  }
+  /**
+   *
+   * @param reader
+   * @param proto
+   * @return
+   */
+  private PlcStruct decodeStruct( DataInput reader, PlcStruct proto ){
+
+    return null;
+  }
+  /**
+   *
+   * @param reader
+   * @param proto
+   * @return
+   */
+  private IPlcWord decodeWord( DataInput reader, IPlcWord proto ) throws IOException {
+    var value = Coder.decodeValue( reader, proto.type() );
+
+    return ( IPlcWord ) PlcObjectCopier.with( proto, value );
   }
   //endregion
 }

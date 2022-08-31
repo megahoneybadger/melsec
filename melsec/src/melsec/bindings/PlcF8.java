@@ -12,11 +12,6 @@ public record PlcF8(IDeviceCode device, int address, Double value, String id )
     return DataType.F8;
   }
 
-  @Override
-  public int size(){
-    return 8;
-  }
-
   public PlcF8() {
     this( WordDeviceCode.W, 0 );
   }

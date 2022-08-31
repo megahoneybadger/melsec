@@ -1,5 +1,6 @@
 package melsec.net;
 
+import melsec.io.commands.Coder;
 import melsec.io.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import static melsec.events.EventType.*;
 import static melsec.net.Connection.State.*;
@@ -36,6 +38,7 @@ public class Connection {
   private final Thread processingThread;
   private final LinkedList<ICommand> queue;
   private boolean run;
+  private ICommand currentPendingCommand;
 
   private final Endpoint endpoint;
   private AsynchronousSocketChannel socket;
@@ -208,6 +211,20 @@ public class Connection {
 
     return hadOpenConnection;
   }
+  /**
+   *
+   * @param c
+   * @param e
+   */
+  private void drop( ICommand c, Throwable e ){
+//    done( c, new RtException( RtException.Code.SocketGeneralError, e.toString(), id ) );
+//
+//    if( close() ){
+//      events.enqueue( new ConnectionEventArgs( endpoint, id, ConnectionEventArgs.Type.Dropped ) );
+//    }
+//
+//    connect();
+  }
   //endregion
 
   //region Class 'IO' methods
@@ -233,8 +250,8 @@ public class Connection {
         if( !run )
           break;
 
-        if( queue.size() > 0 ){
-          send( queue.remove() ) ;
+        if( queue.size() > 0 && null == currentPendingCommand ){
+          send( queue.remove() );
         } else {
           try {
             syncObject.wait();
@@ -253,28 +270,117 @@ public class Connection {
    */
   private void send( ICommand command ){
     try {
-      var buffer = ByteBuffer.wrap( command.encode() );
+      currentPendingCommand = command;
 
-      var l = Thread.holdsLock(syncObject);
+      var buffer = ByteBuffer.wrap( command.encode() );
+      var arr = buffer.array();
 
       socket.write( buffer, command, new CompletionHandler<>() {
         @Override
         public void completed( Integer count, ICommand command ) {
-          //recv( command );
-          var l2 = Thread.holdsLock(syncObject);
+          recvHeader( command );
         }
 
         @Override
-        public void failed(Throwable e, ICommand command) {
-          //drop( c, e );
+        public void failed( Throwable e, ICommand command ) {
+          drop( command, e );
         }
       } );
-
-
-    } catch( Exception e ) {
+    }
+    catch( Exception e ) {
       logger().error( e.getMessage() );
       //command.complete
     }
+  }
+  /**
+   *
+   * @param command
+   */
+  private void recvHeader( ICommand command ){
+    try {
+      var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
+
+      synchronized( syncObject ) {
+        socket.read( buffer, 1, TimeUnit.SECONDS, command, new CompletionHandler<>() {
+          @Override
+          public void completed( Integer countReadBytes, ICommand command ) {
+            if( countReadBytes < Coder.HEADER_LENGTH ){
+              done( command, new Exception( "failed to read header" ) );
+            } else {
+              var replyBodySize = Coder.decodeLength( buffer.array() );
+              var replyTotalSize = Coder.HEADER_LENGTH + replyBodySize;
+
+              var bufferTotal = ByteBuffer.allocate( replyTotalSize );
+              System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, Coder.HEADER_LENGTH );
+
+              bufferTotal.position( Coder.HEADER_LENGTH );
+
+              recvBody( new BodyRecvProgress( command, bufferTotal, replyBodySize ) );
+            }
+          }
+
+          @Override
+          public void failed( Throwable e, ICommand command ) {
+            //drop( c, e );
+          }
+        } );
+      }
+    }
+    catch( Exception e ){
+      drop( command, e );
+    }
+  }
+  /**
+   *
+   * @param p
+   */
+  private void recvBody( BodyRecvProgress p ){
+    try{
+      synchronized( syncObject ){
+        socket.read( p.buffer, 1, TimeUnit.SECONDS, p, new CompletionHandler<>() {
+          @Override
+          public void completed( Integer readFromStreamCount, BodyRecvProgress pars ) {
+            var left = pars.bytesToReadLeft - readFromStreamCount;
+
+            if( left > 0 ) {
+              recvBody( new BodyRecvProgress( p.command, p.buffer, left ));
+            } else {
+              decode( p );
+            }
+          }
+
+          @Override
+          public void failed( Throwable e, BodyRecvProgress pars ) {
+            drop( p.command, e );
+          }
+        });
+      }
+    }
+    catch( Exception e ){
+      //drop
+    }
+  }
+  /**
+   *
+    * @param p
+   */
+  private void decode( BodyRecvProgress p ){
+    try{
+      p.command.decode( p.buffer.array() );
+
+      done( p.command, null );
+    }
+    catch( Exception exc ){
+      //done( c, new RtException( RtException.Code.CommandDecodingError, exc.toString() ) );
+    }
+  }
+  /**
+   *
+   * @param c
+   * @param e
+   */
+  private void done( ICommand c, Exception e ){
+
   }
   //endregion
 
@@ -284,5 +390,10 @@ public class Connection {
     Connecting,
     Connected
   }
+
+  record BodyRecvProgress( ICommand command,
+                           ByteBuffer buffer,
+                           int bytesToReadLeft ){}
   //endregion
 }
+

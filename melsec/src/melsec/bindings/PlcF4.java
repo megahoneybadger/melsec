@@ -12,11 +12,6 @@ public record PlcF4(IDeviceCode device, int address, Float value, String id )
     return DataType.F4;
   }
 
-  @Override
-  public int size(){
-    return 4;
-  }
-
   public PlcF4() {
     this( WordDeviceCode.W, 0 );
   }

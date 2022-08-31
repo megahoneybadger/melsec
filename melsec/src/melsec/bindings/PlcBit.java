@@ -38,5 +38,9 @@ public record PlcBit(IDeviceCode device, int address, boolean value, String id )
     return MessageFormat.format("bit [{0}@{1}{3}] {2} ",
       device, device.toStringAddress(address), value(), id);
   }
+
+  public PlcBit with( boolean value ){
+    return new PlcBit( device, address, value, id );
+  }
 }
 

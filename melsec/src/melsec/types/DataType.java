@@ -16,6 +16,5 @@ public enum DataType {
 
   Bit,
   String,
-  Struct,
-  Offset
+  Struct
 }
