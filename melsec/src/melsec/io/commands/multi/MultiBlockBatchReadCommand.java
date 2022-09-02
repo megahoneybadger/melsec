@@ -1,45 +1,22 @@
-package melsec.io.commands;
+package melsec.io.commands.multi;
 
 import melsec.bindings.*;
-import melsec.io.IOCompleteEventHandler;
+import melsec.io.IORequestItem;
+import melsec.io.IORequestUnit;
+import melsec.io.IOResponse;
+import melsec.io.IOResponseItem;
+import melsec.io.commands.Coder;
+import melsec.io.commands.CommandCode;
+import melsec.io.commands.ICommand;
 import melsec.types.DataType;
-import melsec.utils.EndianDataInputStream;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-public class MultiBlockBatchReadCommand extends ICommand {
-
-  //region Class constants
-  /**
-   *
-   */
-  public static final int MAX_POINTS = 960;
-  /**
-   *
-   */
-  public static final int MAX_BLOCKS = 120;
-  //endregion
-
-  //region Class members
-  /**
-   *
-   */
-  private List<IPlcObject> bits;
-  /**
-   *
-   */
-  private List<IPlcObject> words;
-  /**
-   *
-   */
-  private IOCompleteEventHandler completeHandler;
-  //endregion
+public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
   //region Class properties
   /**
@@ -50,80 +27,49 @@ public class MultiBlockBatchReadCommand extends ICommand {
   public CommandCode code() {
     return CommandCode.MultiBlockBatchRead;
   }
-  /**
-   *
-   * @param o
-   * @return
-   */
-  private static int getPointsCount( IPlcObject o ){
-    return switch( o.type() ){
-      case Bit, U1, U2, I1, I2 -> 1;
-      case U4, I4, F4 -> 2;
-      case U8, I8, F8 -> 4;
-      case String -> {
-        var s = ( PlcString ) o;
-        var extra = ( s.size() % 2 == 0 ) ? 0 : 1;
-        var points = s.size() / 2;
-        yield ( points + extra );
-      }
-      default -> 0;
-    };
-  }
   //endregion
 
   //region Class initialization
   /**
    *
-   * @param targets
-   * @param completeHandler
+   * @param u
    */
-  public MultiBlockBatchReadCommand( Iterable<IPlcObject> targets, IOCompleteEventHandler completeHandler ) {
-    this.completeHandler = completeHandler;
-
-    bits = StreamSupport
-      .stream( targets.spliterator(), false )
-      .filter( x -> x.type() == DataType.Bit )
-      .collect( Collectors.toList() );
-
-    words = StreamSupport
-      .stream( targets.spliterator(), false )
-      .filter( x -> x.type() != DataType.Bit )
-      .collect( Collectors.toList() );
+  public MultiBlockBatchReadCommand( IORequestUnit u ){
+    super( u );
   }
   /**
    *
-   * @param items
-   * @param handler
+   * @param unit
    * @return
    */
-  public static List<MultiBlockBatchReadCommand> split(
-    Iterable<IPlcObject> items, IOCompleteEventHandler handler ){
-
-    var res = new ArrayList<MultiBlockBatchReadCommand>();
-    var group = new ArrayList<IPlcObject>();
+  public static List<ICommand> split( IORequestUnit unit ){
+    var res = new ArrayList<ICommand>();
+    var items = new ArrayList<IORequestItem>();
 
     var blocks = 0;
     var points = 0;
 
-    for( var item: items ){
-      var itemPoints = getPointsCount( item );
+    for( var item: unit.items() ){
+      var itemPoints = getPointsCount( item.object() );
 
       var shouldCreateCommand =
         ( blocks >= MAX_BLOCKS ) || ( points + itemPoints > MAX_POINTS );
 
       if( shouldCreateCommand ){
-        res.add( new MultiBlockBatchReadCommand( new ArrayList<>( group ), handler ) );
-        group.clear();
+        res.add( new MultiBlockBatchReadCommand( unit.with( items ) ) );
+        items.clear();
         blocks = 0;
         points = 0;
       }
 
       blocks++;
       points += itemPoints;
-      group.add( item );
+      items.add( item );
     }
 
-    res.add( new MultiBlockBatchReadCommand( new ArrayList<>( group ), handler ) );
+    if( items.size() > 0 ){
+      res.add( new MultiBlockBatchReadCommand( unit.with( items ) ) );
+    }
 
     return res;
   }
@@ -139,6 +85,8 @@ public class MultiBlockBatchReadCommand extends ICommand {
   protected void encode( DataOutput writer ) throws IOException {
     int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
     Coder.encodeHeader( writer, iTotalSize );
+
+    //throw  new IOException( "suck my dick" );
 
     // Command
     writer.writeByte( 0x06 );
@@ -195,10 +143,9 @@ public class MultiBlockBatchReadCommand extends ICommand {
 //    if( 0 != completionCode )
 //      throw new RtException( RtException.Code.BadCompletionCode, completionCode );
 
-    var list = new ArrayList<>();
-
-    list.addAll( decodeWords( reader ));
-    list.addAll( decodeBits( reader ));
+    results.clear();
+    results.addAll( decodeWords( reader ));
+    results.addAll( decodeBits( reader ));
   }
   /**
    *

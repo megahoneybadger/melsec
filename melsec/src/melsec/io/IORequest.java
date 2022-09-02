@@ -2,8 +2,8 @@ package melsec.io;
 
 import melsec.bindings.*;
 import melsec.io.commands.ICommand;
-import melsec.io.commands.MultiBlockBatchReadCommand;
-import melsec.io.commands.MultiBlockBatchWriteCommand;
+import melsec.io.commands.multi.MultiBlockBatchReadCommand;
+import melsec.io.commands.multi.MultiBlockBatchWriteCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class IORequest {
   /**
    *
    */
-  private IOCompleteEventHandler eventHandler;
+  private IOCompleteEventHandler completeHandler;
   //endregion
 
   //region Class properties
@@ -36,40 +36,57 @@ public class IORequest {
   public static Builder builder() {
     return new Builder();
   }
-
   //endregion
 
   //region Class public methods
+
   /**
-   *
+   * Splits request into contiguous read and write units.
    * @return
    */
-  public List<ICommand> toCommands(){
-    var res = new ArrayList<ICommand>();
-    IORequestItem prev = null;
+  public Iterable<IORequestUnit> toUnits(){
+    var res = new ArrayList<IORequestUnit>();
 
-    var group = new ArrayList<IORequestItem>();
+    IORequestItem prev = null;
+    var items = new ArrayList<IORequestItem>();
 
     for( var item: list ){
-      if( prev == null || prev.type() == item.type() ){
-        group.add( item );
-      } else{
-        var plcObjects = group
-          .stream()
-          .map( x -> x.object() )
-          .toList();
+      if( prev != null && prev.type() != item.type() ){
+        res.add( new IORequestUnit(
+          prev.type(), new ArrayList<>( items ), completeHandler ) );
 
-        var commands = switch( prev.type() ){
-          case Read -> MultiBlockBatchReadCommand.split( plcObjects, eventHandler );
-
-          case Write -> MultiBlockBatchWriteCommand.split( plcObjects, eventHandler );
-        };
-
-        res.addAll( commands );
-        group.clear();
+        items.clear();
       }
 
+      items.add( item );
+
       prev = item;
+    }
+
+    if( items.size() > 0 ){
+      res.add( new IORequestUnit(
+        prev.type(), new ArrayList<>( items ), completeHandler ) );
+    }
+
+    return res;
+  }
+  /**
+   * Splits units multi block batch commands.
+   * @return
+   */
+  public Iterable<ICommand> toMultiBlockBatchCommands(){
+    var units = toUnits();
+    var res = new ArrayList<ICommand>();
+
+    for( var u : units ){
+      var commands = switch( u.type() ){
+        case Read -> MultiBlockBatchReadCommand.split( u );
+        case Write -> MultiBlockBatchWriteCommand.split( u );
+      };
+
+      if( null != commands && commands.size() > 0 ){
+        res.addAll( commands );
+      }
     }
 
     return res;
@@ -77,7 +94,6 @@ public class IORequest {
   //endregion
 
   //region Class internal structs
-
   /**
    *
    */
@@ -86,14 +102,20 @@ public class IORequest {
     private List<IORequestItem> list = new ArrayList<>();
     private IOCompleteEventHandler eventHandler;
 
-    public Builder read( IPlcObject o ){
-      list.add( new IORequestItem( IOType.Read, o ) );
+    public int count(){
+      return list.size();
+    }
 
-      return this;
+    public Builder read( IPlcObject o ){
+      return add( new IORequestItem( IOType.Read, o ) );
     }
 
     public Builder write( IPlcObject o ){
-      list.add( new IORequestItem( IOType.Write, o ) );
+      return add( new IORequestItem( IOType.Write, o ) );
+    }
+
+    public Builder add( IORequestItem item ){
+      list.add( item );
 
       return this;
     }
@@ -109,7 +131,7 @@ public class IORequest {
     public IORequest build(){
       var res = new IORequest();
       res.list = new ArrayList<IORequestItem>( list );
-      res.eventHandler = eventHandler;
+      res.completeHandler = eventHandler;
 
       return res;
     }

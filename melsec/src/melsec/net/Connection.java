@@ -4,6 +4,7 @@ import melsec.io.commands.Coder;
 import melsec.io.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
+import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -232,12 +233,12 @@ public class Connection {
    *
    * @param commands
    */
-  public void enqueue( List<ICommand> commands ){
+  public void enqueue( Iterable<ICommand> commands ){
     synchronized ( syncObject ){
       if( !run )
         return;
 
-      queue.addAll( commands );
+      queue.addAll( UtilityHelper.toList( commands ) );
       syncObject.notify();
     }
   }
@@ -272,12 +273,15 @@ public class Connection {
     try {
       currentPendingCommand = command;
 
+      logger().debug( "Sending {}", command );
+
       var buffer = ByteBuffer.wrap( command.encode() );
       var arr = buffer.array();
 
       socket.write( buffer, command, new CompletionHandler<>() {
         @Override
         public void completed( Integer count, ICommand command ) {
+          logger().debug( "Sent {}", command );
           recvHeader( command );
         }
 
@@ -288,8 +292,9 @@ public class Connection {
       } );
     }
     catch( Exception e ) {
-      logger().error( e.getMessage() );
-      //command.complete
+      logger().error( "Failed to send command. {}", e.getMessage() );
+      command.complete( e );
+      //command.handler
     }
   }
   /**
@@ -380,7 +385,12 @@ public class Connection {
    * @param e
    */
   private void done( ICommand c, Exception e ){
+    synchronized( syncObject ){
+      currentPendingCommand = null;
+      syncObject.notify();
+    }
 
+    c.complete();
   }
   //endregion
 

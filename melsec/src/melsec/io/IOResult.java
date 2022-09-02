@@ -3,18 +3,18 @@ package melsec.io;
 import melsec.bindings.IPlcObject;
 
 public class IOResult {
-  private IOErrorCode error = IOErrorCode.None;
+  private Throwable error;
   private IPlcObject value;
 
   public boolean success(){
-    return error == IOErrorCode.None;
+    return error == null;
   }
 
   public boolean failure(){
     return !success();
   }
 
-  public IOErrorCode error(){
+  public Throwable error(){
     return error;
   }
 
@@ -32,9 +32,9 @@ public class IOResult {
     return res;
   }
 
-  public static IOResult create( IOErrorCode code ){
+  public static IOResult create( Throwable e ){
     var res = new IOResult();
-    res.error = code;
+    res.error = e;
     return res;
   }
 

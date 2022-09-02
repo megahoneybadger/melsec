@@ -33,10 +33,7 @@ public record PlcBit(IDeviceCode device, int address, boolean value, String id )
   }
 
   public String toString() {
-    var id = this.id.isEmpty() ? EMPTY_STRING : " " + this.id;
-
-    return MessageFormat.format("bit [{0}@{1}{3}] {2} ",
-      device, device.toStringAddress(address), value(), id);
+    return PlcObjectPrinter.toString( this );
   }
 
   public PlcBit with( boolean value ){

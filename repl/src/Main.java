@@ -30,13 +30,23 @@ public class Main {
 
     Thread.sleep( 500 );
 
+    Object sync = new Object();
+
     var request = IORequest
       .builder()
       .read( new PlcBit( B, 100, "RecvGlassRequestBit1"  ) )
       .read( new PlcBit( B, 200, "RecvGlassRequestBit2"  ) )
       .read( new PlcU2( W, 300, "GlassId" ) )
-      .write( new PlcBit( B, 401, "RecvGlassReplyBit" ) )
-      .complete( x -> System.out.println( "io done" ) )
+      .write( new PlcBit( B, 401, true, "RecvGlassReplyBit" ) )
+//      .read( new PlcU2( W, 400, "Something" ) )
+      .complete( x -> {
+        synchronized( sync ){
+          for( var item : x.items() ){
+            System.out.println( item );
+          }
+        }
+
+      } )
       .build();
 
     driver.exec( request );

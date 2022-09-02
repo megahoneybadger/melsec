@@ -1,13 +1,24 @@
 package melsec.io.commands;
 
 import melsec.exceptions.EncodingException;
+import melsec.io.IORequestUnit;
+import melsec.io.IOResponse;
 import melsec.utils.EndianDataInputStream;
+import melsec.utils.UtilityHelper;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.security.SecureRandom;
 
 public abstract class ICommand {
+
+  //region Class members
+  /**
+   *
+   */
+  protected String id;
+  //endregion
 
   //region Class properties
   /**
@@ -15,6 +26,28 @@ public abstract class ICommand {
    * @return
    */
   public abstract CommandCode code();
+  /**
+   *
+   * @return
+   */
+  public String id(){
+    return id;
+  }
+  /**
+   *
+   */
+  protected IORequestUnit unit;
+  //endregion
+
+  //region Class initialization
+  /**
+   *
+   */
+  public ICommand(){
+    id = Integer
+      .valueOf( new SecureRandom().nextInt( 1000 ))
+      .toString();
+  }
   //endregion
 
   //region Class 'Coding' methods
@@ -33,7 +66,7 @@ public abstract class ICommand {
       }
     }
     catch( Exception e ){
-      throw new EncodingException();
+      throw new EncodingException( this, e );
     }
 
     res = ( null == res ) ? new byte[ 0 ] : res;
@@ -65,5 +98,40 @@ public abstract class ICommand {
    * @param reader
    */
   protected abstract void decode( DataInput reader ) throws IOException;
+  //endregion
+
+  //region Class 'Response' methods
+  /**
+   *
+   * @return
+   */
+  public IOResponse toResponse(){
+    return null;
+  }
+  /**
+   *
+   */
+  public void complete(){
+    if( null != unit.handler() ){
+      unit.handler().complete( toResponse() );
+    }
+  }
+  /**
+   *
+   * @param e
+   */
+  public void complete( Throwable e ){
+    var items = UtilityHelper
+      .toList( unit.items() )
+      .stream()
+      .map( x -> x.toResponse( e ) )
+      .toList();
+
+    var response = new IOResponse( items );
+
+    if( null != unit.handler() ){
+      unit.handler().complete( response );
+    }
+  }
   //endregion
 }

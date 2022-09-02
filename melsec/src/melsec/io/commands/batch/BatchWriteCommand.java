@@ -1,4 +1,7 @@
-package melsec.io.commands;
+package melsec.io.commands.batch;
+
+import melsec.io.commands.CommandCode;
+import melsec.io.commands.ICommand;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -6,10 +9,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class BatchReadCommand extends ICommand {
+public class BatchWriteCommand extends ICommand {
   @Override
   public CommandCode code() {
-    return CommandCode.BatchRead;
+    return CommandCode.BatchWrite;
   }
 
   //region Class 'Coding' methods

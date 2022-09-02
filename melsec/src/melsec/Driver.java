@@ -92,11 +92,14 @@ public class Driver {
    * @param r
    */
   public void exec( IORequest r ) {
+    if( null == r )
+      return;
+
     synchronized( syncObject ){
       if( !run )
         return;
 
-      connection.enqueue( r.toCommands() );
+      connection.enqueue( r.toMultiBlockBatchCommands() );
     }
   }
   //endregion
