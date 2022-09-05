@@ -17,6 +17,10 @@ public enum WordDeviceCode implements IDeviceCode {
     return 960;
   }
 
+  public DeviceKind getKind(){
+    return DeviceKind.Word;
+  }
+
   public boolean isDecimalAddress() {
     return switch ( this ){
       case D, R -> true;

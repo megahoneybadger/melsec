@@ -2,6 +2,25 @@ public class Ideas {
 
   public void todo(){
 
+//    var request = IORequest
+//      .builder()
+//      .read( new PlcBit( B, 100, "RecvGlassRequestBit1"  ) )
+//      .read( new PlcBit( B, 200, "RecvGlassRequestBit2"  ) )
+//      .read( new PlcU2( W, 300, "GlassId" ) )
+//      .write( new PlcBit( B, 401, true, "RecvGlassReplyBit" ) )
+////      .read( new PlcU2( W, 400, "Something" ) )
+//      .complete( x -> {
+//        synchronized( sync ){
+//          x.items().forEach( y -> Console.print( y ) );
+//
+//        }
+//
+//      } )
+//      .build();
+//
+//    driver.exec( request );
+
+
 //    var s = LogManager.ROOT_LOGGER_NAME;
 //    var log = LogManager.getLogger( "sucker" );
 //

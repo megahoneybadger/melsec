@@ -16,8 +16,4 @@ public interface IPlcObject {
   String id();
 
   DataType type();
-
-  default String key(){
-    return MessageFormat.format( "{0}{1}", device(), device().toStringAddress(address()) );
-  }
 }

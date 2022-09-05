@@ -1,12 +1,10 @@
-package melsec.io.commands;
+package melsec.commands;
 
 import melsec.types.DataType;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class Coder {
 

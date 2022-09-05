@@ -10,6 +10,8 @@ public interface IDeviceCode {
 
   boolean isDecimalAddress();
 
+  DeviceKind getKind();
+
   default int getAddressRadix(){
     return isDecimalAddress() ? 10 : 16;
   }

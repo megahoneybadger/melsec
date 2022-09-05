@@ -2,10 +2,7 @@ package melsec.events;
 
 import melsec.events.driver.IDriverStartedEvent;
 import melsec.events.driver.IDriverStoppedEvent;
-import melsec.events.net.ConnectionEventArgs;
-import melsec.events.net.IConnectionEstablishedEvent;
-import melsec.events.net.IConnectionConnectingEvent;
-import melsec.events.net.IConnectionDisposedEvent;
+import melsec.events.net.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,23 +11,60 @@ import java.util.LinkedList;
 
 public final class EventDispatcher implements IEventDispatcher  {
 
+  //region Class members
+  /**
+   *
+   */
   private EventBox driverStarted = new EventBox();
+  /**
+   *
+   */
   private EventBox driverStopped = new EventBox();
 
-  private EventBox<ConnectionEventArgs> channelConnecting = new EventBox();
-  private EventBox<ConnectionEventArgs> channelConnected = new EventBox();
-  private EventBox<ConnectionEventArgs> channelDisposed = new EventBox();
-
+  /**
+   *
+   */
+  private EventBox<ConnectionEventArgs> conConnecting = new EventBox();
+  /**
+   *
+   */
+  private EventBox<ConnectionEventArgs> conConnected = new EventBox();
+  /**
+   *
+   */
+  private EventBox<ConnectionEventArgs> conDropped = new EventBox();
+  /**
+   *
+   */
+  private EventBox<ConnectionEventArgs> conDisposed = new EventBox();
+  /**
+   *
+   */
   private Thread thread;
+  /**
+   *
+   */
   private Object syncObject;
+  /**
+   *
+   */
   private boolean run;
-
+  /**
+   *
+   */
   private LinkedList<Message> queue;
+  //endregion
 
+  //region Class properties
   Logger logger(){
     return LogManager.getLogger();
   }
+  //endregion
 
+  //region Class initialization
+  /**
+   *
+   */
   public EventDispatcher(){
     syncObject = new Object();
     queue = new LinkedList<>();
@@ -39,7 +73,9 @@ public final class EventDispatcher implements IEventDispatcher  {
     thread = new Thread( () -> processor() );
     thread.start();
   }
+  //endregion
 
+  //region Class 'Subscription' methods
   public void subscribe( IDriverStartedEvent handler ){
     synchronized( syncObject ){
       driverStarted.add( handler );
@@ -66,44 +102,66 @@ public final class EventDispatcher implements IEventDispatcher  {
 
   public void subscribe( IConnectionConnectingEvent handler ){
     synchronized( syncObject ) {
-      channelConnecting.add(handler);
+      conConnecting.add(handler);
     }
   }
 
   public void unsubscribe( IConnectionConnectingEvent handler ){
     synchronized( syncObject ) {
-      channelConnecting.remove(handler);
+      conConnecting.remove(handler);
     }
   }
 
   public void subscribe( IConnectionEstablishedEvent handler ){
     synchronized( syncObject ) {
-      channelConnected.add(handler);
+      conConnected.add(handler);
     }
   }
 
   public void unsubscribe( IConnectionEstablishedEvent handler ){
     synchronized( syncObject ) {
-      channelConnected.remove(handler);
+      conConnected.remove(handler);
     }
   }
 
   public void subscribe( IConnectionDisposedEvent handler ){
     synchronized( syncObject ) {
-      channelDisposed.add(handler);
+      conDisposed.add(handler);
     }
   }
 
   public void unsubscribe( IConnectionDisposedEvent handler ){
     synchronized( syncObject ) {
-      channelDisposed.remove(handler);
+      conDisposed.remove(handler);
     }
   }
 
+  public void subscribe( IConnectionDroppedEvent handler ){
+    synchronized( syncObject ) {
+      conDropped.add(handler);
+    }
+  }
+
+  public void unsubscribe( IConnectionDroppedEvent handler ){
+    synchronized( syncObject ) {
+      conDropped.remove(handler);
+    }
+  }
+  //endregion
+
+  //region Class 'Processor' methods
+  /**
+   *
+   * @param type
+   */
   public void enqueue( EventType type ){
     enqueue( type, null );
   }
-
+  /**
+   *
+   * @param type
+   * @param args
+   */
   public void enqueue( EventType type, IEventArgs args ){
     synchronized ( syncObject ){
       if( !run )
@@ -113,7 +171,9 @@ public final class EventDispatcher implements IEventDispatcher  {
       syncObject.notify();
     }
   }
-
+  /**
+   *
+   */
   private void processor(){
     while( true ){
 
@@ -138,36 +198,46 @@ public final class EventDispatcher implements IEventDispatcher  {
       }
     }
   }
-
+  /**
+   *
+   * @param message
+   */
   private void fire( Message message ){
     var args = message.args();
 
     switch ( message.type() ){
       case DriverStarted -> {
-        logger().trace( "driver started" );
+        logger().trace( "Driver started" );
         driverStarted.fire();
       }
       case DriverStopped -> {
-        logger().trace( "driver stopped" );
+        logger().trace( "Driver stopped" );
         driverStopped.fire();
       }
       case ConnectionConnecting ->{
-        logger().debug( "connection#{} trying to connect to {}",
+        logger().debug( "Connection#{} trying to connect to {}",
           (( ConnectionEventArgs )args ).id(), args );
-        channelConnecting.fire( ( ConnectionEventArgs ) args );
+        conConnecting.fire( ( ConnectionEventArgs ) args );
       }
       case ConnectionEstablished ->{
-        logger().trace( "connection#{} established",
+        logger().trace( "Connection#{} established",
           (( ConnectionEventArgs )args ).id() );
-        channelConnecting.fire( ( ConnectionEventArgs ) args );
+        conConnecting.fire( ( ConnectionEventArgs ) args );
+      }
+      case ConnectionDropped ->{
+        logger().trace( "Connection#{} dropped",
+          (( ConnectionEventArgs )args ).id() );
+        conDropped.fire( ( ConnectionEventArgs ) args );
       }
       case ConnectionDisposed -> {
-        logger().debug( "connection#{} disposed", (( ConnectionEventArgs )args ).id() );
-        channelDisposed.fire( ( ConnectionEventArgs ) args );
+        logger().debug( "Connection#{} disposed", (( ConnectionEventArgs )args ).id() );
+        conDisposed.fire( ( ConnectionEventArgs ) args );
       }
     }
   }
+  //endregion
 
-  record Message(EventType type, IEventArgs args ) {
-  }
+  //region Class internal structs
+  record Message(EventType type, IEventArgs args ) {}
+  //endregion
 }

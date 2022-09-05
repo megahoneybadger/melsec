@@ -1,21 +1,15 @@
-package melsec.io.commands.multi;
+package melsec.commands.multi;
 
-import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcBit;
-import melsec.io.IOCompleteEventHandler;
+import melsec.commands.ICommand;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
-import melsec.io.commands.CommandCode;
-import melsec.io.commands.ICommand;
+import melsec.commands.CommandCode;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
@@ -43,7 +37,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @param unit
    * @return
    */
-  public static List<ICommand> split( IORequestUnit unit ){
+  public static List<ICommand> split(IORequestUnit unit ){
     var res = new ArrayList<ICommand>();
     var items = new ArrayList<IORequestItem>();
 

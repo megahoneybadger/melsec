@@ -1,7 +1,9 @@
 package melsec.exceptions;
 
-public class DriverNotRunningException extends Exception {
+import melsec.types.ErrorCode;
+
+public class DriverNotRunningException extends BaseException {
   public DriverNotRunningException(){
-    super( "driver is not running" );
+    super( ErrorCode.DriverNotRunning, "Driver is not running" );
   }
 }

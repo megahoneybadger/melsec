@@ -1,9 +1,10 @@
 package melsec.io;
 
 import melsec.bindings.*;
-import melsec.io.commands.ICommand;
-import melsec.io.commands.multi.MultiBlockBatchReadCommand;
-import melsec.io.commands.multi.MultiBlockBatchWriteCommand;
+import melsec.commands.ICommand;
+import melsec.commands.multi.MultiBlockBatchReadCommand;
+import melsec.commands.multi.MultiBlockBatchWriteCommand;
+import melsec.utils.UtilityHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +117,12 @@ public class IORequest {
 
     public Builder add( IORequestItem item ){
       list.add( item );
+
+      return this;
+    }
+
+    public Builder add( Iterable<IORequestItem> items ){
+      list.addAll( UtilityHelper.toList( items ) );
 
       return this;
     }

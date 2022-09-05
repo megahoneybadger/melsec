@@ -1,18 +1,30 @@
-package melsec.bindings;
+package melsec.utils;
+
+import melsec.bindings.IPlcNumber;
+import melsec.bindings.IPlcObject;
+import melsec.bindings.PlcBit;
+import melsec.io.IOResponseItem;
 
 import java.text.MessageFormat;
 
-public class PlcObjectPrinter {
-  private static String EMPTY_STRING = "";
+public class Printer {
 
+  //region Class constants
+  /**
+   *
+   */
+  private static String EMPTY_STRING = "";
+  //endregion
+
+  //region Class 'toString' methods
   public static String toString( IPlcObject o ){
     return toString( o, true );
   }
 
   public static String toString( IPlcObject o, boolean displayValue ){
     return switch( o.type() ){
-      case Bit -> toBitString( ( PlcBit ) o, displayValue );
-      case U1, U2, U4, F4, F8 -> toNumericString( ( IPlcNumber ) o, displayValue );
+      case Bit -> toBitString( (PlcBit) o, displayValue );
+      case U1, U2, U4, F4, F8 -> toNumericString( (IPlcNumber) o, displayValue );
 
       default -> "plc object";
     };
@@ -44,4 +56,5 @@ public class PlcObjectPrinter {
     return MessageFormat.format("{0} [{1}@{2}{3}]{4}",
       o.type(), o.device(), o.device().toStringAddress( o.address() ), id, v);
   }
+  //endregion
 }

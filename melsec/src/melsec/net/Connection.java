@@ -1,7 +1,9 @@
 package melsec.net;
 
-import melsec.io.commands.Coder;
-import melsec.io.commands.ICommand;
+import melsec.exceptions.BaseException;
+import melsec.exceptions.ConnectionNotEstablishedException;
+import melsec.commands.Coder;
+import melsec.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
 import melsec.utils.UtilityHelper;
@@ -15,7 +17,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.security.SecureRandom;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -83,10 +84,6 @@ public class Connection {
     syncObject = new Object();
     queue = new LinkedList<>();
 
-    id = Integer
-      .valueOf( new SecureRandom().nextInt( 1000 ))
-      .toString();
-
     run = true;
     state = Disconnected;
 
@@ -95,7 +92,7 @@ public class Connection {
     processingThread = new Thread( () -> processor() );
     processingThread.start();
 
-    reconnect( 100 );
+    reconnect( 100, true );
   }
   /**
    *
@@ -123,7 +120,7 @@ public class Connection {
     }
 
     if( hadOpenConnection ){
-      events.enqueue( ConnectionDrop, getEventArgs() );
+      events.enqueue(ConnectionDropped, getEventArgs() );
     }
 
     events.enqueue( ConnectionDisposed, getEventArgs());
@@ -132,13 +129,20 @@ public class Connection {
 
   //region Class 'Connection' methods
   /**
+  /**
    *
    * @param delay
    */
-  private void reconnect(int delay ){
+  private void reconnect( int delay, boolean renewId ){
     synchronized ( syncObject ){
       if( !run )
         return;
+
+      if( renewId ){
+        id = Integer
+          .valueOf( new SecureRandom().nextInt( 1000 ))
+          .toString();
+      }
 
       timer.schedule( new TimerTask() {
         public void run() {
@@ -178,13 +182,12 @@ public class Connection {
               state = Disconnected;
             }
 
-            reconnect( CONNECTION_TIMEOUT );
+            reconnect( CONNECTION_TIMEOUT, false );
           }
         });
-
       }
       catch ( IOException e ){
-        reconnect( CONNECTION_TIMEOUT );
+        reconnect( CONNECTION_TIMEOUT, false );
       }
     }
   }
@@ -204,7 +207,7 @@ public class Connection {
       try {
         socket.close();
       } catch( IOException e ) {
-        logger().error("failed to close socket [{}]. {}", id(), e.getMessage());
+        logger().error("Failed to close socket [{}]. {}", id(), e.getMessage());
       }
 
       socket = null;
@@ -212,20 +215,7 @@ public class Connection {
 
     return hadOpenConnection;
   }
-  /**
-   *
-   * @param c
-   * @param e
-   */
-  private void drop( ICommand c, Throwable e ){
-//    done( c, new RtException( RtException.Code.SocketGeneralError, e.toString(), id ) );
-//
-//    if( close() ){
-//      events.enqueue( new ConnectionEventArgs( endpoint, id, ConnectionEventArgs.Type.Dropped ) );
-//    }
-//
-//    connect();
-  }
+
   //endregion
 
   //region Class 'IO' methods
@@ -257,13 +247,13 @@ public class Connection {
           try {
             syncObject.wait();
           } catch (InterruptedException e) {
-            logger().error( "failed to put connection#{} processor to sleep", id() );
+            logger().error( "Failed to put connection#{} processor to sleep", id() );
           }
         }
       }
     }
 
-    logger().debug( "connection#{} processor stopped", id() );
+    logger().debug( "Connection#{} processor stopped", id() );
   }
   /**
    *
@@ -275,8 +265,10 @@ public class Connection {
 
       logger().debug( "Sending {}", command );
 
+      if( state != Connected )
+        throw new ConnectionNotEstablishedException( endpoint );
+
       var buffer = ByteBuffer.wrap( command.encode() );
-      var arr = buffer.array();
 
       socket.write( buffer, command, new CompletionHandler<>() {
         @Override
@@ -291,10 +283,8 @@ public class Connection {
         }
       } );
     }
-    catch( Exception e ) {
-      logger().error( "Failed to send command. {}", e.getMessage() );
-      command.complete( e );
-      //command.handler
+    catch( BaseException e){
+      done( command, e );
     }
   }
   /**
@@ -304,6 +294,7 @@ public class Connection {
   private void recvHeader( ICommand command ){
     try {
       var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
+      logger().debug( "Receiving {} header", command );
 
       synchronized( syncObject ) {
         socket.read( buffer, 1, TimeUnit.SECONDS, command, new CompletionHandler<>() {
@@ -314,6 +305,8 @@ public class Connection {
             } else {
               var replyBodySize = Coder.decodeLength( buffer.array() );
               var replyTotalSize = Coder.HEADER_LENGTH + replyBodySize;
+
+              logger().debug( "Received {} header: expecting {} bytes in body", command, replyBodySize );
 
               var bufferTotal = ByteBuffer.allocate( replyTotalSize );
               System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, Coder.HEADER_LENGTH );
@@ -326,7 +319,7 @@ public class Connection {
 
           @Override
           public void failed( Throwable e, ICommand command ) {
-            //drop( c, e );
+            drop( command, e );
           }
         } );
       }
@@ -341,6 +334,8 @@ public class Connection {
    */
   private void recvBody( BodyRecvProgress p ){
     try{
+      logger().debug( "Receiving {} body: {} bytes left", p.command, p.bytesToReadLeft );
+
       synchronized( syncObject ){
         socket.read( p.buffer, 1, TimeUnit.SECONDS, p, new CompletionHandler<>() {
           @Override
@@ -362,7 +357,7 @@ public class Connection {
       }
     }
     catch( Exception e ){
-      //drop
+      drop( p.command, e );
     }
   }
   /**
@@ -371,7 +366,11 @@ public class Connection {
    */
   private void decode( BodyRecvProgress p ){
     try{
+      logger().debug( "Received {} body", p.command );
+
       p.command.decode( p.buffer.array() );
+
+      logger().debug( "Decoded {}", p.command, p.bytesToReadLeft );
 
       done( p.command, null );
     }
@@ -384,13 +383,31 @@ public class Connection {
    * @param c
    * @param e
    */
-  private void done( ICommand c, Exception e ){
+  private void done( ICommand c, Throwable e ){
     synchronized( syncObject ){
       currentPendingCommand = null;
       syncObject.notify();
     }
 
-    c.complete();
+    if( null != e ){
+      logger().error( "Failed to complete {}. {}", c, e.getMessage() );
+    }
+
+    c.complete( e );
+  }
+  /**
+   *
+   * @param c
+   * @param e
+   */
+  private void drop( ICommand c, Throwable e ){
+    done( c, e );
+
+    if( close() ){
+      events.enqueue( ConnectionDropped, getEventArgs() );
+    }
+
+    reconnect( CONNECTION_TIMEOUT, true );
   }
   //endregion
 

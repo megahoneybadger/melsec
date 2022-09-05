@@ -22,6 +22,10 @@ public enum BitDeviceCode implements IDeviceCode {
     return 15360;
   }
 
+  public DeviceKind getKind(){
+    return DeviceKind.Bit;
+  }
+
   public boolean isDecimalAddress() {
     return switch ( this ){
       case M, L, S, F -> true;

@@ -1,19 +1,16 @@
-package melsec.io.commands.multi;
+package melsec.commands.multi;
 
 import melsec.bindings.*;
+import melsec.commands.Coder;
+import melsec.commands.ICommand;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
-import melsec.io.IOResponse;
-import melsec.io.IOResponseItem;
-import melsec.io.commands.Coder;
-import melsec.io.commands.CommandCode;
-import melsec.io.commands.ICommand;
+import melsec.commands.CommandCode;
 import melsec.types.DataType;
+import melsec.utils.Copier;
 
 import java.io.*;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
@@ -42,7 +39,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param unit
    * @return
    */
-  public static List<ICommand> split( IORequestUnit unit ){
+  public static List<ICommand> split(IORequestUnit unit ){
     var res = new ArrayList<ICommand>();
     var items = new ArrayList<IORequestItem>();
 
@@ -157,7 +154,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
     for( var proto: bits ){
       var val = ( 1 == ( 1 & reader.readUnsignedShort() ));
-      list.add( ( PlcBit ) PlcObjectCopier.with( proto, val ) );
+      list.add( ( PlcBit ) Copier.with( proto, val ) );
     }
 
     return list;
@@ -199,7 +196,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   private IPlcWord decodeWord( DataInput reader, IPlcWord proto ) throws IOException {
     var value = Coder.decodeValue( reader, proto.type() );
 
-    return ( IPlcWord ) PlcObjectCopier.with( proto, value );
+    return ( IPlcWord ) Copier.with( proto, value );
   }
   //endregion
 }

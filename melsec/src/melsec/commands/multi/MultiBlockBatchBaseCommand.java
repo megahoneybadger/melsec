@@ -1,10 +1,10 @@
-package melsec.io.commands.multi;
+package melsec.commands.multi;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcString;
+import melsec.commands.ICommand;
 import melsec.io.*;
-import melsec.io.commands.CommandCode;
-import melsec.io.commands.ICommand;
+import melsec.commands.CommandCode;
 import melsec.types.DataType;
 import melsec.utils.UtilityHelper;
 
@@ -93,7 +93,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
 
     UtilityHelper.toList( u.items() )
       .stream()
-      .forEach( x -> map.put( x.object().key(), x ) );
+      .forEach( x -> map.put( UtilityHelper.getPlcObjectKey( x.object()), x ) );
   }
   /**
    *
@@ -121,7 +121,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
     var output = new HashMap<String, IOResponseItem>();
 
     for( var o : results ){
-      var key = o.key();
+      var key = UtilityHelper.getPlcObjectKey( o );
 
       if( !map.containsKey( key ) )
         continue;
@@ -133,7 +133,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
     var res = new ArrayList<IOResponseItem>();
 
     for( var item: unit.items() ){
-      var key = item.object().key();
+      var key = UtilityHelper.getPlcObjectKey( item.object());
 
       if( !output.containsKey( key ) )
         continue;

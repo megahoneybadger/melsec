@@ -1,7 +1,7 @@
 package melsec.io;
 
 import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcObjectPrinter;
+import melsec.utils.Printer;
 
 import java.text.MessageFormat;
 
@@ -17,10 +17,10 @@ public record IOResponseItem( IOType type, IPlcObject target, IOResult result ) 
       return ( result.success() ) ?
 
         MessageFormat.format( "Read [{0}] {1}", resPrefix,
-          PlcObjectPrinter.toString( result.value() ) ) :
+          Printer.toString( result.value() ) ) :
 
         MessageFormat.format( "Read [{0}] {1} -> {2}", resPrefix,
-          PlcObjectPrinter.toString( target, false ), result.error().getMessage() );
+          Printer.toString( target, false ), result.error().getMessage() );
 
 
 
@@ -38,10 +38,10 @@ public record IOResponseItem( IOType type, IPlcObject target, IOResult result ) 
       return ( result.success() ) ?
 
         MessageFormat.format( "Write [{0}] {1}", resPrefix,
-          PlcObjectPrinter.toString( result.value() ) ) :
+          Printer.toString( result.value() ) ) :
 
         MessageFormat.format( "Write [{0}] {1} -> {2}", resPrefix,
-          PlcObjectPrinter.toString( target ), result.error().getMessage() );
+          Printer.toString( target ), result.error().getMessage() );
     }
   }
 }

@@ -1,4 +1,4 @@
-package melsec.io.commands;
+package melsec.commands;
 
 import melsec.exceptions.EncodingException;
 import melsec.io.IORequestUnit;
@@ -7,8 +7,6 @@ import melsec.utils.EndianDataInputStream;
 import melsec.utils.UtilityHelper;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.SecureRandom;
 
 public abstract class ICommand {
@@ -121,17 +119,23 @@ public abstract class ICommand {
    * @param e
    */
   public void complete( Throwable e ){
-    var items = UtilityHelper
-      .toList( unit.items() )
-      .stream()
-      .map( x -> x.toResponse( e ) )
-      .toList();
+    if( null == e ){
+      complete();
+    } else {
+      var items = UtilityHelper
+        .toList( unit.items() )
+        .stream()
+        .map( x -> x.toResponse( e ) )
+        .toList();
 
-    var response = new IOResponse( items );
+      var response = new IOResponse( items );
 
-    if( null != unit.handler() ){
-      unit.handler().complete( response );
+      if( null != unit.handler() ){
+        unit.handler().complete( response );
+      }
     }
+
+
   }
   //endregion
 }

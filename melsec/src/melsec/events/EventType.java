@@ -6,6 +6,6 @@ public enum EventType {
 
   ConnectionConnecting,
   ConnectionEstablished,
-  ConnectionDrop,
+  ConnectionDropped,
   ConnectionDisposed
 }

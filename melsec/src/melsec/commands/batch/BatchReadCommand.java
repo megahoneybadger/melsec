@@ -1,13 +1,11 @@
-package melsec.io.commands.batch;
+package melsec.commands.batch;
 
-import melsec.io.commands.CommandCode;
-import melsec.io.commands.ICommand;
+import melsec.commands.CommandCode;
+import melsec.commands.ICommand;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class BatchReadCommand extends ICommand {
   @Override

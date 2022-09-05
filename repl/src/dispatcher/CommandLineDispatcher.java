@@ -51,6 +51,7 @@ public class CommandLineDispatcher {
 
       var args = Arrays
         .stream( parts )
+        .filter( x -> !x.isEmpty() && !x.isBlank() )
         .skip( 1 )
         .toList();
 
@@ -58,6 +59,7 @@ public class CommandLineDispatcher {
       {
         case StartCommand.COMMAND -> new StartCommand( communicator );
         case StopCommand.COMMAND -> new StopCommand( communicator );
+        case ReadCommand.COMMAND -> new ReadCommand( communicator );
         case "quit" -> {
           run = false;
           yield null;

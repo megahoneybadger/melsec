@@ -6,7 +6,7 @@ import melsec.types.WordDeviceCode;
 
 import java.text.MessageFormat;
 
-public record PlcString(IDeviceCode device, int address, int size,
+public record PlcString(WordDeviceCode device, int address, int size,
                         String value, String id )  implements IPlcWord {
 
   public PlcString {
@@ -29,11 +29,11 @@ public record PlcString(IDeviceCode device, int address, int size,
     this( WordDeviceCode.W, 0, size, EMPTY_STRING, EMPTY_STRING );
   }
 
-  public PlcString( IDeviceCode device, int address, int size ) {
+  public PlcString( WordDeviceCode device, int address, int size ) {
     this( device, address, size, EMPTY_STRING, EMPTY_STRING );
   }
 
-  public PlcString(IDeviceCode device, int address, int size, String value ) {
+  public PlcString(WordDeviceCode device, int address, int size, String value ) {
     this( device, address, size, value, EMPTY_STRING );
   }
 
