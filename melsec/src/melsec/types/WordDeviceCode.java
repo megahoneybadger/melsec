@@ -9,16 +9,12 @@ public enum WordDeviceCode implements IDeviceCode {
 
   private int value;
 
-  public int getValue(){
+  public int value(){
     return value;
   }
 
   public int getSectionSize(){
     return 960;
-  }
-
-  public DeviceKind getKind(){
-    return DeviceKind.Word;
   }
 
   public boolean isDecimalAddress() {

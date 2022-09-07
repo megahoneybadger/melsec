@@ -1,7 +1,11 @@
 package melsec.events;
 
-import melsec.events.driver.IDriverStartedEvent;
+import melsec.commands.ICommand;
+import melsec.events.commands.CommandEventArgs;
+import melsec.events.commands.ICommandAfterSendEvent;
+import melsec.events.commands.ICommandBeforeSendEvent;
 import melsec.events.driver.IDriverStoppedEvent;
+import melsec.events.driver.IDriverStartedEvent;
 import melsec.events.net.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +41,14 @@ public final class EventDispatcher implements IEventDispatcher  {
    *
    */
   private EventBox<ConnectionEventArgs> conDisposed = new EventBox();
+  /**
+   *
+   */
+  private EventBox<CommandEventArgs> commandBeforeSend = new EventBox();
+  /**
+   *
+   */
+  private EventBox<CommandEventArgs> commandAfterSend = new EventBox();
   /**
    *
    */
@@ -147,6 +159,30 @@ public final class EventDispatcher implements IEventDispatcher  {
       conDropped.remove(handler);
     }
   }
+
+  public void subscribe( ICommandBeforeSendEvent handler ){
+    synchronized( syncObject ) {
+      commandBeforeSend.add(handler);
+    }
+  }
+
+  public void unsubscribe( ICommandBeforeSendEvent handler ){
+    synchronized( syncObject ) {
+      commandBeforeSend.remove(handler);
+    }
+  }
+
+  public void subscribe( ICommandAfterSendEvent handler ){
+    synchronized( syncObject ) {
+      commandAfterSend.add(handler);
+    }
+  }
+
+  public void unsubscribe( ICommandAfterSendEvent handler ){
+    synchronized( syncObject ) {
+      commandAfterSend.remove(handler);
+    }
+  }
   //endregion
 
   //region Class 'Processor' methods
@@ -155,7 +191,15 @@ public final class EventDispatcher implements IEventDispatcher  {
    * @param type
    */
   public void enqueue( EventType type ){
-    enqueue( type, null );
+    enqueue( type, ( IEventArgs )null );
+  }
+  /**
+   *
+   * @param type
+   * @param command
+   */
+  public void enqueue( EventType type, ICommand command ){
+    enqueue( type, new CommandEventArgs( command ) );
   }
   /**
    *
@@ -207,11 +251,11 @@ public final class EventDispatcher implements IEventDispatcher  {
 
     switch ( message.type() ){
       case DriverStarted -> {
-        logger().trace( "Driver started" );
+        logger().info( "Driver started" );
         driverStarted.fire();
       }
       case DriverStopped -> {
-        logger().trace( "Driver stopped" );
+        logger().info( "Driver stopped" );
         driverStopped.fire();
       }
       case ConnectionConnecting ->{
@@ -220,18 +264,22 @@ public final class EventDispatcher implements IEventDispatcher  {
         conConnecting.fire( ( ConnectionEventArgs ) args );
       }
       case ConnectionEstablished ->{
-        logger().trace( "Connection#{} established",
+        logger().info( "Connection#{} established",
           (( ConnectionEventArgs )args ).id() );
         conConnecting.fire( ( ConnectionEventArgs ) args );
       }
       case ConnectionDropped ->{
-        logger().trace( "Connection#{} dropped",
+        logger().info( "Connection#{} dropped",
           (( ConnectionEventArgs )args ).id() );
         conDropped.fire( ( ConnectionEventArgs ) args );
       }
-      case ConnectionDisposed -> {
-        logger().debug( "Connection#{} disposed", (( ConnectionEventArgs )args ).id() );
-        conDisposed.fire( ( ConnectionEventArgs ) args );
+      case CommandBeforeSend ->{
+        logger().debug( "Before send {}", (( CommandEventArgs )args ).command() );
+        commandBeforeSend.fire( ( CommandEventArgs) args );
+      }
+      case CommandAfterSend -> {
+        logger().debug( "After send {}", (( CommandEventArgs )args ).command() );
+        commandAfterSend.fire( ( CommandEventArgs ) args );
       }
     }
   }

@@ -2,6 +2,7 @@ package melsec.commands.multi;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcString;
+import melsec.bindings.PlcStruct;
 import melsec.commands.ICommand;
 import melsec.io.*;
 import melsec.commands.CommandCode;
@@ -20,11 +21,11 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
   /**
    *
    */
-  public static final int MAX_POINTS = 960;
+  protected static final int MAX_POINTS = 960;
   /**
    *
    */
-  public static final int MAX_BLOCKS = 120;
+  protected static final int MAX_BLOCKS = 120;
   //endregion
 
   //region Class members
@@ -54,14 +55,25 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
    */
   protected static int getPointsCount( IPlcObject o ){
     return switch( o.type() ){
-      case Bit, U1, U2, I1, I2 -> 1;
-      case U4, I4, F4 -> 2;
-      case U8, I8, F8 -> 4;
+      case Bit, U2, I2 -> 1;
+      case U4, I4 -> 2;
       case String -> {
         var s = ( PlcString ) o;
         var extra = ( s.size() % 2 == 0 ) ? 0 : 1;
         var points = s.size() / 2;
         yield ( points + extra );
+      }
+      case Struct -> {
+        var st = ( PlcStruct )o;
+        var items = st.items();
+
+        if( 0 == items.size() )
+          yield 0;
+
+        var last = items.get( items.size() - 1 );
+        var words = last.address() - st.address() + getPointsCount( last );
+
+        yield words;
       }
       default -> 0;
     };
@@ -74,6 +86,8 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
    * @param u
    */
   public MultiBlockBatchBaseCommand( IORequestUnit u ){
+    map = new HashMap<>();
+    results = new ArrayList<>();
     unit = u;
 
     bits = UtilityHelper.toList( u.items() )
@@ -87,9 +101,6 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
       .filter( x -> x.object().type() != DataType.Bit )
       .map( x -> x.object() )
       .collect( Collectors.toList() );
-
-    map = new HashMap<>();
-    results = new ArrayList<>();
 
     UtilityHelper.toList( u.items() )
       .stream()
@@ -109,7 +120,6 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
 
     return MessageFormat.format( "mbb{4}#{3} [{0}{1}{2}]", w, sep, b, id, c );
   }
-
   //endregion
 
   //region Class 'Response' methods

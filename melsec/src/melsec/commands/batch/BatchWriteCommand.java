@@ -2,6 +2,7 @@ package melsec.commands.batch;
 
 import melsec.commands.CommandCode;
 import melsec.commands.ICommand;
+import melsec.commands.multi.MultiBlockBatchReadCommand;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -26,6 +27,14 @@ public class BatchWriteCommand extends ICommand {
   @Override
   protected void decode( DataInput reader ){
 
+  }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public ICommand copy(){
+    return null;
   }
   //endregion
 }

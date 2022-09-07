@@ -4,7 +4,8 @@ import melsec.Driver;
 import melsec.bindings.BaseTest;
 import melsec.Config;
 import melsec.events.EventType;
-import melsec.events.driver.*;
+import melsec.events.driver.IDriverStartedEvent;
+import melsec.events.driver.IDriverStoppedEvent;
 import melsec.events.net.IConnectionDisposedEvent;
 import melsec.utils.ResettableCountDownLatch;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +48,7 @@ public class ConnectionTest extends BaseTest {
     var lock = new CountDownLatch( 1 );
     var d = createDriver();
 
-    d.events().subscribe( (IDriverStartedEvent)( x ) -> lock.countDown() );
+    d.events().subscribe( (IDriverStartedEvent)(x ) -> lock.countDown() );
 
     d.start();
 
@@ -75,7 +76,7 @@ public class ConnectionTest extends BaseTest {
       lock.countDown();
     } );
 
-    d.events().subscribe( ( IDriverStoppedEvent) ( x ) -> {
+    d.events().subscribe( (IDriverStoppedEvent) (x ) -> {
       registeredEvents.add( DriverStopped );
       lock.countDown();
     } );

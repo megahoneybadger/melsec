@@ -1,7 +1,7 @@
 package melsec.io;
 
-import melsec.bindings.*;
 import melsec.commands.ICommand;
+import melsec.bindings.IPlcObject;
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
 import melsec.utils.UtilityHelper;
@@ -80,7 +80,7 @@ public class IORequest {
     var res = new ArrayList<ICommand>();
 
     for( var u : units ){
-      var commands = switch( u.type() ){
+      var commands = switch( u.operation() ){
         case Read -> MultiBlockBatchReadCommand.split( u );
         case Write -> MultiBlockBatchWriteCommand.split( u );
       };

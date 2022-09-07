@@ -7,5 +7,8 @@ public enum EventType {
   ConnectionConnecting,
   ConnectionEstablished,
   ConnectionDropped,
-  ConnectionDisposed
+  ConnectionDisposed,
+
+  CommandBeforeSend,
+  CommandAfterSend,
 }

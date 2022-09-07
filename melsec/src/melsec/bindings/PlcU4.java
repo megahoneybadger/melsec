@@ -1,19 +1,22 @@
 package melsec.bindings;
 
 import melsec.types.DataType;
-import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
-import melsec.utils.Printer;
+import melsec.utils.Stringer;
+import melsec.utils.UtilityHelper;
 
 public record PlcU4(WordDeviceCode device, int address, Long value, String id )
   implements IPlcNumber<Long> {
 
-//  public PlcU4 {
-//    id = ( null == id ) ? EMPTY_STRING : id;
-//
-//    value = ( value > MAX_VALUE ) ? MAX_VALUE : value;
-//    value = ( value < MIN_VALUE ) ? MIN_VALUE : value;
-//  }
+  public static final long MIN_VALUE = 0l;
+  public static final long MAX_VALUE = 0xFFFF_FFFFl;
+
+  public PlcU4 {
+    id = UtilityHelper.notNullString( id );
+
+    value = ( value > MAX_VALUE ) ? MAX_VALUE : value;
+    value = ( value < MIN_VALUE ) ? MIN_VALUE : value;
+  }
 
   @Override
   public DataType type(){
@@ -37,6 +40,6 @@ public record PlcU4(WordDeviceCode device, int address, Long value, String id )
   }
 
   public String toString() {
-    return Printer.toString( this );
+    return Stringer.toString( this );
   }
 }

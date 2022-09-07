@@ -1,5 +1,7 @@
 package melsec.commands;
 
+import melsec.exceptions.BadCompletionCodeException;
+import melsec.exceptions.DecodingException;
 import melsec.exceptions.EncodingException;
 import melsec.io.IORequestUnit;
 import melsec.io.IOResponse;
@@ -46,6 +48,11 @@ public abstract class ICommand {
       .valueOf( new SecureRandom().nextInt( 1000 ))
       .toString();
   }
+  /**
+   *
+   * @return
+   */
+  public abstract ICommand copy();
   //endregion
 
   //region Class 'Coding' methods
@@ -81,21 +88,24 @@ public abstract class ICommand {
    *
    * @param buffer
    */
-  public void decode( byte [] buffer ){
+  public void decode( byte [] buffer ) throws DecodingException {
     try( var bs = new ByteArrayInputStream( buffer )){
       try( var ds = new EndianDataInputStream( bs )){
         decode( ds );
+
+        if( bs.available() > 0 )
+          throw new Exception( "Invalid stream reading alignment." );
       }
     }
     catch( Exception e ){
-      // throw new RtException( RtException.Code.CommandDecodingError, e.toString() );
+      throw new DecodingException( this, e );
     }
   }
   /**
    *
    * @param reader
    */
-  protected abstract void decode( DataInput reader ) throws IOException;
+  protected abstract void decode( DataInput reader ) throws IOException, BadCompletionCodeException;
   //endregion
 
   //region Class 'Response' methods
@@ -110,7 +120,7 @@ public abstract class ICommand {
    *
    */
   public void complete(){
-    if( null != unit.handler() ){
+    if( null != unit && null != unit.handler() ){
       unit.handler().complete( toResponse() );
     }
   }
@@ -121,7 +131,7 @@ public abstract class ICommand {
   public void complete( Throwable e ){
     if( null == e ){
       complete();
-    } else {
+    } else if( null != unit ) {
       var items = UtilityHelper
         .toList( unit.items() )
         .stream()
@@ -134,8 +144,6 @@ public abstract class ICommand {
         unit.handler().complete( response );
       }
     }
-
-
   }
   //endregion
 }

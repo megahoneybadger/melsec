@@ -1,10 +1,8 @@
 package dispatcher;
 
+import dispatcher.multi.MultiReadCommand;
+import dispatcher.multi.MultiWriteCommand;
 import melsec.Driver;
-import melsec.events.net.IConnectionConnectingEvent;
-import melsec.events.driver.IDriverStartedEvent;
-import melsec.events.driver.IDriverStoppedEvent;
-import melsec.events.net.IConnectionDisposedEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +37,7 @@ public class CommandLineDispatcher {
     while( run ){
       var line = scanner
         .nextLine()
-        .trim()
-        .toLowerCase();
+        .trim();
 
       var parts = line.split( " " );
 
@@ -55,11 +52,12 @@ public class CommandLineDispatcher {
         .skip( 1 )
         .toList();
 
-      var res = switch ( command )
+      var res = switch ( command.toLowerCase() )
       {
         case StartCommand.COMMAND -> new StartCommand( communicator );
         case StopCommand.COMMAND -> new StopCommand( communicator );
-        case ReadCommand.COMMAND -> new ReadCommand( communicator );
+        case MultiReadCommand.COMMAND -> new MultiReadCommand( communicator );
+        case MultiWriteCommand.COMMAND -> new MultiWriteCommand( communicator );
         case "quit" -> {
           run = false;
           yield null;

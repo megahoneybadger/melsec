@@ -1,8 +1,12 @@
 package melsec.commands.multi;
 
-import melsec.bindings.*;
-import melsec.commands.Coder;
+import melsec.bindings.IPlcObject;
+import melsec.bindings.IPlcWord;
+import melsec.bindings.PlcBit;
+import melsec.bindings.PlcStruct;
+import melsec.utils.Coder;
 import melsec.commands.ICommand;
+import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
@@ -70,6 +74,16 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
     return res;
   }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public ICommand copy(){
+    var copy = new MultiBlockBatchReadCommand( unit );
+    copy.id = id;
+    return copy;
+  }
   //endregion
 
   //region Class 'Encoding' methods
@@ -82,8 +96,6 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   protected void encode( DataOutput writer ) throws IOException {
     int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
     Coder.encodeHeader( writer, iTotalSize );
-
-    //throw  new IOException( "suck my dick" );
 
     // Command
     writer.writeByte( 0x06 );
@@ -100,7 +112,6 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
     writer.writeByte( bits.size() );
 
     encode( writer, words );
-
     encode( writer, bits );
   }
   /**
@@ -115,7 +126,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
       writer.write( Coder.toBytes( item.address(), 3 ) );
 
       // Device code
-      writer.write( item.device().getValue() );
+      writer.write( item.device().value() );
 
       // Number of device points
       var size = getPointsCount( item );
@@ -130,15 +141,14 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param reader
    */
   @Override
-  protected void decode( DataInput reader ) throws IOException {
-
+  protected void decode( DataInput reader ) throws IOException, BadCompletionCodeException {
     reader.skipBytes( 7 );
 
     var dataSize = Coder.toUShort( reader.readShort() );
     var completionCode = Coder.toUShort( reader.readShort() );
 
-//    if( 0 != completionCode )
-//      throw new RtException( RtException.Code.BadCompletionCode, completionCode );
+    if( 0 != completionCode )
+      throw new BadCompletionCodeException( completionCode );
 
     results.clear();
     results.addAll( decodeWords( reader ));
@@ -170,7 +180,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
     for( var proto: words ){
       var o = ( proto.type() == DataType.Struct ) ?
         decodeStruct( reader, ( PlcStruct ) proto ) :
-        decodeWord( reader, ( IPlcWord ) proto );
+        decodeWord( reader, proto);
 
       list.add( o );
     }
@@ -183,9 +193,25 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param proto
    * @return
    */
-  private PlcStruct decodeStruct( DataInput reader, PlcStruct proto ){
+  private PlcStruct decodeStruct( DataInput reader, PlcStruct proto ) throws IOException {
+    var list = new ArrayList<IPlcWord>();
+    var items = proto.items();
+    var address = proto.address();
 
-    return null;
+    for( var next : items ){
+      var offset = next.address() - address;
+
+      if( offset > 0 ){
+        reader.skipBytes( 2 * offset );
+      }
+
+      var w = decodeWord( reader, next );
+      address += getPointsCount( w ) + offset;
+
+      list.add( w );
+    }
+
+    return Copier.with( proto, list );
   }
   /**
    *
@@ -193,8 +219,8 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param proto
    * @return
    */
-  private IPlcWord decodeWord( DataInput reader, IPlcWord proto ) throws IOException {
-    var value = Coder.decodeValue( reader, proto.type() );
+  private IPlcWord decodeWord( DataInput reader, IPlcObject proto ) throws IOException {
+    var value = Coder.decodeValue( reader, proto );
 
     return ( IPlcWord ) Copier.with( proto, value );
   }

@@ -1,9 +1,13 @@
 package melsec.commands.multi;
 
+import melsec.bindings.IPlcObject;
+import melsec.bindings.PlcBit;
 import melsec.commands.ICommand;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
+import melsec.types.DataType;
+import melsec.utils.Coder;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -37,7 +41,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @param unit
    * @return
    */
-  public static List<ICommand> split(IORequestUnit unit ){
+  public static List<ICommand> split( IORequestUnit unit ){
     var res = new ArrayList<ICommand>();
     var items = new ArrayList<IORequestItem>();
 
@@ -68,17 +72,82 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
     return res;
   }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public ICommand copy(){
+    var copy = new MultiBlockBatchWriteCommand( unit );
+    copy.id = id;
+    return copy;
+  }
   //endregion
 
   //region Class 'Encoding' methods
   /**
    *
-   * @param ds
+   * @param writer
    * @throws IOException
    */
   @Override
-  protected void encode( DataOutput ds ) throws IOException {
-    throw new IOException( "suck my dick" );
+  protected void encode( DataOutput writer ) throws IOException {
+    int wordSize = 0;
+
+    for( var x: words ) {
+      wordSize += ( 3 + 1 + 2 + getPointsCount() );
+    }
+
+    int iBitsSize = bits.size() * 8 /* 3 + 1 + 2 + 2*/;
+    int iTotalSize = 2 + 6 + wordSize + iBitsSize;
+
+    Coder.encodeHeader( writer, iTotalSize );
+
+    // Command
+    writer.writeByte( 0x06 );
+    writer.writeByte( 0x14 );
+
+    // Subcommand 00 means use children units (bit packed in word bits)
+    writer.writeByte( 0x00 );
+    writer.writeByte( 0x00 );
+
+    // Number of word device blocks
+    writer.writeByte( words.size() );
+
+    // Number of bit device blocks
+    writer.writeByte( bits.size() );
+
+    encodeBlock( writer, words );
+    encodeBlock( writer, bits );
+  }
+  /**
+   *
+   * @param writer
+   * @param list
+   * @throws IOException
+   */
+  private void encodeBlock( DataOutput writer, List<IPlcObject> list ) throws IOException {
+    for( var o: list ) {
+      // Word device number
+      var arr = Coder.toBytes( o.address(), 3 );
+      writer.write( arr );
+
+      // Device code
+      var btCode = ( byte )o.device().value();
+      writer.write( btCode );
+
+      arr = Coder.toBytes( getPointsCount( o ), 2 );
+      writer.write( arr );
+
+      if( o.type() == DataType.Bit ){
+        short value = ( short )( (( PlcBit )o ).value() ? 1 : 0 );
+        arr = Coder.toBytes( value, 2 );
+      } else {
+
+      }
+
+      writer.write( arr );
+    }
   }
   //endregion
 

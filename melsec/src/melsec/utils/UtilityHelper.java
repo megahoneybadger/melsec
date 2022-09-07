@@ -23,6 +23,6 @@ public class UtilityHelper {
   }
 
   public static String getPlcObjectKey( IPlcObject o ){
-    return MessageFormat.format( "{0}{1}", o.device(), o.device().toStringAddress(o.address()) );
+    return MessageFormat.format( "{0}@{1}{2}", o.type(), o.device(), o.device().toStringAddress(o.address())  );
   }
 }

@@ -2,8 +2,7 @@ package melsec.bindings;
 
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
-import melsec.types.IDeviceCode;
-import melsec.utils.Printer;
+import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 
 public record PlcBit( BitDeviceCode device, int address, boolean value, String id ) implements IPlcObject {
@@ -33,7 +32,8 @@ public record PlcBit( BitDeviceCode device, int address, boolean value, String i
   }
 
   public String toString() {
-    return Printer.toString( this );
+    return Stringer.toString( this );
   }
+
 }
 

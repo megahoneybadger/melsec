@@ -27,5 +27,8 @@ public class BatchReadCommand extends ICommand {
   protected void decode( DataInput reader ){
 
   }
+  public ICommand copy(){
+    return null;
+  }
   //endregion
 }

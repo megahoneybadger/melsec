@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact name="plc">
+    <output-path>$PROJECT_DIR$/out/artifacts/plc</output-path>
+    <root id="root">
+      <element id="archive" name="monitor.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/melsec/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="melsec" />
+        <element id="module-output" name="repl" />
+      </element>
+      <element id="library" level="project" name="apache.logging.log4j.api" />
+      <element id="library" level="project" name="apache.logging.log4j.core" />
+    </root>
+  </artifact>
+</component>

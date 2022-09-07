@@ -11,11 +11,14 @@ import java.util.List;
 
 public final class PlcStruct implements IPlcWord {
 
+  //region Class members
   private WordDeviceCode device = WordDeviceCode.W;
   private int address = 0;
   private String id = EMPTY_STRING;
   private List<IPlcWord> items = new ArrayList<>();
+  //endregion
 
+  //region Class properties
   @Override
   public DataType type() {
     return DataType.Struct;
@@ -39,16 +42,6 @@ public final class PlcStruct implements IPlcWord {
   public int count(){
     return items.size();
   }
-
-//  @Override
-//  public int size(){
-//    if( items.size() == 0 )
-//      return 0;
-//
-//    var last = items.get( items.size() - 1 );
-//
-//    return last.address() + last.size() - address;
-//  }
 
   public boolean isEmpty(){
     return items.isEmpty();
@@ -78,32 +71,6 @@ public final class PlcStruct implements IPlcWord {
   }
 
   @Override
-  public String toString(){
-    var sb = new StringBuilder();
-
-    var id = this.id.isEmpty() ? EMPTY_STRING : " " + this.id;
-
-    sb.append( MessageFormat.format( "struct [{0}@{1}{2}]",
-      device(), device.toStringAddress( address ), id ) );
-
-    for( var item: items ){
-      sb.append( System.lineSeparator() + "\t" );
-
-      id = item.id().isEmpty() ? EMPTY_STRING : " " + item.id();
-
-      if( item instanceof IPlcNumber<?> n){
-        sb.append( MessageFormat.format( "[{0}@{1}{3}] {2}",
-          n.type(), n.device().toStringAddress( n.address() ), n.value(), id ));
-      } else if( item instanceof PlcString s ){
-        sb.append( MessageFormat.format( "[A{0}@{1}{3}] {2}",
-          s.size(), s.device().toStringAddress( s.address() ), s.value(), id ));
-      }
-    }
-
-    return sb.toString();
-  }
-
-  @Override
   public boolean equals( Object o ){
     if (null == o)
       return false;
@@ -126,15 +93,21 @@ public final class PlcStruct implements IPlcWord {
 
     return true;
   }
+  //endregion
 
+
+  //region Class internal structs
   public static class Builder{
+
+    //region Class members
     private int baseAddress = 0;
     private int address = 0;
     private String id;
-
     private WordDeviceCode device = WordDeviceCode.W;
     private ArrayList<IPlcWord> items = new ArrayList<>();
+    //endregion
 
+    //region Class public methods
     public Builder address( int addr ){
       baseAddress = address = addr;
 
@@ -158,24 +131,41 @@ public final class PlcStruct implements IPlcWord {
       return this;
     }
 
-    public Builder u1( int value ) {
-      return this.u1( value, EMPTY_STRING );
+    public Builder u2( int value ) {
+      return u2( value, EMPTY_STRING );
     }
 
-    public Builder u1( int value, String id ) {
-      items.add( new PlcU1( device, address, value, id ) );
+    public Builder u2( String id ) {
+      return u2( 0, id );
+    }
+
+    public Builder u2(){
+      return u2( 0 );
+    }
+
+    public Builder u2( int value, String id ) {
+      items.add( new PlcU2( device, address, value, id ) );
       address += 1;
 
       return this;
     }
 
-    public Builder u2( int value ) {
-      return u2( value, EMPTY_STRING );
+
+    public Builder i2( short value ) {
+      return i2( value, EMPTY_STRING );
     }
 
-    public Builder u2( int value, String id ) {
-      items.add( new PlcU2( device, address, value, id ) );
-      address += 2;
+    public Builder i2( String id ) {
+      return i2( ( short )0, id );
+    }
+
+    public Builder i2(){
+      return i2( ( short )0 );
+    }
+
+    public Builder i2( short value, String id ) {
+      items.add( new PlcI2( device, address, value, id ) );
+      address += 1;
 
       return this;
     }
@@ -184,33 +174,19 @@ public final class PlcStruct implements IPlcWord {
       return this.u4( value, EMPTY_STRING );
     }
 
+    public Builder u4( String id ) {
+     return this.u4( 0l, id );
+    }
+
     public Builder u4( long value, String id ) {
       items.add( new PlcU4( device, address, value, id ) );
-      address += 4;
+      address += 2;
 
       return this;
     }
 
-    public Builder f4( float value ) {
-      return this.f4( value, EMPTY_STRING );
-    }
-
-    public Builder f4( float value, String id ) {
-      items.add( new PlcF4( device, address, value, id ) );
-      address += 4;
-
-      return this;
-    }
-
-    public Builder f8( double value ) {
-      return this.f8( value, EMPTY_STRING );
-    }
-
-    public Builder f8( double value, String id ) {
-      items.add( new PlcF8( device, address, value, id ) );
-      address += 8;
-
-      return this;
+    public Builder string( int size ) {
+      return string( size, EMPTY_STRING, EMPTY_STRING );
     }
 
     public Builder string( int size, String value ) {
@@ -219,13 +195,16 @@ public final class PlcStruct implements IPlcWord {
 
     public Builder string( int size, String value, String id ) {
       items.add( new PlcString( device, address, size, value, id ) );
-      address += size;
+      var extra = ( size % 2 == 0 ) ? 0 : 1;
+      var points = size / 2 + extra;
+
+      address += points;
 
       return this;
     }
 
-    public Builder offset( int size ){
-      address += size;
+    public Builder offset( int points ){
+      address += points;
 
       return this;
     }
@@ -240,5 +219,18 @@ public final class PlcStruct implements IPlcWord {
 
       return s;
     }
+
+    public PlcStruct with( PlcStruct proto, List<IPlcWord> items ) {
+      var s = new PlcStruct();
+
+      s.address = proto.address;
+      s.device = proto.device;
+      s.id = proto.id;
+      s.items = new ArrayList<>( items );
+
+      return s;
+    }
+    //endregion
   }
+  //endregion
 }

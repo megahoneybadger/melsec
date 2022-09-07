@@ -1,11 +1,6 @@
 package utils;
 
-import melsec.bindings.IPlcNumber;
-import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcBit;
 import melsec.io.IOResponseItem;
-
-import java.text.MessageFormat;
 
 public class Console {
 
@@ -14,18 +9,19 @@ public class Console {
    *
    * @param item
    */
-  public static void print(IOResponseItem item ){
+  public static void print( IOResponseItem item ){
     if( item.result().failure() ){
-      System.out.print(Color.YELLOW);
+      System.out.print( Color.YELLOW );
       System.out.print( Color.RED_BACKGROUND_BRIGHT );
       System.out.println( item );
       System.out.print( Color.RESET );
-
     } else {
       System.out.print( Color.WHITE );
       System.out.print( Color.GREEN_BACKGROUND_BRIGHT );
-      System.out.println(item);
-      System.out.print(Color.RESET);
+
+      System.out.println( item );
+
+      System.out.print( Color.RESET);
     }
   }
   /**
@@ -33,7 +29,7 @@ public class Console {
    * @param e
    */
   public static void error( Throwable e ){
-    System.out.print(Color.WHITE );
+    System.out.print( Color.WHITE );
     System.out.print( Color.RED_BACKGROUND_BRIGHT );
     System.out.println( e.getMessage() );
     System.out.print( Color.RESET );

@@ -5,13 +5,13 @@ import melsec.types.WordDeviceCode;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 
-public record PlcU2(WordDeviceCode device, int address, Integer value, String id )
-  implements IPlcNumber<Integer> {
+public record PlcI2( WordDeviceCode device, int address, Short value, String id )
+  implements IPlcNumber<Short> {
 
-  public static final int MIN_VALUE = 0;
-  public static final int MAX_VALUE = 0xFFFF;
+  public static final short MIN_VALUE = Short.MIN_VALUE;
+  public static final short MAX_VALUE = Short.MAX_VALUE;
 
-  public PlcU2 {
+  public PlcI2 {
     id = UtilityHelper.notNullString( id );
 
     value = ( value > MAX_VALUE ) ? MAX_VALUE : value;
@@ -20,22 +20,22 @@ public record PlcU2(WordDeviceCode device, int address, Integer value, String id
 
   @Override
   public DataType type(){
-    return DataType.U2;
+    return DataType.I2;
   }
 
-  public PlcU2() {
+  public PlcI2() {
     this( WordDeviceCode.W, 0 );
   }
 
-  public PlcU2( WordDeviceCode device, int address ) {
-    this( device, address, 0 );
+  public PlcI2(WordDeviceCode device, int address ) {
+    this( device, address, ( short )0 );
   }
 
-  public PlcU2( WordDeviceCode device, int address, String id ) {
-    this( device, address, 0, id );
+  public PlcI2(WordDeviceCode device, int address, String id ) {
+    this( device, address, ( short )0, id );
   }
 
-  public PlcU2( WordDeviceCode device, int address, Integer value ) {
+  public PlcI2( WordDeviceCode device, int address, Short value ) {
     this( device, address, value, EMPTY_STRING );
   }
 

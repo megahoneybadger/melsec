@@ -8,7 +8,7 @@ public record ConsoleLogger(LogLevel level ) implements IPlcLogger {
   public final static String NAME = "stdout";
 
   public ConsoleLogger(){
-    this( LogLevel.ALL );
+    this( LogLevel.DEBUG );
   }
 
   @Override
@@ -16,7 +16,9 @@ public record ConsoleLogger(LogLevel level ) implements IPlcLogger {
     var layout = builder
       .newLayout( PatternLayout.class.getSimpleName() )
       .addAttribute( "disableAnsi", false )
-      .addAttribute( "pattern", "[melsec]%highlight{[%-5level][%d{HH:mm:ss.sss}] %msg%n}{STYLE=Logback}");
+      .addAttribute( "pattern", "[melsec]%highlight{[%-5level][%d{HH:mm:ss.sss}] %msg%n}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=Normal, DEBUG=Normal}");
+
+    // Fix for win10: REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
 
     var appender = builder
       .newAppender( NAME, "Console")
@@ -33,7 +35,7 @@ public record ConsoleLogger(LogLevel level ) implements IPlcLogger {
 
   private Level getNativeLevel(){
     return switch ( this.level ){
-      case ALL -> Level.ALL;
+      case INFO -> Level.INFO;
       case DEBUG -> Level.DEBUG;
       case ERROR -> Level.ERROR;
       default -> Level.OFF;

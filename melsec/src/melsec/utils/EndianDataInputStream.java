@@ -146,4 +146,8 @@ public class EndianDataInputStream extends InputStream implements DataInput {
   public int readUnsignedShort() throws IOException {
     return readShort() & 0xFFFF;
   }
+
+  public long readUnsignedInt() throws IOException {
+    return readInt() & 0xFFFF_FFFFl;
+  }
 }

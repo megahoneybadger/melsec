@@ -1,7 +1,7 @@
 package melsec.log;
 
 public enum LogLevel {
-  ALL,
+  INFO,
   DEBUG,
   ERROR
 }

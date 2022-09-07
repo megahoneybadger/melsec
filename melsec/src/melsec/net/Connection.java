@@ -1,11 +1,13 @@
 package melsec.net;
 
+import melsec.events.commands.CommandEventArgs;
 import melsec.exceptions.BaseException;
 import melsec.exceptions.ConnectionNotEstablishedException;
-import melsec.commands.Coder;
+import melsec.utils.Coder;
 import melsec.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
+import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -224,9 +226,14 @@ public class Connection {
    * @param commands
    */
   public void enqueue( Iterable<ICommand> commands ){
+    if( null == commands )
+      return;
+
     synchronized ( syncObject ){
       if( !run )
         return;
+
+      logger().debug( "Enqueue {}", Stringer.toString( commands ) );
 
       queue.addAll( UtilityHelper.toList( commands ) );
       syncObject.notify();
@@ -263,7 +270,7 @@ public class Connection {
     try {
       currentPendingCommand = command;
 
-      logger().debug( "Sending {}", command );
+      events.enqueue( CommandBeforeSend, command );
 
       if( state != Connected )
         throw new ConnectionNotEstablishedException( endpoint );
@@ -273,7 +280,7 @@ public class Connection {
       socket.write( buffer, command, new CompletionHandler<>() {
         @Override
         public void completed( Integer count, ICommand command ) {
-          logger().debug( "Sent {}", command );
+          events.enqueue( CommandAfterSend, command );
           recvHeader( command );
         }
 
@@ -375,7 +382,7 @@ public class Connection {
       done( p.command, null );
     }
     catch( Exception exc ){
-      //done( c, new RtException( RtException.Code.CommandDecodingError, exc.toString() ) );
+      done( p.command, exc );
     }
   }
   /**

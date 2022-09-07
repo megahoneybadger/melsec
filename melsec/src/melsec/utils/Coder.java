@@ -1,6 +1,7 @@
-package melsec.commands;
+package melsec.utils;
 
-import melsec.types.DataType;
+import melsec.bindings.IPlcObject;
+import melsec.bindings.PlcString;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -119,58 +120,35 @@ public class Coder {
   }
   /**
    *
-   * @param reader
-   * @param type
+   * @param r
+   * @param o
    * @return
    * @throws IOException
    */
-  public static Object decodeValue( DataInput reader, DataType type ) throws IOException {
-    return switch( type ){
-      case U1 -> reader.readUnsignedByte();
-      case U2 -> reader.readUnsignedShort();
+  public static Object decodeValue(DataInput r, IPlcObject o ) throws IOException {
+    return switch( o.type() ){
+      case U2 -> r.readUnsignedShort();
+      case U4 -> ((EndianDataInputStream)r).readUnsignedInt();
 
-//      case I2 -> bb.getShort( index );
-//      case I4 -> bb.getInt( index );
-//      case I8 -> bb.getLong( index );
-//
-//      case F4 -> bb.getFloat( index );
-//      case F8 -> bb.getDouble( index );
+      case I2 -> r.readShort();
+      case I4 -> r.readInt();
+
+      case String -> {
+        var s = ( PlcString )o;
+
+        var extra = ( s.size() % 2 == 0 ) ? 0 : 1;
+
+        var buffer = new byte[ s.size() + extra ];
+        r.readFully( buffer );
+
+        var res = new String( buffer );
+        res = res.substring( 0, Math.min( res.length(), s.size() ));
+
+        yield  res;
+      }
 
       default -> null;
     };
-
-//    switch( o.type() ){
-//      case I2:
-//        return bb.getShort( index );
-//
-//      case I4:
-//        return bb.getInt( index );
-//
-//      case I8:
-//        return bb.getLong( index );
-//
-//      case F4:
-//        return bb.getFloat( index );
-//
-//      case F8:
-//        return bb.getDouble( index );
-//
-////      case String:
-////        bb.position( index );
-////        byte [] sarr = new byte[ o.size() * 2 ];
-////        bb.get( sarr );
-////        return new String( sarr );
-//
-////      case Bin:
-////        bb.position( index );
-////        byte [] barr = new byte[ o.size() * 2 ];
-////        bb.get( barr );
-////        return barr;
-//    }
-
-
-    //return null;
   }
   //endregion
-
 }

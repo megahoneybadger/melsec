@@ -1,6 +1,7 @@
 package melsec;
 
 import melsec.events.IEventDispatcher;
+import melsec.exceptions.DriverNotRunningException;
 import melsec.io.IORequest;
 import melsec.net.Connection;
 import melsec.events.EventDispatcher;
@@ -91,13 +92,13 @@ public class Driver {
   /**
    * @param r
    */
-  public void exec( IORequest r ) {
+  public void exec( IORequest r ) throws DriverNotRunningException {
     if( null == r )
       return;
 
     synchronized( syncObject ){
       if( !run )
-        return;
+        throw new DriverNotRunningException();
 
       connection.enqueue( r.toMultiBlockBatchCommands() );
     }

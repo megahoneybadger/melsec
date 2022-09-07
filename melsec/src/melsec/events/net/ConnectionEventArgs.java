@@ -1,7 +1,7 @@
 package melsec.events.net;
 
-import melsec.net.Endpoint;
 import melsec.events.IEventArgs;
+import melsec.net.Endpoint;
 
 public record ConnectionEventArgs( Endpoint endpoint, String id ) implements IEventArgs {
 

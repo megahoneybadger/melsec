@@ -1,8 +1,8 @@
 package melsec.bindings;
 
 import melsec.types.DataType;
-import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
+import melsec.utils.Stringer;
 
 import java.text.MessageFormat;
 
@@ -13,7 +13,7 @@ public record PlcString(WordDeviceCode device, int address, int size,
     value = ( null == value ) ? EMPTY_STRING : value;
     id = ( null == id ) ? EMPTY_STRING : id;
 
-    value = value.substring(0, Math.min( value.length(), size ));
+    value = value.substring( 0, Math.min( value.length(), size ));
   }
 
   @Override
@@ -39,7 +39,6 @@ public record PlcString(WordDeviceCode device, int address, int size,
 
   @Override
   public String toString(){
-    return MessageFormat.format( "A{3} [{0}@{1}] [{2}]",
-      device, device.toStringAddress( address ), value(), size() );
+    return Stringer.toString( this, true );
   }
 }

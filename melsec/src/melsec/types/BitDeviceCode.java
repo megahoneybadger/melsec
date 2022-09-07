@@ -14,16 +14,12 @@ public enum BitDeviceCode implements IDeviceCode {
 
   private int value;
 
-  public int getValue(){
+  public int value(){
     return value;
   }
 
   public int getSectionSize(){
     return 15360;
-  }
-
-  public DeviceKind getKind(){
-    return DeviceKind.Bit;
   }
 
   public boolean isDecimalAddress() {

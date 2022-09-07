@@ -1,6 +1,6 @@
 package melsec.io;
 
-public enum IOType{
+public enum IOType {
   Read,
   Write
 }

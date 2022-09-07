@@ -1,16 +1,12 @@
 package melsec.types;
 
-import java.text.MessageFormat;
-
 public interface IDeviceCode {
 
-  int getValue();
+  int value();
 
   int getSectionSize();
 
   boolean isDecimalAddress();
-
-  DeviceKind getKind();
 
   default int getAddressRadix(){
     return isDecimalAddress() ? 10 : 16;
@@ -19,6 +15,7 @@ public interface IDeviceCode {
   default String toStringAddress( int a ){
     return isDecimalAddress() ?
       Integer.toString( a ):
-      MessageFormat.format( "0x{0}", Integer.toString( a, 16 ) );
+      String.format("%04X", a );
+
   }
 }
