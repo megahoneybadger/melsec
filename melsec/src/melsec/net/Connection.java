@@ -1,9 +1,6 @@
 package melsec.net;
 
-import melsec.events.commands.CommandEventArgs;
-import melsec.exceptions.BaseException;
 import melsec.exceptions.ConnectionNotEstablishedException;
-import melsec.utils.Coder;
 import melsec.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
@@ -33,6 +30,10 @@ public class Connection {
    *
    */
   private final int CONNECTION_TIMEOUT = 5000;
+  /**
+   *
+   */
+  private final int COMMAND_HEADER_LENGTH = ICommand.HEADER_LENGTH;
   //endregion
 
   //region Class members
@@ -171,7 +172,7 @@ public class Connection {
         events.enqueue( ConnectionConnecting, getEventArgs());
 
         socket.connect(address, socket, new CompletionHandler<>() {
-          public void completed(Void result, AsynchronousSocketChannel channel) {
+          public void completed( Void result, AsynchronousSocketChannel channel) {
             synchronized ( syncObject ){
               state = Connected;
             }
@@ -202,6 +203,8 @@ public class Connection {
 
     synchronized( syncObject ){
       hadOpenConnection = ( null != socket && socket.isOpen() );
+
+      state = Disconnected;
 
       if( null == socket )
         return false;
@@ -290,7 +293,7 @@ public class Connection {
         }
       } );
     }
-    catch( BaseException e){
+    catch( Exception e ){
       done( command, e );
     }
   }
@@ -300,25 +303,25 @@ public class Connection {
    */
   private void recvHeader( ICommand command ){
     try {
-      var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
+      var buffer = ByteBuffer.allocate( COMMAND_HEADER_LENGTH );
       logger().debug( "Receiving {} header", command );
 
       synchronized( syncObject ) {
         socket.read( buffer, 1, TimeUnit.SECONDS, command, new CompletionHandler<>() {
           @Override
           public void completed( Integer countReadBytes, ICommand command ) {
-            if( countReadBytes < Coder.HEADER_LENGTH ){
+            if( countReadBytes < COMMAND_HEADER_LENGTH ){
               done( command, new Exception( "failed to read header" ) );
             } else {
-              var replyBodySize = Coder.decodeLength( buffer.array() );
-              var replyTotalSize = Coder.HEADER_LENGTH + replyBodySize;
+              var replyBodySize = decodeReplyBodySize( buffer.array() );
+              var replyTotalSize = COMMAND_HEADER_LENGTH + replyBodySize;
 
               logger().debug( "Received {} header: expecting {} bytes in body", command, replyBodySize );
 
               var bufferTotal = ByteBuffer.allocate( replyTotalSize );
-              System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, Coder.HEADER_LENGTH );
+              System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, COMMAND_HEADER_LENGTH );
 
-              bufferTotal.position( Coder.HEADER_LENGTH );
+              bufferTotal.position( COMMAND_HEADER_LENGTH );
 
               recvBody( new BodyRecvProgress( command, bufferTotal, replyBodySize ) );
             }
@@ -332,8 +335,25 @@ public class Connection {
       }
     }
     catch( Exception e ){
-      drop( command, e );
+      done( command, e );
     }
+  }
+  /**
+   *
+   * @param buffer
+   * @return
+   */
+  private int decodeReplyBodySize( byte [] buffer ){
+    int iHByteIndex = 8;
+    int iRes = buffer[ iHByteIndex ] & 0xFF;
+
+    iRes <<= 8;
+
+    int iLowByte = buffer[ iHByteIndex - 1 ] & 0xFF;
+
+    iRes += iLowByte;
+
+    return iRes;
   }
   /**
    *

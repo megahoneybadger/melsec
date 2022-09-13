@@ -3,14 +3,11 @@ package melsec.commands.multi;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcStruct;
-import melsec.utils.Coder;
 import melsec.commands.ICommand;
 import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
-import melsec.types.DataType;
 import melsec.utils.Copier;
 
 import java.io.*;
@@ -95,7 +92,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   @Override
   protected void encode( DataOutput writer ) throws IOException {
     int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
-    Coder.encodeHeader( writer, iTotalSize );
+    encodeHeader( writer, iTotalSize );
 
     // Command
     writer.writeByte( 0x06 );
@@ -123,14 +120,14 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   private void encode( DataOutput writer, Iterable<IPlcObject> list ) throws IOException {
     for( var item: list ){
       // Word device number
-      writer.write( Coder.toBytes( item.address(), 3 ) );
+      writer.write( toBytes( item.address(), 3 ) );
 
       // Device code
       writer.write( item.device().value() );
 
       // Number of device points
       var size = getPointsCount( item );
-      writer.write( Coder.toBytes( size, 2 ) );
+      writer.write( toBytes( size, 2 ) );
     }
   }
   //endregion
@@ -138,32 +135,32 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   //region Class 'Decoding' methods
   /**
    *
-   * @param reader
+   * @param r
    */
   @Override
-  protected void decode( DataInput reader ) throws IOException, BadCompletionCodeException {
-    reader.skipBytes( 7 );
+  protected void decode( DataInput r ) throws IOException, BadCompletionCodeException {
+    r.skipBytes( 7 );
 
-    var dataSize = Coder.toUShort( reader.readShort() );
-    var completionCode = Coder.toUShort( reader.readShort() );
+    var dataSize = r.readUnsignedShort();
+    var completionCode = r.readUnsignedShort();
 
     if( 0 != completionCode )
       throw new BadCompletionCodeException( completionCode );
 
     results.clear();
-    results.addAll( decodeWords( reader ));
-    results.addAll( decodeBits( reader ));
+    results.addAll( decodeWords( r ));
+    results.addAll( decodeBits( r ));
   }
   /**
    *
-    * @param reader
+    * @param r
    * @return
    */
-  private List<PlcBit> decodeBits( DataInput reader ) throws IOException {
+  private List<PlcBit> decodeBits( DataInput r ) throws IOException {
     var list = new ArrayList<PlcBit>();
 
     for( var proto: bits ){
-      var val = ( 1 == ( 1 & reader.readUnsignedShort() ));
+      var val = ( 1 == ( 1 & r.readUnsignedShort() ));
       list.add( ( PlcBit ) Copier.with( proto, val ) );
     }
 
@@ -171,58 +168,19 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   }
   /**
    *
-   * @param reader
+   * @param r
    * @return
    */
-  private List<IPlcWord> decodeWords( DataInput reader ) throws IOException {
+  private List<IPlcWord> decodeWords( DataInput r ) throws IOException {
     var list = new ArrayList<IPlcWord>();
 
     for( var proto: words ){
-      var o = ( proto.type() == DataType.Struct ) ?
-        decodeStruct( reader, ( PlcStruct ) proto ) :
-        decodeWord( reader, proto);
-
-      list.add( o );
+      var o = decode ( r, proto );
+      list.add( ( IPlcWord ) o );
     }
 
     return list;
   }
-  /**
-   *
-   * @param reader
-   * @param proto
-   * @return
-   */
-  private PlcStruct decodeStruct( DataInput reader, PlcStruct proto ) throws IOException {
-    var list = new ArrayList<IPlcWord>();
-    var items = proto.items();
-    var address = proto.address();
 
-    for( var next : items ){
-      var offset = next.address() - address;
-
-      if( offset > 0 ){
-        reader.skipBytes( 2 * offset );
-      }
-
-      var w = decodeWord( reader, next );
-      address += getPointsCount( w ) + offset;
-
-      list.add( w );
-    }
-
-    return Copier.with( proto, list );
-  }
-  /**
-   *
-   * @param reader
-   * @param proto
-   * @return
-   */
-  private IPlcWord decodeWord( DataInput reader, IPlcObject proto ) throws IOException {
-    var value = Coder.decodeValue( reader, proto );
-
-    return ( IPlcWord ) Copier.with( proto, value );
-  }
   //endregion
 }

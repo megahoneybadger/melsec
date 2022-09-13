@@ -1,21 +1,28 @@
 package melsec.commands.multi;
 
 import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcBit;
 import melsec.commands.ICommand;
+import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
-import melsec.types.DataType;
-import melsec.utils.Coder;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
+
+  //region Class constants
+  /**
+   *
+   */
+  protected final int HEADER_LENGTH = 9;
+  //endregion
 
   //region Class properties
   /**
@@ -87,78 +94,86 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
   //region Class 'Encoding' methods
   /**
    *
-   * @param writer
+   * @param w
    * @throws IOException
    */
   @Override
-  protected void encode( DataOutput writer ) throws IOException {
+  protected void encode( DataOutput w ) throws IOException {
     int wordSize = 0;
 
     for( var x: words ) {
-      wordSize += ( 3 + 1 + 2 + getPointsCount() );
+      wordSize += ( 3 + 1 + 2 + getPointsCount( x ) * 2 );
     }
 
     int iBitsSize = bits.size() * 8 /* 3 + 1 + 2 + 2*/;
     int iTotalSize = 2 + 6 + wordSize + iBitsSize;
 
-    Coder.encodeHeader( writer, iTotalSize );
+    encodeHeader( w, iTotalSize );
 
     // Command
-    writer.writeByte( 0x06 );
-    writer.writeByte( 0x14 );
+    w.writeByte( 0x06 );
+    w.writeByte( 0x14 );
 
     // Subcommand 00 means use children units (bit packed in word bits)
-    writer.writeByte( 0x00 );
-    writer.writeByte( 0x00 );
+    w.writeByte( 0x00 );
+    w.writeByte( 0x00 );
 
     // Number of word device blocks
-    writer.writeByte( words.size() );
+    w.writeByte( words.size() );
 
     // Number of bit device blocks
-    writer.writeByte( bits.size() );
+    w.writeByte( bits.size() );
 
-    encodeBlock( writer, words );
-    encodeBlock( writer, bits );
+    encodeBlocks( w, words );
+    encodeBlocks( w, bits );
   }
   /**
    *
-   * @param writer
+   * @param w
    * @param list
    * @throws IOException
    */
-  private void encodeBlock( DataOutput writer, List<IPlcObject> list ) throws IOException {
+  private void encodeBlocks( DataOutput w, List<IPlcObject> list ) throws IOException {
     for( var o: list ) {
       // Word device number
-      var arr = Coder.toBytes( o.address(), 3 );
-      writer.write( arr );
+      var arr = toBytes( o.address(), 3 );
+      w.write( arr );
 
       // Device code
       var btCode = ( byte )o.device().value();
-      writer.write( btCode );
+      w.write( btCode );
 
-      arr = Coder.toBytes( getPointsCount( o ), 2 );
-      writer.write( arr );
+      // Number of device points
+      arr = toBytes( getPointsCount( o ), 2 );
+      w.write( arr );
 
-      if( o.type() == DataType.Bit ){
-        short value = ( short )( (( PlcBit )o ).value() ? 1 : 0 );
-        arr = Coder.toBytes( value, 2 );
-      } else {
-
-      }
-
-      writer.write( arr );
+      encode( w, o );
     }
   }
+
   //endregion
 
   //region Class 'Decoding' methods
   /**
    *
-   * @param reader
+   * @param r
    */
   @Override
-  protected void decode( DataInput reader ){
+  protected void decode( DataInput r ) throws IOException, BadCompletionCodeException {
+    r.skipBytes( 7 );
 
+    var dataSize = r.readUnsignedShort();
+    var completionCode = r.readUnsignedShort();
+
+    if( 0 != completionCode )
+      throw new BadCompletionCodeException( completionCode );
+
+    results = Stream
+      .concat( words.stream(), bits.stream())
+      .collect( Collectors.toList());
   }
+
   //endregion
 }
+
+// write w100 u2 100, w101 i2 200

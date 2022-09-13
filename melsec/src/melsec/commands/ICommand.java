@@ -13,6 +13,13 @@ import java.security.SecureRandom;
 
 public abstract class ICommand {
 
+  //region Class constants
+  /**
+   *
+   */
+  public static final int HEADER_LENGTH = 9;
+  //endregion
+
   //region Class members
   /**
    *
@@ -55,7 +62,7 @@ public abstract class ICommand {
   public abstract ICommand copy();
   //endregion
 
-  //region Class 'Coding' methods
+  //region Class 'Encoding' methods
   /**
    *
    * @return
@@ -84,6 +91,66 @@ public abstract class ICommand {
    * @throws IOException
    */
   protected abstract void encode( DataOutput ds ) throws IOException;
+  /**
+   *
+   * @param w
+   * @throws IOException
+   */
+  protected void encodeTitle( DataOutput w ) throws IOException {
+    // Subheader
+    w.writeByte( 0x50 );
+    w.writeByte( 0x00 );
+
+    // Network No
+    w.writeByte( 0x00 );
+
+    // Plc No
+    w.writeByte( 0xFF );
+
+    // Request destination module IO No
+    w.writeByte( 0xFF );
+    w.writeByte( 0x03 );
+
+    // Request destination module station No
+    w.writeByte( 0x00 );
+  }
+  /**
+   *
+   * @param w
+   * @param len
+   * @throws IOException
+   */
+  protected void encodeHeader( DataOutput w, int len ) throws IOException {
+    encodeTitle( w );
+
+    // Request data count
+    w.write( toBytes( len, 2 ) );
+
+    // CPU monitoring timer
+    w.writeByte( 0x10 );
+    w.writeByte( 0x00 );
+  }
+  /**
+   *
+   * @param v
+   * @param bytesNo
+   * @return
+   */
+  protected byte[] toBytes( int v, int bytesNo ){
+    var arr = new byte[ bytesNo ];
+
+    for( int i = 0; i < bytesNo; ++i ){
+      int iNextByte = v & 255;
+      arr[ i ] = ( byte )iNextByte;
+
+      v >>= 8;
+    }
+
+    return arr;
+  }
+  //endregion
+
+  //region Class 'Decoding' methods
   /**
    *
    * @param buffer

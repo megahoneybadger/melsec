@@ -112,7 +112,11 @@ public class MultiWriteCommand extends BaseMultiCommand {
     var address = validateAddress( device, addr );
     var obj = validateType( device, address, type, id );
 
-    obj = Copier.with( obj, toTypedValue( obj, value ) );
+    if( device instanceof BitDeviceCode ){
+      obj = new PlcBit((BitDeviceCode) device, address, value );
+    }
+
+    obj = Copier.with( obj, toTypedValue( obj, type, value ) );
 
     return new IORequestItem( IOType.Write, obj );
   }
@@ -122,10 +126,10 @@ public class MultiWriteCommand extends BaseMultiCommand {
    * @param value
    * @return
    */
-  private Object toTypedValue( IPlcObject proto, String value ){
+  private Object toTypedValue( IPlcObject proto, String type, String value ){
     try {
       return switch( proto.type() ){
-        case Bit -> Boolean.parseBoolean( value );
+        case Bit -> Boolean.parseBoolean( type/*!!!*/ );
         case U2, I4 -> Integer.parseInt( value );
         case U4 -> Long.parseLong( value );
         case I2 -> Short.parseShort( value );

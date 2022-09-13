@@ -1,5 +1,6 @@
 package melsec.utils;
 
+import melsec.bindings.IPlcNumber;
 import melsec.bindings.IPlcObject;
 
 import java.text.MessageFormat;
@@ -22,7 +23,9 @@ public class UtilityHelper {
     return ( x == null ) ? EMPTY_STRING : x;
   }
 
-  public static String getPlcObjectKey( IPlcObject o ){
+  public static String getKey(IPlcObject o ){
     return MessageFormat.format( "{0}@{1}{2}", o.type(), o.device(), o.device().toStringAddress(o.address())  );
   }
+
+
 }

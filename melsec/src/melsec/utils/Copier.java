@@ -25,11 +25,13 @@ public class Copier {
       case String -> new PlcString( ( WordDeviceCode )device,
         addr, (( PlcString )proto ).size(), ( String )value, id );
 
+      case Struct -> {
+        var st = ( PlcStruct ) proto;
+        yield PlcStruct.builder().with( st, st.items() );
+      }
 
       default -> null;
     };
-
-
   }
 
   public static PlcStruct with( PlcStruct p, List<IPlcWord> items ){
