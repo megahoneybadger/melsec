@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/eqp/eqp.iml" filepath="$PROJECT_DIR$/eqp/eqp.iml" />
       <module fileurl="file://$PROJECT_DIR$/melsec/melsec.iml" filepath="$PROJECT_DIR$/melsec/melsec.iml" />
       <module fileurl="file://$PROJECT_DIR$/repl/repl.iml" filepath="$PROJECT_DIR$/repl/repl.iml" />
     </modules>

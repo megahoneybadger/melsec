@@ -1,6 +1,5 @@
 package melsec.utils;
 
-import melsec.bindings.IPlcNumber;
 import melsec.bindings.IPlcObject;
 
 import java.text.MessageFormat;

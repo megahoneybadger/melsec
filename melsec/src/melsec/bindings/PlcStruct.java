@@ -95,7 +95,6 @@ public final class PlcStruct implements IPlcWord {
   }
   //endregion
 
-
   //region Class internal structs
   public static class Builder{
 

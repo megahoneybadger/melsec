@@ -1,11 +1,16 @@
 package melsec.commands.multi;
 
 import melsec.bindings.IPlcObject;
+import melsec.bindings.IPlcWord;
+import melsec.bindings.PlcBit;
+import melsec.bindings.PlcStruct;
 import melsec.commands.ICommand;
 import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
+import melsec.utils.ByteConverter;
+import melsec.utils.Coder;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -21,7 +26,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
   /**
    *
    */
-  protected final int HEADER_LENGTH = 9;
+  public static final int CODE = 0x1406;
   //endregion
 
   //region Class properties
@@ -108,11 +113,10 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
     int iBitsSize = bits.size() * 8 /* 3 + 1 + 2 + 2*/;
     int iTotalSize = 2 + 6 + wordSize + iBitsSize;
 
-    encodeHeader( w, iTotalSize );
+    Coder.encodeHeader( w, iTotalSize );
 
     // Command
-    w.writeByte( 0x06 );
-    w.writeByte( 0x14 );
+    w.write( ByteConverter.toBytes( CODE, 2 ) );
 
     // Subcommand 00 means use children units (bit packed in word bits)
     w.writeByte( 0x00 );
@@ -136,21 +140,42 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
   private void encodeBlocks( DataOutput w, List<IPlcObject> list ) throws IOException {
     for( var o: list ) {
       // Word device number
-      var arr = toBytes( o.address(), 3 );
-      w.write( arr );
+      w.write( ByteConverter.toBytes( o.address(), 3 ) );
 
       // Device code
-      var btCode = ( byte )o.device().value();
-      w.write( btCode );
+      w.write( ( byte )o.device().value() );
 
       // Number of device points
-      arr = toBytes( getPointsCount( o ), 2 );
+      var arr = ByteConverter.toBytes( getPointsCount( o ), 2 );
       w.write( arr );
 
       encode( w, o );
     }
   }
+  /**
+   *
+   * @param w
+   * @param o
+   * @return
+   */
+  protected void encode( DataOutput w, IPlcObject o ) throws IOException {
+    var buffer = switch( o.type() ){
+      case Bit -> {
+        // this is incorrect: I will not use bit writes with this command
+        // just for tests
+        short value = ( short )( ((PlcBit)o).value() ? 1 : 0 );
+        yield ByteConverter.toBytes( value, 2 );
+      }
 
+      case I2, I4, U2, U4, String, Struct -> ByteConverter.toBytes( (IPlcWord) o );
+
+      default -> null;
+    };
+
+    if( null != buffer ){
+      w.write( buffer );
+    }
+  }
   //endregion
 
   //region Class 'Decoding' methods

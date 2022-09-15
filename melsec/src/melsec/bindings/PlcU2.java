@@ -42,5 +42,10 @@ public record PlcU2(WordDeviceCode device, int address, Integer value, String id
   public String toString() {
     return Stringer.toString( this );
   }
+
+  @Override
+  public IPlcNumber<Integer> with( Integer v ){
+    return new PlcU2( device, address, v, id );
+  }
 }
 //65535

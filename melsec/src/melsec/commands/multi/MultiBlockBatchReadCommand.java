@@ -1,20 +1,28 @@
 package melsec.commands.multi;
 
-import melsec.bindings.IPlcObject;
-import melsec.bindings.IPlcWord;
-import melsec.bindings.PlcBit;
+import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
+import melsec.utils.ByteConverter;
+import melsec.utils.Coder;
 import melsec.utils.Copier;
+import melsec.utils.EndianDataInputStream;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
+
+  //region Class constants
+  /**
+   *
+   */
+  public static final int CODE = 0x0406;
+  //endregion
 
   //region Class properties
   /**
@@ -86,30 +94,29 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   //region Class 'Encoding' methods
   /**
    *
-   * @param writer
+   * @param w
    * @throws IOException
    */
   @Override
-  protected void encode( DataOutput writer ) throws IOException {
+  protected void encode( DataOutput w ) throws IOException {
     int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
-    encodeHeader( writer, iTotalSize );
+    Coder.encodeHeader( w, iTotalSize );
 
     // Command
-    writer.writeByte( 0x06 );
-    writer.writeByte( 0x04 );
+    w.write( ByteConverter.toBytes( CODE, 2 ) );
 
     // Subcommand 00 means use children units (bit packed in word bits)
-    writer.writeByte( 0x00 );
-    writer.writeByte( 0x00 );
+    w.writeByte( 0x00 );
+    w.writeByte( 0x00 );
 
     // Number of word device blocks
-    writer.writeByte( words.size() );
+    w.writeByte( words.size() );
 
     // Number of bit device blocks
-    writer.writeByte( bits.size() );
+    w.writeByte( bits.size() );
 
-    encode( writer, words );
-    encode( writer, bits );
+    encode( w, words );
+    encode( w, bits );
   }
   /**
    *
@@ -120,14 +127,14 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   private void encode( DataOutput writer, Iterable<IPlcObject> list ) throws IOException {
     for( var item: list ){
       // Word device number
-      writer.write( toBytes( item.address(), 3 ) );
+      writer.write( ByteConverter.toBytes( item.address(), 3 ) );
 
       // Device code
       writer.write( item.device().value() );
 
       // Number of device points
       var size = getPointsCount( item );
-      writer.write( toBytes( size, 2 ) );
+      writer.write( ByteConverter.toBytes( size, 2 ) );
     }
   }
   //endregion
@@ -160,7 +167,9 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
     var list = new ArrayList<PlcBit>();
 
     for( var proto: bits ){
-      var val = ( 1 == ( 1 & r.readUnsignedShort() ));
+      // I am reading only one bit from the response
+      var word = r.readUnsignedShort();
+      var val = ( 1 == ( 1 & word ));
       list.add( ( PlcBit ) Copier.with( proto, val ) );
     }
 
@@ -181,6 +190,61 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
     return list;
   }
+  /**
+   *
+   * @param r
+   * @param o
+   * @return
+   * @throws IOException
+   */
+  protected IPlcObject decode( DataInput r, IPlcObject o ) throws IOException {
+    var value = switch( o.type() ){
+      case U2 -> r.readUnsignedShort();
+      case I2 -> r.readShort();
 
+      case U4 -> ((EndianDataInputStream)r).readUnsignedInt();
+      case I4 -> r.readInt();
+
+      case String -> {
+        var s = (PlcString)o;
+
+        var extra = ( s.size() % 2 == 0 ) ? 0 : 1;
+
+        var buffer = new byte[ s.size() + extra ];
+        r.readFully( buffer );
+
+        var res = new String( buffer );
+        res = res.substring( 0, Math.min( res.length(), s.size() ));
+
+        yield  res;
+      }
+
+      case Struct -> {
+        var proto = (PlcStruct) o;
+        var list = new ArrayList<IPlcWord>();
+        var items = proto.items();
+        var address = proto.address();
+
+        for( var next : items ){
+          var offset = next.address() - address;
+
+          if( offset > 0 ){
+            r.skipBytes( 2 * offset );
+          }
+
+          var v = decode( r, next );
+          address += getPointsCount( next ) + offset;
+
+          list.add( ( IPlcWord ) v );
+        }
+
+        yield list;
+      }
+
+      default -> null;
+    };
+
+    return Copier.with( o, value );
+  }
   //endregion
 }

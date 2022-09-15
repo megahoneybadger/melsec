@@ -42,4 +42,9 @@ public record PlcI4(WordDeviceCode device, int address, Integer value, String id
   public String toString() {
     return Stringer.toString( this );
   }
+
+  @Override
+  public IPlcNumber<Integer> with( Integer v ){
+    return new PlcI4( device, address, v, id );
+  }
 }

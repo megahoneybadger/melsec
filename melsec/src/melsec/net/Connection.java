@@ -4,6 +4,8 @@ import melsec.exceptions.ConnectionNotEstablishedException;
 import melsec.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
+import melsec.utils.ByteConverter;
+import melsec.utils.Coder;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
@@ -30,10 +32,6 @@ public class Connection {
    *
    */
   private final int CONNECTION_TIMEOUT = 5000;
-  /**
-   *
-   */
-  private final int COMMAND_HEADER_LENGTH = ICommand.HEADER_LENGTH;
   //endregion
 
   //region Class members
@@ -303,25 +301,25 @@ public class Connection {
    */
   private void recvHeader( ICommand command ){
     try {
-      var buffer = ByteBuffer.allocate( COMMAND_HEADER_LENGTH );
+      var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
       logger().debug( "Receiving {} header", command );
 
       synchronized( syncObject ) {
         socket.read( buffer, 1, TimeUnit.SECONDS, command, new CompletionHandler<>() {
           @Override
           public void completed( Integer countReadBytes, ICommand command ) {
-            if( countReadBytes < COMMAND_HEADER_LENGTH ){
-              done( command, new Exception( "failed to read header" ) );
+            if( countReadBytes < Coder.HEADER_LENGTH ){
+              done( command, new Exception( "Failed to read header" ) );
             } else {
-              var replyBodySize = decodeReplyBodySize( buffer.array() );
-              var replyTotalSize = COMMAND_HEADER_LENGTH + replyBodySize;
+              var replyBodySize = Coder.getCommandBodySize( buffer.array() );
+              var replyTotalSize = Coder.HEADER_LENGTH + replyBodySize;
 
               logger().debug( "Received {} header: expecting {} bytes in body", command, replyBodySize );
 
               var bufferTotal = ByteBuffer.allocate( replyTotalSize );
-              System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, COMMAND_HEADER_LENGTH );
+              System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, Coder.HEADER_LENGTH );
 
-              bufferTotal.position( COMMAND_HEADER_LENGTH );
+              bufferTotal.position( Coder.HEADER_LENGTH );
 
               recvBody( new BodyRecvProgress( command, bufferTotal, replyBodySize ) );
             }
@@ -338,23 +336,8 @@ public class Connection {
       done( command, e );
     }
   }
-  /**
-   *
-   * @param buffer
-   * @return
-   */
-  private int decodeReplyBodySize( byte [] buffer ){
-    int iHByteIndex = 8;
-    int iRes = buffer[ iHByteIndex ] & 0xFF;
 
-    iRes <<= 8;
 
-    int iLowByte = buffer[ iHByteIndex - 1 ] & 0xFF;
-
-    iRes += iLowByte;
-
-    return iRes;
-  }
   /**
    *
    * @param p

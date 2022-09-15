@@ -1,33 +1,26 @@
 package melsec.utils;
 
 import melsec.bindings.*;
-import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
 
 import java.util.List;
 
 public class Copier {
 
   public static IPlcObject with( IPlcObject proto, Object value ){
-    var device = proto.device();
-    var addr = proto.address();
-    var id = proto.id();
-
     return switch( proto.type() ){
-      case Bit -> new PlcBit( (BitDeviceCode) device, addr, ( boolean )value, id );
+      case Bit -> (( PlcBit ) proto ).with( ( boolean )value );
 
-      case U2 -> new PlcU2( ( WordDeviceCode )device, addr, ( int )value, id );
-      case U4 -> new PlcU4( ( WordDeviceCode )device, addr, ( long )value, id );
+      case U2 -> (( PlcU2 ) proto ).with( ( int )value );
+      case U4 -> (( PlcU4 ) proto ).with( ( long )value );
 
-      case I2 -> new PlcI2( ( WordDeviceCode )device, addr, ( short )value, id );
-      case I4 -> new PlcI4( ( WordDeviceCode )device, addr, ( int )value, id );
+      case I2 -> (( PlcI2 ) proto ).with( ( short )value );
+      case I4 -> (( PlcI4 ) proto ).with( ( int )value );
 
-      case String -> new PlcString( ( WordDeviceCode )device,
-        addr, (( PlcString )proto ).size(), ( String )value, id );
+      case String ->(( PlcString ) proto ).with( ( String )value );
 
       case Struct -> {
         var st = ( PlcStruct ) proto;
-        yield PlcStruct.builder().with( st, st.items() );
+        yield PlcStruct.builder().with( st, ( List<IPlcWord> )value );
       }
 
       default -> null;
