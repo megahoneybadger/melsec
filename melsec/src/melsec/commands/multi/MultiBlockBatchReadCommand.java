@@ -3,16 +3,15 @@ package melsec.commands.multi;
 import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.exceptions.BadCompletionCodeException;
+import melsec.exceptions.EncodingException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
 import melsec.commands.CommandCode;
-import melsec.utils.ByteConverter;
-import melsec.utils.Coder;
-import melsec.utils.Copier;
-import melsec.utils.EndianDataInputStream;
+import melsec.utils.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
@@ -61,16 +60,16 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
       var shouldCreateCommand =
         ( blocks >= MAX_BLOCKS ) || ( points + itemPoints > MAX_POINTS );
 
-      if( shouldCreateCommand ){
+      if( shouldCreateCommand && items.size() > 0 ){
         res.add( new MultiBlockBatchReadCommand( unit.with( items ) ) );
         items.clear();
         blocks = 0;
         points = 0;
       }
 
+      items.add( item );
       blocks++;
       points += itemPoints;
-      items.add( item );
     }
 
     if( items.size() > 0 ){
@@ -120,21 +119,29 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
   }
   /**
    *
-   * @param writer
+   * @param w
    * @param list
    * @throws IOException
    */
-  private void encode( DataOutput writer, Iterable<IPlcObject> list ) throws IOException {
+  private void encode( DataOutput w, Iterable<IPlcObject> list ) throws IOException {
+    var totalPoints = UtilityHelper
+      .toStream( list )
+      .map( x -> getPointsCount( x ) )
+      .reduce( 0, ( a, b ) -> a + b );
+
+    if( totalPoints > MAX_POINTS )
+      throw new IOException( "Too many points" );
+
     for( var item: list ){
       // Word device number
-      writer.write( ByteConverter.toBytes( item.address(), 3 ) );
+      Coder.encodeDeviceNumber( w, item.address() );
 
       // Device code
-      writer.write( item.device().value() );
+      w.write( item.device().value() );
 
       // Number of device points
       var size = getPointsCount( item );
-      writer.write( ByteConverter.toBytes( size, 2 ) );
+      w.write( ByteConverter.toBytes( size, 2 ) );
     }
   }
   //endregion

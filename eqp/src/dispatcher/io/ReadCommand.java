@@ -1,5 +1,6 @@
 package dispatcher.io;
 
+import melsec.exceptions.InvalidRangeException;
 import melsec.io.IORequestItem;
 import melsec.simulation.Equipment;
 
@@ -37,7 +38,6 @@ public class ReadCommand extends BaseIOCommand {
       String address = null;
       String type = null;
       String id = null;
-      var items = new ArrayList<IORequestItem>();
 
       for( var next: args ){
         next = next.trim();
@@ -79,7 +79,7 @@ public class ReadCommand extends BaseIOCommand {
    * @param id
    * @return
    */
-  private void read( String addr, String type, String id ) {
+  private void read( String addr, String type, String id ) throws InvalidRangeException {
     var device = validateDeviceCode( addr );
     var address = validateAddress( device, addr );
     var obj = validateType( device, address, type, id );

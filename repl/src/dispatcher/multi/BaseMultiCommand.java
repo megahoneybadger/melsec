@@ -81,9 +81,14 @@ public abstract class BaseMultiCommand extends BaseCommand {
     var rest = address.substring( 1 );
 
     try{
-      return device.isDecimalAddress() ?
+      var res = device.isDecimalAddress() ?
         Integer.parseInt( rest ) :
         Integer.parseInt( rest, 16 );
+
+      if( res < 0 )
+        throw new NumberFormatException();
+
+      return res;
     }
     catch( Exception e ){
       throw new IllegalArgumentException( MessageFormat.format(

@@ -2,6 +2,8 @@ package melsec.io;
 
 import melsec.utils.UtilityHelper;
 
+import java.util.Collections;
+
 public record IORequestUnit( IOType operation,
                              Iterable<IORequestItem> items,
                              IOCompleteEventHandler handler) {
@@ -9,4 +11,10 @@ public record IORequestUnit( IOType operation,
   public IORequestUnit with( Iterable<IORequestItem> items ){
     return new IORequestUnit( operation, UtilityHelper.toList( items ), handler );
   }
+
+  public IORequestUnit with( IORequestItem item ){
+    return new IORequestUnit( operation, Collections.singletonList( item ), handler );
+  }
+
+
 }

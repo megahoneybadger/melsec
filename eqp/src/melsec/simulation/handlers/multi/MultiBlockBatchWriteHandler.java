@@ -1,7 +1,9 @@
 package melsec.simulation.handlers.multi;
 
+import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.BaseHandler;
+import melsec.simulation.handlers.RequestBlock;
 import melsec.types.BitDeviceCode;
 import melsec.types.WordDeviceCode;
 import melsec.utils.ByteConverter;
@@ -31,7 +33,7 @@ public class MultiBlockBatchWriteHandler extends BaseHandler {
    * @throws IOException
    */
   @Override
-  public byte[] handle() throws IOException {
+  public byte[] handle() throws IOException, InvalidRangeException {
     var subCommand = reader.readUnsignedShort();
 
     var wordBlockCount = reader.readUnsignedByte();
@@ -49,16 +51,14 @@ public class MultiBlockBatchWriteHandler extends BaseHandler {
    * @return
    * @throws IOException
    */
-  private void writeWords( DataInput r, int wordBlockCount ) throws IOException {
+  private void writeWords( DataInput r, int wordBlockCount ) throws IOException, InvalidRangeException {
     for( int i = 0; i < wordBlockCount; ++i ){
-      int address = readDeviceNumber( r );
-      var device = (WordDeviceCode) readDeviceCode( r );
-      var points = r.readUnsignedShort();
+      var block = RequestBlock.decode( r );
 
-      var buffer = new byte[ points * 2 ];
+      var buffer = new byte[ block.points() * 2 ];
       r.readFully( buffer );
 
-      memory.write( device, address, buffer );
+      memory.fromBytes( ( WordDeviceCode ) block.device(), block.address(), buffer );
     }
   }
   /**
@@ -69,15 +69,13 @@ public class MultiBlockBatchWriteHandler extends BaseHandler {
    * @throws IOException
    */
   private void writeBits(DataInput r, int bitBlockCount ) throws IOException {
-//    for( int i = 0; i < bitBlockCount; ++i ){
-//      int address = readDeviceNumber( r );
-//      var device = (BitDeviceCode) readDeviceCode( r );
-//      var points = r.readUnsignedShort();
-//
+    for( int i = 0; i < bitBlockCount; ++i ){
+      var block = RequestBlock.decode( r );
+
 //      var buffer = memory.toBytes( device, address, points );
 //
 //      res = ByteConverter.concat( res, buffer );
-//    }
+    }
 
     //write b100 true, b102 true
     // write b100 true, b102 true, b10F true, b110 true

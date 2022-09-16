@@ -7,4 +7,6 @@ public enum ErrorCode {
   InvalidEncoding,
   InvalidDecoding,
   BadCompletionCode,
+
+  InvalidRange
 }

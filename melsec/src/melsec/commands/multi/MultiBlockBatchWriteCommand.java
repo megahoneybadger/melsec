@@ -140,7 +140,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
   private void encodeBlocks( DataOutput w, List<IPlcObject> list ) throws IOException {
     for( var o: list ) {
       // Word device number
-      w.write( ByteConverter.toBytes( o.address(), 3 ) );
+      Coder.encodeDeviceNumber( w, o.address() );
 
       // Device code
       w.write( ( byte )o.device().value() );

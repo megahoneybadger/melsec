@@ -1,6 +1,8 @@
 package melsec.simulation.handlers;
 
+import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
+import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;
 import melsec.utils.Coder;
 
@@ -28,43 +30,13 @@ public abstract class BaseHandler {
   //endregion
 
   //region Class 'Handle' methods
+
   /**
    *
-   * @param r
    * @return
    * @throws IOException
+   * @throws InvalidRangeException
    */
-  public abstract byte[] handle() throws IOException;
-  //endregion
-
-  //region Class utility methods
-  /**
-   *
-   * @param r
-   * @return
-   * @throws IOException
-   */
-  protected int readDeviceNumber(DataInput r ) throws IOException {
-    var headDevice = new byte[ 3 ];
-    r.readFully( headDevice );
-    var bufferAddress = new byte [ 4 ];
-    System.arraycopy( headDevice, 0, bufferAddress, 0, 3 );
-
-    var bb = ByteBuffer
-      .wrap( bufferAddress )
-      .order( ByteOrder.LITTLE_ENDIAN );
-
-    return bb.getInt();
-
-  }
-  /**
-   *
-   * @param r
-   * @return
-   * @throws IOException
-   */
-  protected IDeviceCode readDeviceCode(DataInput r ) throws IOException {
-    return Coder.getDeviceCode( r.readUnsignedByte() );
-  }
+  public abstract byte[] handle() throws IOException, InvalidRangeException;
   //endregion
 }

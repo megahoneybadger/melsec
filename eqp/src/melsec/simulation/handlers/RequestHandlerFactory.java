@@ -2,12 +2,15 @@ package melsec.simulation.handlers;
 
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
+import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.multi.MultiBlockBatchReadHandler;
 import melsec.simulation.handlers.multi.MultiBlockBatchWriteHandler;
+import melsec.types.CompletionCode;
 import melsec.utils.EndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class RequestHandlerFactory {
 
@@ -18,6 +21,8 @@ public class RequestHandlerFactory {
    * @return
    */
   public static byte[] reply( Memory m, byte [] buffer ){
+    var completionCode = CompletionCode.InternalError;
+
     try( var bs = new ByteArrayInputStream( buffer )){
       try( var r = new EndianDataInputStream( bs )){
         r.skipBytes( 7 );
@@ -26,23 +31,26 @@ public class RequestHandlerFactory {
         var iCpuMonitoringTime = r.readUnsignedShort();
         var command = r.readUnsignedShort();
 
-        BaseHandler req = switch( command ){
+        BaseHandler req = switch( command ) {
           case MultiBlockBatchReadCommand.CODE -> new MultiBlockBatchReadHandler( m, r );
           case MultiBlockBatchWriteCommand.CODE -> new MultiBlockBatchWriteHandler( m, r );
           default -> null;
         };
 
-        var buf =req.handle();
-        return buf;
+        return req.handle();
       }
     }
-    catch( Exception e ){
-      int a = 789*8;
-      //throw new DecodingException( this, e );
-      // new error request handle: todo
+    catch( IOException e ){
+      completionCode = CompletionCode.DecodingError;
+    }
+    catch( InvalidRangeException e ){
+      completionCode = CompletionCode.InvalidRange;
+    }
+    catch( Exception e ) {
+      completionCode = CompletionCode.InternalError;
     }
 
-    return null;
+    return new ErrorHandler( completionCode ).handle();
   }
   //endregion
 }

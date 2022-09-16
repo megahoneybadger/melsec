@@ -1,9 +1,9 @@
 package melsec.simulation.handlers.multi;
 
+import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.BaseHandler;
-import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
+import melsec.simulation.handlers.RequestBlock;
 import melsec.utils.ByteConverter;
 import melsec.utils.Coder;
 
@@ -26,64 +26,38 @@ public class MultiBlockBatchReadHandler extends BaseHandler {
 
   //region Class 'Handle' methods
   @Override
-  public byte[] handle() throws IOException {
+  public byte[] handle() throws IOException, InvalidRangeException {
     var subCommand = reader.readUnsignedShort();
 
     var wordBlockCount = reader.readUnsignedByte();
     var bitBlockCount = reader.readUnsignedByte();
 
-    var words = readWords( reader, wordBlockCount );
-    var bits = readBits( reader, bitBlockCount );
+    var words = read( reader, wordBlockCount );
+    var bits = read( reader, bitBlockCount );
 
     return reply( bits, words );
   }
   /**
    *
    * @param r
-   * @param wordBlockCount
+   * @param blockCount
    * @return
    * @throws IOException
    */
-  private byte [] readWords( DataInput r, int wordBlockCount ) throws IOException {
+  private byte [] read(DataInput r, int blockCount ) throws IOException, InvalidRangeException {
     byte [] res = null;
 
-    for( int i = 0; i < wordBlockCount; ++i ){
-      int address = readDeviceNumber( r );
-      var device = (WordDeviceCode) readDeviceCode( r );
-      var points = r.readUnsignedShort();
+    for( int i = 0; i < blockCount; ++i ){
+      var block = RequestBlock.decode( r );
 
-      var buffer = memory.read( device, address, points );
+      var buffer = memory.toBytes( block );
 
       res = ByteConverter.concat( res, buffer );
     }
 
     return res;
   }
-  /**
-   *
-   * @param r
-   * @param bitBlockCount
-   * @return
-   * @throws IOException
-   */
-  private byte [] readBits(DataInput r, int bitBlockCount ) throws IOException {
-    byte [] res = null;
 
-    for( int i = 0; i < bitBlockCount; ++i ){
-      int address = readDeviceNumber( r );
-      var device = (BitDeviceCode) readDeviceCode( r );
-      var points = r.readUnsignedShort();
-
-      var buffer = memory.read( device, address, points );
-
-      res = ByteConverter.concat( res, buffer );
-    }
-
-    //write b100 true, b102 true
-    // write b100 true, b102 true, b10F true, b110 true
-
-    return res;
-  }
   /**
    *
    * @param bits
@@ -98,8 +72,8 @@ public class MultiBlockBatchReadHandler extends BaseHandler {
 
         int size =
           ( ( null != bits ) ? bits.length : 0 ) +
-            ( ( null != words ) ? words.length : 0 ) +
-            2 /*Completion code*/;
+          ( ( null != words ) ? words.length : 0 ) +
+          2 /*Completion code*/;
 
         w.write( ByteConverter.toBytes( size, 2 )  );
 

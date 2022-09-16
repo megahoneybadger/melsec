@@ -58,6 +58,17 @@ public class Coder {
   }
   /**
    *
+   * @param w
+   * @param address
+   */
+  public static void encodeDeviceNumber( DataOutput w, int address ) throws IOException {
+    if( address < 0 || address > ( 1 << 24 ) - 1 )
+      throw new IOException( "Invalid device address" );
+
+    w.write( ByteConverter.toBytes( address, 3 ) );
+  }
+  /**
+   *
    * @param header
    * @return
    */

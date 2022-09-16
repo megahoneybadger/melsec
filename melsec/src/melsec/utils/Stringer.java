@@ -70,7 +70,7 @@ public class Stringer {
     var v = displayValue ? " " + o.value() : EMPTY_STRING;
 
     return MessageFormat.format("A{4} [{0}@{1}{2}]{3}",
-      o.device(), o.device().toStringAddress( o.address() ), id, v, o.size());
+      o.device(), o.device().toStringAddress( o.address() ), id, v, Integer.toString( o.size() ));
   }
 
   public static String toString( PlcStruct st ){
@@ -122,7 +122,8 @@ public class Stringer {
           Stringer.toString( result.value() ) ) :
 
         MessageFormat.format( "Read [{0}] {1} -> {2}", resPrefix,
-          Stringer.toString( item.target(), false ), result.error().getMessage() );
+          Stringer.toString( item.target(), false ),
+          UtilityHelper.coalesce( result.error().getMessage(), result.error().toString() ) );
 
     } else {
       return ( result.success() ) ?
@@ -131,7 +132,8 @@ public class Stringer {
           Stringer.toString( result.value() ) ) :
 
         MessageFormat.format( "Write [{0}] {1} -> {2}", resPrefix,
-          Stringer.toString( item.target() ), result.error().getMessage() );
+          Stringer.toString( item.target() ),
+          UtilityHelper.coalesce( result.error().getMessage(), result.error().toString() ) );
     }
   }
   //endregion

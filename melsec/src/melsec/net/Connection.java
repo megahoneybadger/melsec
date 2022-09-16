@@ -400,7 +400,8 @@ public class Connection {
     }
 
     if( null != e ){
-      logger().error( "Failed to complete {}. {}", c, e.getMessage() );
+      logger().error( "Failed to complete {}. {}", c,
+        UtilityHelper.coalesce( e.getMessage(), e.toString() )  );
     }
 
     c.complete( e );
