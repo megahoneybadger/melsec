@@ -1,14 +1,14 @@
 package dispatcher;
 
-import melsec.simulation.Equipment;
+import melsec.simulation.Memory;
 
 import java.util.List;
 
 public abstract class BaseCommand {
-  protected Equipment eqp;
+  protected Memory memory;
 
-  public BaseCommand( Equipment e ){
-    eqp = e;
+  public BaseCommand( Memory m ){
+    memory = m;
   }
 
   public abstract void exec( List<String> args );

@@ -1,27 +1,33 @@
 package melsec.log;
 
+import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.apache.logging.log4j.message.Message;
 
-public record ConsoleLogger(LogLevel level ) implements IPlcLogger {
+import java.text.MessageFormat;
+
+public record ConsoleLogger( LogLevel level ) implements IPlcLogger {
   public final static String NAME = "stdout";
 
-  public ConsoleLogger(){
+  public ConsoleLogger( String id ){
     this( LogLevel.DEBUG );
   }
 
-  @Override
-  public void create( ConfigurationBuilder builder ){
+  public void create( ConfigurationBuilder builder, String id ){
+    id = UtilityHelper.coalesce( id, "melsec" );
+    id = MessageFormat.format( "[{0}]", id );
+
     var layout = builder
       .newLayout( PatternLayout.class.getSimpleName() )
       .addAttribute( "disableAnsi", false )
-      .addAttribute( "pattern", "[melsec]%highlight{[%-5level][%d{HH:mm:ss.sss}] %msg%n}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=Normal, DEBUG=Normal}");
+      .addAttribute( "pattern", id + "%highlight{[%-5level][%d{HH:mm:ss.sss}] %msg%n}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=Normal, DEBUG=Normal}" );
 
     // Fix for win10: REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
 
     var appender = builder
-      .newAppender( NAME, "Console")
+      .newAppender( NAME, "Console" )
       .add(layout);
 
     builder.add(appender);
@@ -40,5 +46,11 @@ public record ConsoleLogger(LogLevel level ) implements IPlcLogger {
       case ERROR -> Level.ERROR;
       default -> Level.OFF;
     };
+  }
+
+  @Override
+  public void create( ConfigurationBuilder builder ){
+    create( builder, null );
+
   }
 }

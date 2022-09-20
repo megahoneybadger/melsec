@@ -127,6 +127,14 @@ public class ByteConverter {
    * @param o
    * @return
    */
+  public static int getPointsCount( IPlcWord o ){
+    return getBytesCount( o ) * 2;
+  }
+  /**
+   *
+   * @param o
+   * @return
+   */
   public static int getBytesCount( IPlcWord o ){
     return switch( o.type() ){
       case U2, I2 -> 2;

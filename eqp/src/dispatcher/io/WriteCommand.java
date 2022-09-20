@@ -2,8 +2,9 @@ package dispatcher.io;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBit;
+import melsec.exceptions.InvalidRangeException;
 import melsec.io.IORequestItem;
-import melsec.simulation.Equipment;
+import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
 import melsec.utils.Copier;
 
@@ -23,10 +24,10 @@ public class WriteCommand extends BaseIOCommand {
   //region Class initialization
   /**
    *
-   * @param c
+   * @param m
    */
-  public WriteCommand(Equipment c ){
-    super( c );
+  public WriteCommand(Memory m ){
+    super( m );
   }
   //endregion
 
@@ -89,7 +90,7 @@ public class WriteCommand extends BaseIOCommand {
    * @param id
    * @return
    */
-  private void write( String addr, String type, String value, String id ) {
+  private void write( String addr, String type, String value, String id ) throws InvalidRangeException {
     var device = validateDeviceCode( addr );
     var address = validateAddress( device, addr );
     var obj = validateType( device, address, type, id );
@@ -100,7 +101,7 @@ public class WriteCommand extends BaseIOCommand {
 
     obj = Copier.with( obj, toTypedValue( obj, type, value ) );
 
-    eqp.getMemory().write( obj );
+    memory.write( obj );
   }
   /**
    *

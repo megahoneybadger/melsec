@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public record RequestBlock(IDeviceCode device, int address, int points ) {
+public record RequestBlock(IDeviceCode device, int address, int points, byte [] buffer ) {
 
+  public RequestBlock(IDeviceCode device, int address, int points ){
+    this( device, address, points, null );
+  }
 
   //region Class initialization
   /**
@@ -19,12 +22,29 @@ public record RequestBlock(IDeviceCode device, int address, int points ) {
    * @return
    * @throws IOException
    */
-  public static RequestBlock decode( DataInput r ) throws IOException {
+  public static RequestBlock decodeRead( DataInput r ) throws IOException {
     int address = readDeviceNumber( r );
     var device = readDeviceCode( r );
     var points = r.readUnsignedShort();
 
-    return new RequestBlock( device, address, points );
+    return new RequestBlock( device, address, points, null );
+  }
+
+  /**
+   *
+   * @param r
+   * @return
+   * @throws IOException
+   */
+  public static RequestBlock decodeWrite( DataInput r ) throws IOException {
+    int address = readDeviceNumber( r );
+    var device = readDeviceCode( r );
+    var points = r.readUnsignedShort();
+
+    var buffer = new byte[ points * 2 ];
+    r.readFully( buffer );
+
+    return new RequestBlock( device, address, points, buffer );
   }
   /**
    *

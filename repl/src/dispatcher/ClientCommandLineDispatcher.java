@@ -8,25 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class CommandLineDispatcher {
+public class ClientCommandLineDispatcher {
 
   private final Driver communicator;
   private boolean run;
 
-  public CommandLineDispatcher( Driver c ){
+  public ClientCommandLineDispatcher(Driver c ){
     communicator = c;
-
-//    c.events().subscribe( ( IDriverStartedEvent ) args ->
-//      System.out.println( "driver started" ));
-//
-//    c.events().subscribe( (IDriverStoppedEvent ) args ->
-//      System.out.println( "driver stopped" ));
-//
-//    c.events().subscribe( ( IConnectionConnectingEvent) args ->
-//      System.out.println( "channel connecting" ));
-//
-//    c.events().subscribe( (IConnectionDisposedEvent ) args ->
-//      System.out.println( "connection disposed" ));
 
   }
 

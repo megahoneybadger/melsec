@@ -1,11 +1,9 @@
 package dispatcher.io;
 
 import melsec.exceptions.InvalidRangeException;
-import melsec.io.IORequestItem;
-import melsec.simulation.Equipment;
+import melsec.simulation.Memory;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReadCommand extends BaseIOCommand {
@@ -20,10 +18,10 @@ public class ReadCommand extends BaseIOCommand {
   //region Class initialization
   /**
    *
-   * @param c
+   * @param m
    */
-  public ReadCommand( Equipment c ){
-    super( c );
+  public ReadCommand(Memory m ){
+    super( m );
   }
   //endregion
 
@@ -84,7 +82,7 @@ public class ReadCommand extends BaseIOCommand {
     var address = validateAddress( device, addr );
     var obj = validateType( device, address, type, id );
 
-    var res = eqp.getMemory().read( obj );
+    var res = memory.read( obj );
     System.out.println( res );
   }
   //endregion

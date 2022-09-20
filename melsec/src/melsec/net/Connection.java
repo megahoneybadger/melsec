@@ -4,7 +4,6 @@ import melsec.exceptions.ConnectionNotEstablishedException;
 import melsec.commands.ICommand;
 import melsec.events.EventDispatcher;
 import melsec.events.net.ConnectionEventArgs;
-import melsec.utils.ByteConverter;
 import melsec.utils.Coder;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
@@ -31,7 +30,11 @@ public class Connection {
   /**
    *
    */
-  private final int CONNECTION_TIMEOUT = 5000;
+  private final int CONNECTION_LONG_TIMEOUT = 5000;
+  /**
+   *
+   */
+  private final int CONNECTION_SHORT_TIMEOUT = 100;
   //endregion
 
   //region Class members
@@ -93,7 +96,7 @@ public class Connection {
     processingThread = new Thread( () -> processor() );
     processingThread.start();
 
-    reconnect( 100, true );
+    reconnect( CONNECTION_SHORT_TIMEOUT, true );
   }
   /**
    *
@@ -183,12 +186,12 @@ public class Connection {
               state = Disconnected;
             }
 
-            reconnect( CONNECTION_TIMEOUT, false );
+            reconnect(CONNECTION_LONG_TIMEOUT, false );
           }
         });
       }
       catch ( IOException e ){
-        reconnect( CONNECTION_TIMEOUT, false );
+        reconnect(CONNECTION_LONG_TIMEOUT, false );
       }
     }
   }
@@ -250,7 +253,7 @@ public class Connection {
           break;
 
         if( queue.size() > 0 && null == currentPendingCommand ){
-          send( queue.remove() );
+          sendAsync( queue.remove() );
         } else {
           try {
             syncObject.wait();
@@ -267,7 +270,7 @@ public class Connection {
    *
    * @param command
    */
-  private void send( ICommand command ){
+  private void sendAsync(ICommand command ){
     try {
       currentPendingCommand = command;
 
@@ -282,7 +285,7 @@ public class Connection {
         @Override
         public void completed( Integer count, ICommand command ) {
           events.enqueue( CommandAfterSend, command );
-          recvHeader( command );
+          recvHeaderAsync( command );
         }
 
         @Override
@@ -299,7 +302,7 @@ public class Connection {
    *
    * @param command
    */
-  private void recvHeader( ICommand command ){
+  private void recvHeaderAsync(ICommand command ){
     try {
       var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
       logger().debug( "Receiving {} header", command );
@@ -321,7 +324,7 @@ public class Connection {
 
               bufferTotal.position( Coder.HEADER_LENGTH );
 
-              recvBody( new BodyRecvProgress( command, bufferTotal, replyBodySize ) );
+              recvBodyAsync( new BodyRecvProgress( command, bufferTotal, replyBodySize ) );
             }
           }
 
@@ -336,13 +339,11 @@ public class Connection {
       done( command, e );
     }
   }
-
-
   /**
    *
    * @param p
    */
-  private void recvBody( BodyRecvProgress p ){
+  private void recvBodyAsync( BodyRecvProgress p ){
     try{
       logger().debug( "Receiving {} body: {} bytes left", p.command, p.bytesToReadLeft );
 
@@ -353,7 +354,7 @@ public class Connection {
             var left = pars.bytesToReadLeft - readFromStreamCount;
 
             if( left > 0 ) {
-              recvBody( new BodyRecvProgress( p.command, p.buffer, left ));
+              recvBodyAsync( new BodyRecvProgress( p.command, p.buffer, left ));
             } else {
               decode( p );
             }
@@ -418,7 +419,7 @@ public class Connection {
       events.enqueue( ConnectionDropped, getEventArgs() );
     }
 
-    reconnect( CONNECTION_TIMEOUT, true );
+    reconnect( CONNECTION_SHORT_TIMEOUT, true );
   }
   //endregion
 

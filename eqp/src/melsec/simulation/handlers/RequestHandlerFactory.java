@@ -11,6 +11,7 @@ import melsec.utils.EndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class RequestHandlerFactory {
 
@@ -20,10 +21,10 @@ public class RequestHandlerFactory {
    * @param buffer
    * @return
    */
-  public static byte[] reply( Memory m, byte [] buffer ){
+  public static byte[] reply(Memory m, ByteBuffer buffer ){
     var completionCode = CompletionCode.InternalError;
 
-    try( var bs = new ByteArrayInputStream( buffer )){
+    try( var bs = new ByteArrayInputStream( buffer.array() )){
       try( var r = new EndianDataInputStream( bs )){
         r.skipBytes( 7 );
 

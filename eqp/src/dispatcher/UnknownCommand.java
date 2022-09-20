@@ -10,6 +10,6 @@ public class UnknownCommand extends BaseCommand {
 
   @Override
   public void exec( List<String> args ){
-    System.out.println( "unknown eqp command" );
+    System.out.println( "Unknown eqp command" );
   }
 }

@@ -3,12 +3,11 @@ package melsec.commands.multi;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcStruct;
+import melsec.commands.CommandCode;
 import melsec.commands.ICommand;
 import melsec.exceptions.BadCompletionCodeException;
 import melsec.io.IORequestItem;
 import melsec.io.IORequestUnit;
-import melsec.commands.CommandCode;
 import melsec.utils.ByteConverter;
 import melsec.utils.Coder;
 
@@ -137,19 +136,19 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @param list
    * @throws IOException
    */
-  private void encodeBlocks( DataOutput w, List<IPlcObject> list ) throws IOException {
-    for( var o: list ) {
+  private void encodeBlocks( DataOutput w, Iterable<IPlcObject> list ) throws IOException {
+    for( var item: list ) {
       // Word device number
-      Coder.encodeDeviceNumber( w, o.address() );
+      Coder.encodeDeviceNumber( w, item.address() );
 
       // Device code
-      w.write( ( byte )o.device().value() );
+      w.write( ( byte )item.device().value() );
 
       // Number of device points
-      var arr = ByteConverter.toBytes( getPointsCount( o ), 2 );
-      w.write( arr );
+      var size = getPointsCount( item );
+      w.write( ByteConverter.toBytes( size, 2 ) );
 
-      encode( w, o );
+      encode( w, item );
     }
   }
   /**
@@ -167,7 +166,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
         yield ByteConverter.toBytes( value, 2 );
       }
 
-      case I2, I4, U2, U4, String, Struct -> ByteConverter.toBytes( (IPlcWord) o );
+      case I2, I4, U2, U4, String, Struct -> ByteConverter.toBytes( ( IPlcWord ) o );
 
       default -> null;
     };
@@ -200,5 +199,3 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
   //endregion
 }
-
-// write w100 u2 100, w101 i2 200

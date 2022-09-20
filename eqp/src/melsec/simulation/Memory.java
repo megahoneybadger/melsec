@@ -3,7 +3,6 @@ package melsec.simulation;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcString;
 import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.handlers.RequestBlock;
 import melsec.types.BitDeviceCode;
@@ -25,7 +24,7 @@ public class Memory {
   /**
    *
    */
-  private final int MAX_WORDS = 50000;
+  private final int MAX_WORDS = 5;
   //endregion
 
   //region Class members
@@ -71,7 +70,7 @@ public class Memory {
    */
   public boolean read( PlcBit b ) throws InvalidRangeException {
     synchronized(syncObject){
-      return getMemoryBlock( b.device(), b.address(), 1 ).get( b.address() );
+      return getMemory( b.device(), b.address(), 1 ).get( b.address() );
     }
   }
   /**
@@ -80,22 +79,21 @@ public class Memory {
    * @return
    */
   public Object read( IPlcWord w ) throws InvalidRangeException {
-    synchronized(syncObject){
-      var size = ByteConverter.getBytesCount( w );
-      var address = 2 * w.address();
+    var buffer = getBytes( new RequestBlock( w.device(),
+      w.address(), ByteConverter.getPointsCount( w ) ) );
 
-      var memory = getMemoryBlock( ( WordDeviceCode ) w.device(), address, size / 2 );
-
-      var target = new byte[ size ];
-      System.arraycopy( memory, address, target, 0, size );
-
-      return ByteConverter.fromBytes( target, w );
-    }
+    return ByteConverter.fromBytes( buffer, w );
   }
-  public byte [] toBytes( RequestBlock block ) throws InvalidRangeException {
-    return ( block.device() instanceof BitDeviceCode ) ?
-      toBytes( ( BitDeviceCode ) block.device(), block.address(), block.points() ) :
-      toBytes( ( WordDeviceCode ) block.device(), block.address(), block.points() );
+  /**
+   *
+   * @param b
+   * @return
+   * @throws InvalidRangeException
+   */
+  public byte[] getBytes( RequestBlock b ) throws InvalidRangeException {
+    return ( b.device() instanceof BitDeviceCode ) ?
+      getBytes( ( BitDeviceCode ) b.device(), b.address(), b.points() ) :
+      getBytes( ( WordDeviceCode ) b.device(), b.address(), b.points() );
   }
   /**
    *
@@ -104,11 +102,11 @@ public class Memory {
    * @param points
    * @return
    */
-  public byte[] toBytes( WordDeviceCode device, int start, int points ) throws InvalidRangeException {
+  public byte[] getBytes( WordDeviceCode device, int start, int points ) throws InvalidRangeException {
     synchronized( syncObject ){
       var size = 2 * points;
       var address = 2 * start;
-      var memory = getMemoryBlock( device, address, points );
+      var memory = getMemory( device, address, points );
 
       var target = new byte[ size ];
       System.arraycopy( memory, address, target, 0, size );
@@ -123,9 +121,9 @@ public class Memory {
    * @param points
    * @return
    */
-  public byte[] toBytes( BitDeviceCode device, int start, int points ) throws InvalidRangeException {
+  public byte[] getBytes( BitDeviceCode device, int start, int points ) throws InvalidRangeException {
     synchronized(syncObject){
-      var memory = getMemoryBlock( device, start, points );
+      var memory = getMemory( device, start, points );
 
       var count = points * 16;
       var temp = new boolean[ count ];
@@ -159,7 +157,7 @@ public class Memory {
    *
    * @param o
    */
-  public void write( IPlcObject o ){
+  public void write( IPlcObject o ) throws InvalidRangeException {
     if( o.type() == DataType.Bit ){
       write( ( PlcBit ) o );
     } else{
@@ -170,10 +168,9 @@ public class Memory {
    *
    * @param b
    */
-  public void write( PlcBit b ){
+  public void write( PlcBit b ) throws InvalidRangeException {
     synchronized(syncObject){
-      bits
-        .computeIfAbsent( b.device(), k -> new BitSet( MAX_BITS ) )
+      getMemory( b.device(), b.address(), 1 )
         .set( b.address(), b.value() );
     }
   }
@@ -181,23 +178,19 @@ public class Memory {
    *
    * @param w
    */
-  public void write( IPlcWord w ){
-    synchronized(syncObject){
-      var memory = words.computeIfAbsent(
-        w.device(), k -> new byte[ MAX_WORDS * 2 ] );
-
-      var address = 2 * w.address();
-      var source = ByteConverter.toBytes( w );
-
-      var bShouldReportError =
-        ( 0 > address ) ||
-        ( w.address() >= MAX_WORDS ) ||
-        ( w.address() + source.length / 2 > MAX_WORDS );
-
-      if( bShouldReportError )
-        return;
-
-      System.arraycopy( source, 0, memory, address, source.length );
+  public void write( IPlcWord w ) throws InvalidRangeException {
+    setBytes( ( WordDeviceCode  )w.device(), w.address(), ByteConverter.toBytes( w ) );
+  }
+  /**
+   *
+   * @param b
+   * @throws InvalidRangeException
+   */
+  public void setBytes( RequestBlock b ) throws InvalidRangeException {
+    if( b.device() instanceof BitDeviceCode ){
+      setBytes( ( BitDeviceCode ) b.device(), b.address(), b.buffer() );
+    } else{
+      setBytes( ( WordDeviceCode ) b.device(), b.address(), b.buffer() );
     }
   }
   /**
@@ -206,12 +199,12 @@ public class Memory {
    * @param start
    * @param buffer
    */
-  public void fromBytes( WordDeviceCode device, int start, byte[] buffer ) throws InvalidRangeException {
+  public void setBytes( WordDeviceCode device, int start, byte[] buffer ) throws InvalidRangeException {
     synchronized( syncObject ){
       var address = start * 2;
       var points = buffer.length / 2;
 
-      var memory = getMemoryBlock( device, start, points );
+      var memory = getMemory( device, address, points );
 
       System.arraycopy( buffer, 0, memory, address, buffer.length );
     }
@@ -222,14 +215,18 @@ public class Memory {
    * @param start
    * @param buffer
    */
-  public void fromBytes( BitDeviceCode device, int start, byte[] buffer ) throws InvalidRangeException {
+  public void setBytes( BitDeviceCode device, int start, byte[] buffer ) throws InvalidRangeException {
     synchronized( syncObject ){
-//      var address = start * 2;
-//      var points = buffer.length / 2;
-//
-//      var memory = getMemoryBlock( device, start, points );
-//
-//      System.arraycopy( buffer, 0, memory, address, buffer.length );
+      var points = buffer.length / 2;
+      var memory = getMemory( device, start, points );
+
+      for( int i = 0, index = start; i < buffer.length; ++i ){
+        var b = buffer[ i ];
+
+        for( int j = 0; j < 8; ++j, b >>= 1, ++index ){
+          memory.set( index, ( b & 1 ) > 0 );
+        }
+      }
     }
   }
   //endregion
@@ -237,11 +234,20 @@ public class Memory {
   //region Class utility methods
   /**
    *
+   */
+  public void reset(){
+    synchronized( syncObject ){
+      bits.clear();
+      words.clear();
+    }
+  }
+  /**
+   *
    * @param device
    * @param start
    * @param points
    */
-  private BitSet getMemoryBlock( BitDeviceCode device, int start, int points ) throws InvalidRangeException {
+  private BitSet getMemory( BitDeviceCode device, int start, int points ) throws InvalidRangeException {
     var memory = bits
       .computeIfAbsent( device, k -> new BitSet( MAX_BITS ) );
 
@@ -263,7 +269,7 @@ public class Memory {
    * @return
    * @throws InvalidRangeException
    */
-  private byte[] getMemoryBlock( WordDeviceCode device, int start, int points ) throws InvalidRangeException {
+  private byte[] getMemory( WordDeviceCode device, int start, int points ) throws InvalidRangeException {
     var memory = words.computeIfAbsent( device, k -> new byte[ MAX_WORDS * 2 ] );
 
     var l = start;

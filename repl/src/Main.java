@@ -1,20 +1,15 @@
-import dispatcher.CommandLineDispatcher;
+import dispatcher.ClientCommandLineDispatcher;
 import melsec.Config;
 import melsec.Driver;
-import melsec.bindings.PlcStruct;
 import melsec.exceptions.DriverNotRunningException;
 import melsec.exceptions.EncodingException;
-import melsec.io.IORequest;
 import melsec.log.ConsoleLogger;
 import melsec.log.LogLevel;
-import melsec.types.WordDeviceCode;
-import utils.Console;
 
 import java.net.UnknownHostException;
 
 
 public class Main {
-
 
   public static void main(String[] args) throws UnknownHostException, InterruptedException, DriverNotRunningException, EncodingException {
 
@@ -29,12 +24,12 @@ public class Main {
     var driver = new Driver( config );
     driver.start();
 
-//    Thread.sleep( 500 );
-//
+    Thread.sleep( 500 );
+
 //    var st = PlcStruct
 //      .builder( WordDeviceCode.W, 0x100, "Glass" )
 //      .offset( 2 )
-//      .u2(/* 100*/ )
+//      .u2( 101 )
 //      .u2( 27894 )
 //      .u2( 31254 )
 //      .offset( 3 )
@@ -46,13 +41,13 @@ public class Main {
 ////
 //    var request = IORequest
 //      .builder()
-//      .read( st )
+//      .write( st )
 //      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
 //      .build();
 ////
 //    driver.exec( request );
 
-    new CommandLineDispatcher( driver ).run();
+    new ClientCommandLineDispatcher( driver ).run();
   }
 }
 

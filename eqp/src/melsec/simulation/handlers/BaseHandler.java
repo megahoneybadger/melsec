@@ -2,14 +2,9 @@ package melsec.simulation.handlers;
 
 import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
-import melsec.types.BitDeviceCode;
-import melsec.types.IDeviceCode;
-import melsec.utils.Coder;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public abstract class BaseHandler {
 

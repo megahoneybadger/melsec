@@ -48,9 +48,9 @@ public class MultiBlockBatchReadHandler extends BaseHandler {
     byte [] res = null;
 
     for( int i = 0; i < blockCount; ++i ){
-      var block = RequestBlock.decode( r );
+      var block = RequestBlock.decodeRead( r );
 
-      var buffer = memory.toBytes( block );
+      var buffer = memory.getBytes( block );
 
       res = ByteConverter.concat( res, buffer );
     }

@@ -4,8 +4,6 @@ import melsec.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.BaseHandler;
 import melsec.simulation.handlers.RequestBlock;
-import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
 import melsec.utils.ByteConverter;
 import melsec.utils.Coder;
 
@@ -39,46 +37,24 @@ public class MultiBlockBatchWriteHandler extends BaseHandler {
     var wordBlockCount = reader.readUnsignedByte();
     var bitBlockCount = reader.readUnsignedByte();
 
-    writeWords( reader, wordBlockCount );
-    writeBits( reader, bitBlockCount );
+    write( reader, wordBlockCount );
+    write( reader, bitBlockCount );
 
     return reply( true );
   }
   /**
    *
    * @param r
-   * @param wordBlockCount
+   * @param blockCount
    * @return
    * @throws IOException
    */
-  private void writeWords( DataInput r, int wordBlockCount ) throws IOException, InvalidRangeException {
-    for( int i = 0; i < wordBlockCount; ++i ){
-      var block = RequestBlock.decode( r );
+  private void write( DataInput r, int blockCount ) throws IOException, InvalidRangeException {
+    for( int i = 0; i < blockCount; ++i ){
+      var block = RequestBlock.decodeWrite( r );
 
-      var buffer = new byte[ block.points() * 2 ];
-      r.readFully( buffer );
-
-      memory.fromBytes( ( WordDeviceCode ) block.device(), block.address(), buffer );
+      memory.setBytes( block );
     }
-  }
-  /**
-   *
-   * @param r
-   * @param bitBlockCount
-   * @return
-   * @throws IOException
-   */
-  private void writeBits(DataInput r, int bitBlockCount ) throws IOException {
-    for( int i = 0; i < bitBlockCount; ++i ){
-      var block = RequestBlock.decode( r );
-
-//      var buffer = memory.toBytes( device, address, points );
-//
-//      res = ByteConverter.concat( res, buffer );
-    }
-
-    //write b100 true, b102 true
-    // write b100 true, b102 true, b10F true, b110 true
   }
   /**
    *

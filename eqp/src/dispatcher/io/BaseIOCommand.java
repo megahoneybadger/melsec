@@ -2,7 +2,7 @@ package dispatcher.io;
 
 import dispatcher.BaseCommand;
 import melsec.bindings.*;
-import melsec.simulation.Equipment;
+import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
@@ -12,7 +12,6 @@ import java.text.MessageFormat;
 public abstract class BaseIOCommand extends BaseCommand {
 
   //region Class constants
-
   /**
    *
    */
@@ -38,10 +37,10 @@ public abstract class BaseIOCommand extends BaseCommand {
   //region Class initialization
   /**
    *
-   * @param c
+   * @param m
    */
-  public BaseIOCommand(Equipment c ){
-    super( c );
+  public BaseIOCommand(Memory m){
+    super( m );
   }
   //endregion
 
