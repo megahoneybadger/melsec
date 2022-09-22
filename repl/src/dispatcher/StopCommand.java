@@ -1,13 +1,13 @@
 package dispatcher;
 
-import melsec.Driver;
+import melsec.EquipmentClient;
 
 import java.util.List;
 
 public class StopCommand extends BaseCommand {
   public final static String COMMAND = "stop";
 
-  public StopCommand( Driver c ){
+  public StopCommand( EquipmentClient c ){
     super( c );
   }
 

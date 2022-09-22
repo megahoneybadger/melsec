@@ -1,22 +1,17 @@
 package dispatcher.multi;
 
-import melsec.Driver;
+import melsec.EquipmentClient;
 import melsec.bindings.*;
-import melsec.io.IORequest;
-import melsec.io.IORequestItem;
-import melsec.io.IOType;
+import melsec.types.io.IORequest;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IOType;
 import melsec.types.BitDeviceCode;
-import melsec.types.DataType;
-import melsec.types.IDeviceCode;
-import melsec.types.WordDeviceCode;
 import melsec.utils.Copier;
 import utils.Console;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import static melsec.types.DataType.*;
 
 public class MultiWriteCommand extends BaseMultiCommand {
 
@@ -32,7 +27,7 @@ public class MultiWriteCommand extends BaseMultiCommand {
    *
    * @param c
    */
-  public MultiWriteCommand(Driver c ){
+  public MultiWriteCommand(EquipmentClient c ){
     super( c );
   }
   //endregion

@@ -1,6 +1,6 @@
 package dispatcher.io;
 
-import melsec.exceptions.InvalidRangeException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 
 import java.text.MessageFormat;

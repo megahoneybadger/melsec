@@ -2,7 +2,7 @@ package dispatcher;
 
 import dispatcher.multi.MultiReadCommand;
 import dispatcher.multi.MultiWriteCommand;
-import melsec.Driver;
+import melsec.EquipmentClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 public class ClientCommandLineDispatcher {
 
-  private final Driver communicator;
+  private final EquipmentClient communicator;
   private boolean run;
 
-  public ClientCommandLineDispatcher(Driver c ){
+  public ClientCommandLineDispatcher(EquipmentClient c ){
     communicator = c;
 
   }

@@ -1,13 +1,13 @@
 package dispatcher;
 
-import melsec.Driver;
+import melsec.EquipmentClient;
 
 import java.util.List;
 
 public class StartCommand extends BaseCommand  {
   public final static String COMMAND = "start";
 
-  public StartCommand( Driver c ){
+  public StartCommand( EquipmentClient c ){
     super( c );
   }
 

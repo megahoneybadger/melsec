@@ -3,7 +3,7 @@ package melsec.simulation;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.exceptions.InvalidRangeException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.handlers.RequestBlock;
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
@@ -20,11 +20,11 @@ public class Memory {
   /**
    *
    */
-  private final int MAX_BITS = 50000;
+  public static final int MAX_BITS = 50000;
   /**
    *
    */
-  private final int MAX_WORDS = 5;
+  public static final int MAX_WORDS = 50000;
   //endregion
 
   //region Class members

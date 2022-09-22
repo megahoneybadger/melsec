@@ -2,16 +2,14 @@ package melsec.commands.multi;
 
 import melsec.bindings.*;
 import melsec.commands.ICommand;
-import melsec.exceptions.BadCompletionCodeException;
-import melsec.exceptions.EncodingException;
-import melsec.io.IORequestItem;
-import melsec.io.IORequestUnit;
-import melsec.commands.CommandCode;
+import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IORequestUnit;
+import melsec.types.CommandCode;
 import melsec.utils.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
@@ -62,6 +60,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
       if( shouldCreateCommand && items.size() > 0 ){
         res.add( new MultiBlockBatchReadCommand( unit.with( items ) ) );
+
         items.clear();
         blocks = 0;
         points = 0;

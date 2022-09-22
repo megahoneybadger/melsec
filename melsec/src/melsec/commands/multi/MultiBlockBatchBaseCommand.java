@@ -2,21 +2,18 @@ package melsec.commands.multi;
 
 import melsec.bindings.*;
 import melsec.commands.ICommand;
-import melsec.io.*;
-import melsec.commands.CommandCode;
+import melsec.types.CommandCode;
 import melsec.types.DataType;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IORequestUnit;
+import melsec.types.io.IOResponse;
+import melsec.types.io.IOResponseItem;
 import melsec.utils.*;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class MultiBlockBatchBaseCommand extends ICommand {
@@ -75,20 +72,20 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
     results = new ArrayList<>();
     unit = u;
 
-    bits = UtilityHelper.toList( u.items() )
-      .stream()
+    bits = UtilityHelper
+      .toStream( u.items() )
       .filter( x -> x.object().type() == DataType.Bit )
       .map( x -> x.object() )
       .collect( Collectors.toList() );
 
-    words = UtilityHelper.toList( u.items() )
-      .stream()
+    words = UtilityHelper
+      .toStream( u.items() )
       .filter( x -> x.object().type() != DataType.Bit )
       .map( x -> x.object() )
       .collect( Collectors.toList() );
 
-    UtilityHelper.toList( u.items() )
-      .stream()
+    UtilityHelper
+      .toStream( u.items() )
       .forEach( x -> map.put( UtilityHelper.getKey( x.object()), x ) );
   }
   /**
@@ -102,8 +99,9 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
     String sep = ( !w.isEmpty() && !b.isEmpty() ) ? "|" : "";
 
     var c = ( code() == CommandCode.MultiBlockBatchWrite ) ? "w" : "r";
+    var shortId = id.substring( 0, 3 );
 
-    return MessageFormat.format( "mbb{4}#{3} [{0}{1}{2}]", w, sep, b, id, c );
+    return MessageFormat.format( "mbb{4}#{3} [{0}{1}{2}]", w, sep, b, shortId, c );
   }
   //endregion
 
@@ -112,7 +110,15 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
    *
    * @return
    */
-  public IOResponse toResponse(){
+  @Override
+  public IOResponse toResponse( Throwable e ){
+    return ( null == e ) ? toOkResponse() : toNgResponse( e );
+  }
+  /**
+   *
+   * @return
+   */
+  private IOResponse toOkResponse(){
     var output = new HashMap<String, IOResponseItem>();
 
     for( var o : results ){
@@ -125,7 +131,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
       output.put( key, req.toResponse( o ) );
     }
 
-    var res = new ArrayList<IOResponseItem>();
+    var items = new ArrayList<IOResponseItem>();
 
     for( var item: unit.items() ){
       var key = UtilityHelper.getKey( item.object());
@@ -133,10 +139,24 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
       if( !output.containsKey( key ) )
         continue;
 
-      res.add( output.get( key ) );
+      items.add( output.get( key ) );
     }
 
-    return new IOResponse( res );
+    return new IOResponse( items );
+  }
+
+  /**
+   *
+   * @param e
+   * @return
+   */
+  protected IOResponse toNgResponse( Throwable e ){
+    var items = UtilityHelper
+      .toStream( unit.items() )
+      .map(x -> x.toResponse( e ))
+      .toList();
+
+    return new IOResponse(items);
   }
   //endregion
 }

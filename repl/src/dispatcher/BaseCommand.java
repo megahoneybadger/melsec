@@ -1,13 +1,13 @@
 package dispatcher;
 
-import melsec.Driver;
+import melsec.EquipmentClient;
 
 import java.util.List;
 
 public abstract class BaseCommand {
-  protected Driver communicator;
+  protected EquipmentClient communicator;
 
-  public BaseCommand( Driver c ){
+  public BaseCommand( EquipmentClient c ){
     communicator = c;
   }
 

@@ -2,8 +2,8 @@ package dispatcher.io;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBit;
-import melsec.exceptions.InvalidRangeException;
-import melsec.io.IORequestItem;
+import melsec.types.exceptions.InvalidRangeException;
+import melsec.types.io.IORequestItem;
 import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
 import melsec.utils.Copier;

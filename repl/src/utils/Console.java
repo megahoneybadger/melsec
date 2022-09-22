@@ -1,6 +1,6 @@
 package utils;
 
-import melsec.io.IOResponseItem;
+import melsec.types.io.IOResponseItem;
 
 public class Console {
 

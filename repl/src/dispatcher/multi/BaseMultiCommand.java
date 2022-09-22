@@ -1,7 +1,7 @@
 package dispatcher.multi;
 
 import dispatcher.BaseCommand;
-import melsec.Driver;
+import melsec.EquipmentClient;
 import melsec.bindings.*;
 import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;
@@ -40,7 +40,7 @@ public abstract class BaseMultiCommand extends BaseCommand {
    *
    * @param c
    */
-  public BaseMultiCommand(Driver c ){
+  public BaseMultiCommand(EquipmentClient c ){
     super( c );
   }
   //endregion

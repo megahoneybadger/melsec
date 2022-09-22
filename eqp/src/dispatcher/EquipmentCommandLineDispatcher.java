@@ -3,8 +3,8 @@ package dispatcher;
 import dispatcher.io.ReadCommand;
 import dispatcher.io.WriteCommand;
 import melsec.simulation.Memory;
-import melsec.simulation.net.EquipmentOptions;
-import melsec.simulation.net.EquipmentServer;
+import melsec.simulation.ServerOptions;
+import melsec.simulation.EquipmentServer;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class EquipmentCommandLineDispatcher implements Runnable {
    *
    * @param options
    */
-  public EquipmentCommandLineDispatcher( EquipmentOptions options ){
+  public EquipmentCommandLineDispatcher( ServerOptions options ){
     memory = options.memory();
 
     server = new EquipmentServer( options );

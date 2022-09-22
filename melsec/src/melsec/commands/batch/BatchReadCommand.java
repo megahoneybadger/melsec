@@ -1,7 +1,8 @@
 package melsec.commands.batch;
 
-import melsec.commands.CommandCode;
+import melsec.types.CommandCode;
 import melsec.commands.ICommand;
+import melsec.types.io.IOResponse;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,6 +29,9 @@ public class BatchReadCommand extends ICommand {
 
   }
   public ICommand copy(){
+    return null;
+  }
+  public IOResponse toResponse(Throwable e){
     return null;
   }
   //endregion

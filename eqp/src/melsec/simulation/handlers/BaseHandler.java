@@ -1,6 +1,6 @@
 package melsec.simulation.handlers;
 
-import melsec.exceptions.InvalidRangeException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 
 import java.io.DataInput;

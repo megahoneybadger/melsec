@@ -22,7 +22,7 @@ public class Ideas {
 
 
 //    var s = LogManager.ROOT_LOGGER_NAME;
-//    var log = LogManager.getLogger( "sucker" );
+//
 //
 //    log.error( "fuck u asshole john" );
 

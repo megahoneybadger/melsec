@@ -3,11 +3,11 @@ package melsec.commands.multi;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.commands.CommandCode;
+import melsec.types.CommandCode;
 import melsec.commands.ICommand;
-import melsec.exceptions.BadCompletionCodeException;
-import melsec.io.IORequestItem;
-import melsec.io.IORequestUnit;
+import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IORequestUnit;
 import melsec.utils.ByteConverter;
 import melsec.utils.Coder;
 

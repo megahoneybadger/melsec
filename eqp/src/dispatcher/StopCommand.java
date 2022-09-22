@@ -1,6 +1,6 @@
 package dispatcher;
 
-import melsec.simulation.net.EquipmentServer;
+import melsec.simulation.EquipmentServer;
 import melsec.utils.UtilityHelper;
 
 import java.text.MessageFormat;

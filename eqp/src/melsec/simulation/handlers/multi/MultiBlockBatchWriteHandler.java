@@ -1,6 +1,6 @@
 package melsec.simulation.handlers.multi;
 
-import melsec.exceptions.InvalidRangeException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.BaseHandler;
 import melsec.simulation.handlers.RequestBlock;

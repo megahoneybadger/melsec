@@ -2,7 +2,7 @@ package melsec.simulation.handlers;
 
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
-import melsec.exceptions.InvalidRangeException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
 import melsec.simulation.handlers.multi.MultiBlockBatchReadHandler;
 import melsec.simulation.handlers.multi.MultiBlockBatchWriteHandler;

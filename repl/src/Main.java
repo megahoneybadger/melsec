@@ -1,19 +1,22 @@
 import dispatcher.ClientCommandLineDispatcher;
-import melsec.Config;
-import melsec.Driver;
-import melsec.exceptions.DriverNotRunningException;
-import melsec.exceptions.EncodingException;
-import melsec.log.ConsoleLogger;
-import melsec.log.LogLevel;
+import melsec.ClientOptions;
+import melsec.EquipmentClient;
+import melsec.types.log.ConsoleLogger;
+import melsec.types.log.LogLevel;
 
 import java.net.UnknownHostException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.UUID;
 
 
 public class Main {
 
-  public static void main(String[] args) throws UnknownHostException, InterruptedException, DriverNotRunningException, EncodingException {
+  public static void main(String[] args) throws UnknownHostException, InterruptedException {
 
-    var config = Config
+
+
+    var config = ClientOptions
       .builder()
       .address( "127.0.0.1" )
       .port( 8000 )
@@ -21,7 +24,7 @@ public class Main {
         new ConsoleLogger( LogLevel.DEBUG ))
       .build();
 
-    var driver = new Driver( config );
+    var driver = new EquipmentClient( config );
     driver.start();
 
     Thread.sleep( 500 );

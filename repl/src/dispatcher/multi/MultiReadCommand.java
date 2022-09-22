@@ -1,9 +1,9 @@
 package dispatcher.multi;
 
-import melsec.Driver;
-import melsec.io.IORequest;
-import melsec.io.IORequestItem;
-import melsec.io.IOType;
+import melsec.EquipmentClient;
+import melsec.types.io.IORequest;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IOType;
 import utils.Console;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class MultiReadCommand extends BaseMultiCommand {
    *
    * @param c
    */
-  public MultiReadCommand(Driver c ){
+  public MultiReadCommand(EquipmentClient c ){
     super( c );
   }
   //endregion

@@ -2,9 +2,9 @@ package melsec.utils;
 
 import melsec.bindings.*;
 import melsec.commands.ICommand;
-import melsec.io.IOResponseItem;
-import melsec.io.IOType;
-import melsec.types.DataType;
+import melsec.types.io.IORequestItem;
+import melsec.types.io.IOResponseItem;
+import melsec.types.io.IOType;
 
 import java.text.MessageFormat;
 
@@ -122,7 +122,7 @@ public class Stringer {
           Stringer.toString( result.value() ) ) :
 
         MessageFormat.format( "Read [{0}] {1} -> {2}", resPrefix,
-          Stringer.toString( item.target(), false ),
+          Stringer.toString( item.proto(), false ),
           UtilityHelper.coalesce( result.error().getMessage(), result.error().toString() ) );
 
     } else {
@@ -132,9 +132,19 @@ public class Stringer {
           Stringer.toString( result.value() ) ) :
 
         MessageFormat.format( "Write [{0}] {1} -> {2}", resPrefix,
-          Stringer.toString( item.target() ),
+          Stringer.toString( item.proto() ),
           UtilityHelper.coalesce( result.error().getMessage(), result.error().toString() ) );
     }
+  }
+
+  /**
+   *
+   * @param item
+   * @return
+   */
+  public static String toString( IORequestItem item ){
+    return MessageFormat.format(
+      "{0} {1}", item.type(), Stringer.toString( item.object(), false ) );
   }
   //endregion
 }

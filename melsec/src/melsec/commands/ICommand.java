@@ -1,16 +1,16 @@
 package melsec.commands;
 
-import melsec.exceptions.BadCompletionCodeException;
-import melsec.exceptions.DecodingException;
-import melsec.exceptions.EncodingException;
-import melsec.io.IORequestUnit;
-import melsec.io.IOResponse;
-import melsec.utils.ByteConverter;
+import melsec.types.CommandCode;
+import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.exceptions.DecodingException;
+import melsec.types.exceptions.EncodingException;
+import melsec.types.io.IORequestUnit;
+import melsec.types.io.IOResponse;
 import melsec.utils.EndianDataInputStream;
 import melsec.utils.UtilityHelper;
 
 import java.io.*;
-import java.security.SecureRandom;
+import java.util.UUID;
 
 public abstract class ICommand {
 
@@ -45,9 +45,7 @@ public abstract class ICommand {
    *
    */
   public ICommand(){
-    id = Integer
-      .valueOf( new SecureRandom().nextInt( 1000 ))
-      .toString();
+    id = UUID.randomUUID().toString();
   }
   /**
    *
@@ -118,37 +116,6 @@ public abstract class ICommand {
    *
    * @return
    */
-  public IOResponse toResponse(){
-    return null;
-  }
-  /**
-   *
-   */
-  public void complete(){
-    if( null != unit && null != unit.handler() ){
-      unit.handler().complete( toResponse() );
-    }
-  }
-  /**
-   *
-   * @param e
-   */
-  public void complete( Throwable e ){
-    if( null == e ){
-      complete();
-    } else if( null != unit ) {
-      var items = UtilityHelper
-        .toList( unit.items() )
-        .stream()
-        .map( x -> x.toResponse( e ) )
-        .toList();
-
-      var response = new IOResponse( items );
-
-      if( null != unit.handler() ){
-        unit.handler().complete( response );
-      }
-    }
-  }
+  public abstract IOResponse toResponse( Throwable e );
   //endregion
 }
