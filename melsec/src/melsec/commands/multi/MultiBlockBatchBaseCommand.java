@@ -4,6 +4,7 @@ import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.types.CommandCode;
 import melsec.types.DataType;
+import melsec.types.PlcKey;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IORequestUnit;
 import melsec.types.io.IOResponse;
@@ -33,7 +34,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
   /**
    *
    */
-  protected HashMap<String, IORequestItem> map;
+  protected HashMap<PlcKey, IORequestItem> map;
   /**
    *
    */
@@ -119,7 +120,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
    * @return
    */
   private IOResponse toOkResponse(){
-    var output = new HashMap<String, IOResponseItem>();
+    var output = new HashMap<PlcKey, IOResponseItem>();
 
     for( var o : results ){
       var key = UtilityHelper.getKey( o );

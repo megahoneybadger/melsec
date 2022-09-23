@@ -47,5 +47,9 @@ public record PlcI2( WordDeviceCode device, int address, Short value, String id 
   public IPlcNumber<Short> with( Short v ){
     return new PlcI2( device, address, v, id );
   }
+
+  public IPlcNumber<Short> without(){
+    return new PlcI2( device, address, ( short )0, id );
+  }
 }
 //65535

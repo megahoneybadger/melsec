@@ -128,7 +128,7 @@ public class ByteConverter {
    * @return
    */
   public static int getPointsCount( IPlcWord o ){
-    return getBytesCount( o ) * 2;
+    return getBytesCount( o ) / 2;
   }
   /**
    *

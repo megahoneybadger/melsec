@@ -6,7 +6,7 @@ import melsec.types.events.IEventArgs;
 public record CommandEventArgs( ICommand command ) implements IEventArgs {
 
   public CommandEventArgs {
-    command = command.copy();
+    //command = command.copy();
   }
 
   @Override

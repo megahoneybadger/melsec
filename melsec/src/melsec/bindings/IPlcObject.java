@@ -2,6 +2,7 @@ package melsec.bindings;
 
 import melsec.types.DataType;
 import melsec.types.IDeviceCode;
+import melsec.types.PlcCoordinate;
 
 import java.text.MessageFormat;
 

@@ -8,12 +8,12 @@ import melsec.simulation.EquipmentServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public record IOTestFrame(EquipmentClient client,
                           EquipmentServer server,
@@ -66,7 +66,7 @@ public record IOTestFrame(EquipmentClient client,
    * @throws InterruptedException
    */
   public void await() throws InterruptedException {
-    await( 300 );
+    await( 0 );
   }
   //endregion
 

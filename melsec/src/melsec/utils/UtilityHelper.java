@@ -1,6 +1,8 @@
 package melsec.utils;
 
 import melsec.bindings.IPlcObject;
+import melsec.types.PlcCoordinate;
+import melsec.types.PlcKey;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -27,17 +29,47 @@ public class UtilityHelper {
   }
   //endregion
 
+  //region Class utility methods
+
+  /**
+   *
+   * @param x
+   * @param v
+   * @return
+   * @param <T>
+   */
   public static  <T> T coalesce( T x, T v ){
     return ( x == null ) ? v : x;
   }
 
+  /**
+   *
+   * @param x
+   * @return
+   */
   public static String notNullString( String x ){
     return ( x == null ) ? EMPTY_STRING : x;
   }
+  //endregion
 
-  public static String getKey(IPlcObject o ){
-    return MessageFormat.format( "{0}@{1}{2}", o.type(), o.device(), o.device().toStringAddress(o.address())  );
+  //region Class 'PLC Identification' methods
+
+  /**
+   *
+   * @param o
+   * @return
+   */
+  public static PlcCoordinate getCoordinate( IPlcObject o ){
+    return new PlcCoordinate( o.device(), o.address() );
   }
 
-
+  /**
+   *
+   * @param o
+   * @return
+   */
+  public static PlcKey getKey( IPlcObject o ){
+    return new PlcKey( o.type(), o.device(), o.address() );
+  }
+  //endregion
 }

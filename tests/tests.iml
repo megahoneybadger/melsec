@@ -12,5 +12,6 @@
     <orderEntry type="library" scope="TEST" name="hamcrest" level="project" />
     <orderEntry type="library" name="junit.jupiter" level="project" />
     <orderEntry type="module" module-name="eqp" exported="" />
+    <orderEntry type="library" scope="TEST" name="apache.logging.log4j.core" level="project" />
   </component>
 </module>

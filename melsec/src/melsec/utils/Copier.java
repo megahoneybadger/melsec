@@ -58,10 +58,10 @@ public class Copier {
       //case Bit -> (( PlcBit ) proto ).with( ( boolean )value );
 
       case U2 -> (( PlcU2 ) proto ).without();
-//      case U4 -> (( PlcU4 ) proto ).with( ( long )value );
+      case U4 -> (( PlcU4 ) proto ).without();
 //
-//      case I2 -> (( PlcI2 ) proto ).with( ( short )value );
-//      case I4 -> (( PlcI4 ) proto ).with( ( int )value );
+      case I2 -> (( PlcI2 ) proto ).without();
+      case I4 -> (( PlcI4 ) proto ).without();
 //
 //      case String ->(( PlcString ) proto ).with( ( String )value );
 //

@@ -10,116 +10,25 @@ import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.ServerOptions;
 import melsec.simulation.EquipmentServer;
 import melsec.types.WordDeviceCode;
-import melsec.types.log.ConsoleLogger;
-import melsec.types.log.LogLevel;
 import melsec.utils.Copier;
 import melsec.utils.IOTestFrame;
 import melsec.utils.RandomFactory;
+import org.apache.logging.log4j.core.util.Assert;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
-import static melsec.utils.RandomFactory.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ReadTest extends BaseTest {
 
-  //region Class constants
-  /**
-   *
-   */
-  private final static int PORT = 5000;
-  //endregion
-
-  //region Class members
-  /**
-   *
-   */
-  private EquipmentServer server;
-  /**
-   *
-   */
-  private EquipmentClient client;
-  //endregion
-
-  //region Class initialization
-
-  /**
-   * @throws IOException
-   * @throws InterruptedException
-   */
-  @BeforeAll
-  private void initAll() throws IOException, InterruptedException {
-    server = new EquipmentServer(ServerOptions
-      .builder()
-      .port(PORT)
-      .logger(false)
-      .build());
-
-    client = new EquipmentClient(ClientOptions
-      .builder()
-      .address("127.0.0.1")
-      .port(PORT)
-      //.loggers( new ConsoleLogger( LogLevel.INFO ) )
-      .build());
-
-    var lock = new CountDownLatch(1);
-
-    client
-      .events()
-      .subscribe((IConnectionEstablishedEvent) (x) -> lock.countDown());
-
-    server.start();
-    client.start();
-
-    lock.await();
-  }
-
-  /**
-   * @throws IOException
-   */
-  @AfterAll
-  private void cleanAll() throws IOException {
-    server.stop();
-    client.stop();
-  }
-
-  /**
-   *
-   */
-  @BeforeEach
-  private void initEach() {
-    server.reset();
-  }
-
-  /**
-   *
-   */
-  @AfterEach
-  private void cleanEach() {
-
-  }
-
-  /**
-   * @return
-   */
-  private IOTestFrame createFrame() {
-    return createFrame(1);
-  }
-
-  /**
-   * @param iAsyncSteps
-   * @return
-   */
-  private IOTestFrame createFrame(int iAsyncSteps) {
-    return new IOTestFrame(client, server,
-      new CountDownLatch(iAsyncSteps), new ArrayList<>());
-  }
-  //endregion
+public class ReadU2 extends BaseIOTest {
 
   //region Class 'U2' methods
   /**
@@ -156,6 +65,37 @@ public class ReadTest extends BaseTest {
 
     f.assertResults( toWrite );
   }
+
+  @Test
+  public void Should_Read_U2_Max() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU2( WordDeviceCode.W, ADDRESS_2, 0xFFFF);
+    server.write(toWrite);
+
+    var toRead = toWrite.without();
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    f.assertResults( toWrite );
+  }
+
+  @Test
+  public void Should_Read_U2_Min() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU2( WordDeviceCode.W, ADDRESS_2, 0 );
+    server.write(toWrite);
+
+    var toRead = toWrite.without();
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    f.assertResults( toWrite );
+  }
+
 
   @Test
   public void Should_Read_MultipleU2_1() throws InvalidRangeException, InterruptedException {
@@ -243,7 +183,7 @@ public class ReadTest extends BaseTest {
 
   @Test
   public void Should_Read_MultipleU2_6() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcU2( 50000 );
+    var toWrite = RandomFactory.getPlcU2( 150000 );
 
     server.write( toWrite );
 
@@ -257,7 +197,43 @@ public class ReadTest extends BaseTest {
     f.assertResults( toWrite );
   }
 
+  @Test
+  public void Should_Read_MultipleU2_7() throws InvalidRangeException, InterruptedException {
+    for( int i = 0; i < 10; ++i ){
+      Should_Read_MultipleU2_5();
+    }
+  }
+  @Test
+  public void Should_NotRead_U2_BadRange() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU2(WordDeviceCode.W, INVALID_ADDRESS_1, 200);
 
+    var toRead = toWrite.without();
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    var res = f.results().get( 0 ).result();
+    assertTrue( res.failure() );
+    assertThat( res.error().getMessage(), CoreMatchers.containsString(ERROR_INVALID_RANGE));
+  }
+
+  @Test
+  public void Should_NotRead_U2_NoData() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU2(WordDeviceCode.W, ADDRESS_1, 200);
+
+    var toRead = toWrite.without();
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    var res = f.results().get( 0 ).result();
+    assertTrue( res.success() );
+    assertFalse( res.value().equals( toWrite ) );
+  }
 
   //endregion
 }
