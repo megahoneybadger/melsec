@@ -1,33 +1,36 @@
-import dispatcher.ClientCommandLineDispatcher;
-import melsec.ClientOptions;
-import melsec.EquipmentClient;
-import melsec.types.log.ConsoleLogger;
-import melsec.types.log.LogLevel;
+import melsec.bindings.files.BindingDeserializer;
+import utils.Console;
 
 import java.net.UnknownHostException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.UUID;
 
 
 public class Main {
 
   public static void main(String[] args) throws UnknownHostException, InterruptedException {
 
+    try{
+      var list = BindingDeserializer.read( ".resources/conf1/bits.xml" );
+    }
+    catch( Exception e ){
+      Console.error( e );
+    }
 
 
-    var config = ClientOptions
-      .builder()
-      .address( "127.0.0.1" )
-      .port( 8000 )
-      .loggers(
-        new ConsoleLogger( LogLevel.DEBUG ))
-      .build();
 
-    var driver = new EquipmentClient( config );
-    driver.start();
 
-    Thread.sleep( 500 );
+//
+//    var config = ClientOptions
+//      .builder()
+//      .address( "127.0.0.1" )
+//      .port( 8000 )
+//      .loggers(
+//        new ConsoleLogger( LogLevel.DEBUG ))
+//      .build();
+//
+//    var driver = new EquipmentClient( config );
+//    driver.start();
+//
+//    Thread.sleep( 500 );
 
 //    var st = PlcStruct
 //      .builder( WordDeviceCode.W, 0x100, "Glass" )
@@ -50,7 +53,7 @@ public class Main {
 ////
 //    driver.exec( request );
 
-    new ClientCommandLineDispatcher( driver ).run();
+//    new ClientCommandLineDispatcher( driver ).run();
   }
 }
 

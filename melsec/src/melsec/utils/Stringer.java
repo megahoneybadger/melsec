@@ -2,6 +2,8 @@ package melsec.utils;
 
 import melsec.bindings.*;
 import melsec.commands.ICommand;
+import melsec.types.IDeviceCode;
+import melsec.types.WordDeviceCode;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IOResponseItem;
 import melsec.types.io.IOType;
@@ -18,6 +20,10 @@ public class Stringer {
   //endregion
 
   //region Class 'toString' methods
+  public static String toString( IDeviceCode code ){
+    return (( Enum )code).name();
+  }
+
   public static String toString( IPlcObject o ){
     return toString( o, true );
   }
@@ -43,8 +49,14 @@ public class Stringer {
     var iv = o.value() ? 1 : 0;
     var v = displayValue ? " " + iv : EMPTY_STRING;
 
-    return MessageFormat.format("bit [{0}@{1}{3}]{2}",
-      o.device(), o.device().toStringAddress( o.address() ), v, id);
+    var device = toString( o.device() );
+
+    if( !o.device().isDecimalAddress() ){
+      device += "x";
+    }
+
+    return MessageFormat.format("bit [{0}{1}{3}]{2}",
+      device, o.device().toStringAddress( o.address() ), v, id);
   }
 
   private static <T extends  Number> String toNumericString( IPlcNumber<T> o ){
@@ -54,10 +66,17 @@ public class Stringer {
   private static <T extends  Number> String toNumericString( IPlcNumber<T> o, boolean displayValue ){
     var id = o.id().isEmpty() ? EMPTY_STRING : " " + o.id();
 
-    var v = displayValue ? " " + o.value().toString() : EMPTY_STRING;
+    var v = displayValue /*&& o.value().equals( 0 )*/ ?
+      " " + o.value().toString() : EMPTY_STRING;
 
-    return MessageFormat.format("{0} [{1}@{2}{3}]{4}",
-      o.type(), o.device(), o.device().toStringAddress( o.address() ), id, v);
+    var device = toString( o.device() );
+
+    if( !o.device().isDecimalAddress() ){
+      device += "x";
+    }
+
+    return MessageFormat.format("{0} [{1}{2}{3}]{4}",
+      o.type(), device, o.device().toStringAddress( o.address() ), id, v);
   }
 
   private static String toString( PlcString s ){
@@ -67,10 +86,16 @@ public class Stringer {
   private static String toString( PlcString o, boolean displayValue ){
     var id = o.id().isEmpty() ? EMPTY_STRING : " " + o.id();
 
-    var v = displayValue ? " " + o.value() : EMPTY_STRING;
+    var v = displayValue && !o.value().isEmpty() ? " " + o.value() : EMPTY_STRING;
 
-    return MessageFormat.format("A{4} [{0}@{1}{2}]{3}",
-      o.device(), o.device().toStringAddress( o.address() ), id, v, Integer.toString( o.size() ));
+    var device = toString( o.device() );
+
+    if( !o.device().isDecimalAddress() ){
+      device += "x";
+    }
+
+    return MessageFormat.format("A{4} [{0}{1}{2}]{3}",
+      device, o.device().toStringAddress( o.address() ), id, v, Integer.toString( o.size() ));
   }
 
   public static String toString( PlcStruct st ){
@@ -82,8 +107,14 @@ public class Stringer {
 
     var id = st.id().isEmpty() ? EMPTY_STRING : " " + st.id();
 
-    sb.append( MessageFormat.format( "struct [{0}@{1}{2}]",
-      st.device(), st.device().toStringAddress( st.address() ), id ) );
+    var device = toString( st.device() );
+
+    if( !st.device().isDecimalAddress() ){
+      device += "x";
+    }
+
+    sb.append( MessageFormat.format( "struct [{0}{1}{2}]",
+      device, st.device().toStringAddress( st.address() ), id ) );
 
     if( displayValue ){
       for( var item: st.items() ){

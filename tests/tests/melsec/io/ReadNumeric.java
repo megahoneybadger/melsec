@@ -96,5 +96,62 @@ public class ReadNumeric extends BaseIOTest {
     }
   }
   //endregion
+
+  //region Class 'Numeric and Bits' methods
+  @Test
+  public void Should_Read_NumericAndBit_1() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcBitNumerics( 10 );
+
+    server.write(toWrite);
+
+    var toRead = Copier.without( toWrite );
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    f.assertResults( toWrite );
+  }
+
+  @Test
+  public void Should_Read_NumericAndBit_2() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcBitNumerics( 1000 );
+
+    server.write(toWrite);
+
+    var toRead = Copier.without( toWrite );
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    f.assertResults( toWrite );
+  }
+
+  @Test
+  public void Should_Read_NumericAndBit_3() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcBitNumerics( 25000 );
+
+    server.write(toWrite);
+
+    var toRead = Copier.without( toWrite );
+
+    var f = createFrame();
+    f.readAsync( toRead );
+
+    f.await();
+
+    f.assertResults( toWrite );
+  }
+
+  @Test
+  public void Should_Read_NumericAndBit_4() throws InvalidRangeException, InterruptedException {
+    for( int i = 0; i < 10; ++i ){
+      Should_Read_NumericAndBit_2();
+    }
+  }
+  //endregion
 }
 

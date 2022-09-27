@@ -181,6 +181,7 @@ public class ByteConverter {
       case String -> {
         var s = new String( arr );
         s = s.substring( 0, Math.min( s.length(), (( PlcString ) proto ).size() ));
+        s = s.trim();
         yield s;
       }
       default -> null;

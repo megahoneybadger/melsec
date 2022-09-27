@@ -15,7 +15,13 @@ import java.util.List;
 public class ClientOptions {
 
   //region Class members
+  /**
+   *
+   */
   private InetAddress address;
+  /**
+   *
+   */
   private int port;
   //endregion
 
@@ -97,7 +103,6 @@ public class ClientOptions {
       Configurator.initialize((Configuration) logNativeBuilder.build());
     }
     //endregion
-
   }
 
   //endregion

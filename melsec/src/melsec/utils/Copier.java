@@ -55,15 +55,15 @@ public class Copier {
    */
   public static IPlcObject without( IPlcObject proto ){
     return switch( proto.type() ){
-      //case Bit -> (( PlcBit ) proto ).with( ( boolean )value );
+      case Bit -> (( PlcBit ) proto ).without();
 
       case U2 -> (( PlcU2 ) proto ).without();
       case U4 -> (( PlcU4 ) proto ).without();
-//
+
       case I2 -> (( PlcI2 ) proto ).without();
       case I4 -> (( PlcI4 ) proto ).without();
-//
-//      case String ->(( PlcString ) proto ).with( ( String )value );
+
+      case String ->(( PlcString ) proto ).without();
 //
 //      case Struct -> {
 //        var st = ( PlcStruct ) proto;

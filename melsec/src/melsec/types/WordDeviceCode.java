@@ -13,10 +13,6 @@ public enum WordDeviceCode implements IDeviceCode {
     return value;
   }
 
-  public int getSectionSize(){
-    return 960;
-  }
-
   public boolean isDecimalAddress() {
     return switch ( this ){
       case D, R -> true;

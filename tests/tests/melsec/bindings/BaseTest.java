@@ -30,6 +30,8 @@ public class BaseTest {
   protected static final String ERROR_INVALID_RANGE = "invalid request range";
   protected static final String ERROR_CLOSED_CONNECTION = "An existing connection was forcibly closed by the remote host";
   protected static final String ERROR_INVALID_ADDRESS = "Invalid device address";
+  protected static final String ERROR_TOO_MANY_POINTS = "Too many points";
+
 
   //endregion
 

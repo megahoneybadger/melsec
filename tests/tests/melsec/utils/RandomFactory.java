@@ -1,15 +1,13 @@
 package melsec.utils;
 
+import jdk.jshell.execution.Util;
 import melsec.bindings.*;
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
 import melsec.types.PlcCoordinate;
 import melsec.types.WordDeviceCode;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 import static melsec.simulation.Memory.*;
@@ -50,6 +48,37 @@ public class RandomFactory {
   public static int getI4() {
     return random.nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );
   }
+  /**
+   *
+   * @return
+   */
+  public static boolean getBit() {
+    return random.nextBoolean();
+  }
+  /**
+   *
+   * @return
+   */
+  public static String getString() {
+    return getString( 10 );
+  }
+  /**
+   *
+   * @param size
+   * @return
+   */
+  public static String getString(int size) {
+    int leftLimit = 48; // numeral '0'
+    int rightLimit = 122; // letter 'z'
+
+    var generatedString = random.ints(leftLimit, rightLimit + 1)
+      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+      .limit(size)
+      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+      .toString();
+
+    return generatedString;
+  }
   //endregion
 
   //region Class 'Plc Object' methods
@@ -58,7 +87,7 @@ public class RandomFactory {
    * @return
    */
   public static PlcU2 getPlcU2() {
-    return new PlcU2(getWordDeviceCode(), getAddress(), getU2());
+    return new PlcU2(getWordDeviceCode(), getWordAddress(), getU2());
   }
 
   /**
@@ -66,14 +95,14 @@ public class RandomFactory {
    * @return
    */
   public static List<IPlcObject> getPlcU2(int count) {
-    return getPlcObjects( count, () -> getPlcU2() );
+    return getWords( count, () -> getPlcU2() );
   }
 
   /**
    * @return
    */
   public static PlcI2 getPlcI2() {
-    return new PlcI2(getWordDeviceCode(), getAddress(), getI2());
+    return new PlcI2(getWordDeviceCode(), getWordAddress(), getI2());
   }
 
   /**
@@ -81,14 +110,14 @@ public class RandomFactory {
    * @return
    */
   public static List<IPlcObject> getPlcI2(int count) {
-    return getPlcObjects( count, () -> getPlcI2() );
+    return getWords( count, () -> getPlcI2() );
   }
 
   /**
    * @return
    */
   public static PlcU4 getPlcU4() {
-    var address = getAddress();
+    var address = getWordAddress();
 
     if( address == MAX_WORDS - 1 )address--;
 
@@ -102,14 +131,14 @@ public class RandomFactory {
    * @return
    */
   public static List<IPlcObject> getPlcU4(int count) {
-    return getPlcObjects( count, () -> getPlcU4() );
+    return getWords( count, () -> getPlcU4() );
   }
 
   /**
    * @return
    */
   public static PlcI4 getPlcI4() {
-    var address = getAddress();
+    var address = getWordAddress();
 
     if( address == MAX_WORDS - 1 )address--;
 
@@ -123,17 +152,93 @@ public class RandomFactory {
    * @return
    */
   public static List<IPlcObject> getPlcI4(int count) {
-    return getPlcObjects( count, () -> getPlcI4() );
+    return getWords( count, () -> getPlcI4() );
+  }
+
+  /**
+   * @return
+   */
+  public static PlcBit getPlcBit() {
+    return new PlcBit( getBitDeviceCode(),  getBitAddress(), getBit());
   }
 
   /**
    *
    * @return
    */
-  public static int getAddress(){
+  public static PlcString getPlcString(){
+    return getPlcString( 10 );
+  }
+
+  /**
+   * @return
+   */
+  public static PlcString getPlcString( int size ) {
+    var address = random.nextInt( 0, MAX_WORDS );
+    //var address = MAX_WORDS - 5;
+
+    var extra = ( size % 2 == 0 ) ? 0 : 1;
+    var points = size / 2 + extra;
+    var right = address + points;
+
+    address = ( right > MAX_WORDS ) ? address - ( right - MAX_WORDS ) : address;
+
+    return new PlcString( getWordDeviceCode(),  address, size, getString( size ));
+  }
+
+  /**
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getString( int size, int count) {
+    return getWords( count, () -> getPlcString( size ) );
+  }
+
+  /**
+   *
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getPlcBit(int count) {
+    var list = new ArrayList<IPlcObject>();
+    var set = new HashSet<PlcCoordinate>();
+
+    for(int i = 0; i < count; ++i) {
+      PlcBit next;
+
+      do{
+        next = getPlcBit();
+      }
+      while( set.contains( UtilityHelper.getCoordinate( next ) ) );
+
+      list.add( next );
+      set.add(UtilityHelper.getCoordinate( next ));
+    }
+
+    return list;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static int getWordAddress(){
     return random.nextInt(0, MAX_WORDS );
   }
 
+  /**
+   *
+   * @return
+   */
+  public static int getBitAddress(){
+    return random.nextInt(0, MAX_WORDS );
+  }
+
+  /**
+   *
+   * @param count
+   * @return
+   */
   public static List<IPlcObject> getPlcNumerics( int count ){
     DataType[] types = {
       I2, U2, I4, U4
@@ -167,10 +272,27 @@ public class RandomFactory {
   }
 
   /**
+   *
    * @param count
    * @return
    */
-  private static <T extends IPlcObject> List<T> getPlcObjects(int count, Callable<T> func ) {
+  public static List<IPlcObject> getPlcBitNumerics( int count ){
+    var nums = getPlcNumerics( count );
+    var bits = getPlcBit( count );
+
+    var res = new ArrayList<IPlcObject>( nums );
+    res.addAll( bits );
+
+    Collections.shuffle( res );
+
+    return res;
+  }
+
+  /**
+   * @param count
+   * @return
+   */
+  private static <T extends IPlcObject> List<T> getWords(int count, Callable<T> func ) {
     var list = new ArrayList<T>();
     var checker = new CoordinateIntersectionChecker();
 

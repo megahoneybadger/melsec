@@ -3,6 +3,7 @@ package melsec.bindings;
 import melsec.types.DataType;
 import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
+import melsec.utils.ByteConverter;
 
 
 import java.text.MessageFormat;
@@ -143,8 +144,10 @@ public final class PlcStruct implements IPlcWord {
     }
 
     public Builder u2( int value, String id ) {
-      items.add( new PlcU2( device, address, value, id ) );
-      address += 1;
+      var o = new PlcU2( device, address, value, id );
+
+      items.add( o );
+      address += ByteConverter.getPointsCount( o );
 
       return this;
     }
@@ -163,8 +166,31 @@ public final class PlcStruct implements IPlcWord {
     }
 
     public Builder i2( short value, String id ) {
-      items.add( new PlcI2( device, address, value, id ) );
-      address += 1;
+      var o = new PlcI2( device, address, value, id );
+
+      items.add( o );
+      address += ByteConverter.getPointsCount( o );
+
+      return this;
+    }
+
+    public Builder i4( int value ) {
+      return i4( value, EMPTY_STRING );
+    }
+
+    public Builder i4( String id ) {
+      return i4( 0, id );
+    }
+
+    public Builder i4(){
+      return i4( 0 );
+    }
+
+    public Builder i4( int value, String id ) {
+      var o = new PlcI4( device, address, value, id );
+
+      items.add( o );
+      address += ByteConverter.getPointsCount( o );
 
       return this;
     }
@@ -178,8 +204,10 @@ public final class PlcStruct implements IPlcWord {
     }
 
     public Builder u4( long value, String id ) {
-      items.add( new PlcU4( device, address, value, id ) );
-      address += 2;
+      var o = new PlcU4( device, address, value, id );
+
+      items.add( o );
+      address += ByteConverter.getPointsCount( o );
 
       return this;
     }
@@ -193,11 +221,10 @@ public final class PlcStruct implements IPlcWord {
     }
 
     public Builder string( int size, String value, String id ) {
-      items.add( new PlcString( device, address, size, value, id ) );
-      var extra = ( size % 2 == 0 ) ? 0 : 1;
-      var points = size / 2 + extra;
+      var o = new PlcString( device, address, size, value, id );
 
-      address += points;
+      items.add( o );
+      address += ByteConverter.getPointsCount( o );
 
       return this;
     }

@@ -13,7 +13,9 @@ public record PlcString(WordDeviceCode device, int address, int size,
     value = ( null == value ) ? EMPTY_STRING : value;
     id = ( null == id ) ? EMPTY_STRING : id;
 
-    value = value.substring( 0, Math.min( value.length(), size ));
+    value = value
+      .substring( 0, Math.min( value.length(), size ))
+      .trim();
   }
 
   @Override
@@ -44,5 +46,9 @@ public record PlcString(WordDeviceCode device, int address, int size,
 
   public PlcString with( String v ){
     return new PlcString( device, address, size, v, id );
+  }
+
+  public PlcString without(){
+    return new PlcString( device, address, size, "", id );
   }
 }

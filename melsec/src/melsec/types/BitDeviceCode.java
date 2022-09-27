@@ -18,10 +18,6 @@ public enum BitDeviceCode implements IDeviceCode {
     return value;
   }
 
-  public int getSectionSize(){
-    return 15360;
-  }
-
   public boolean isDecimalAddress() {
     return switch ( this ){
       case M, L, S, F -> true;

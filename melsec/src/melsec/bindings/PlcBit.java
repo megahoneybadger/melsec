@@ -39,5 +39,8 @@ public record PlcBit( BitDeviceCode device, int address, boolean value, String i
     return new PlcBit( device, address, v, id );
   }
 
+  public PlcBit without(){
+    return new PlcBit( device, address, false );
+  }
 }
 

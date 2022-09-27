@@ -8,5 +8,8 @@ public enum ErrorCode {
   InvalidDecoding,
   BadCompletionCode,
 
-  InvalidRange
+  InvalidRange,
+
+  InvalidDeserialization,
+  InvalidSerialization,
 }

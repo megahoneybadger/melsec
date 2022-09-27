@@ -50,7 +50,6 @@ public class IORequest {
 
     IORequestItem prev = null;
     var items = new ArrayList<IORequestItem>();
-    var sequenceNo = 0;
 
     for( var item: list ){
       if( prev != null && prev.type() != item.type() ){

@@ -220,7 +220,9 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
         r.readFully( buffer );
 
         var res = new String( buffer );
-        res = res.substring( 0, Math.min( res.length(), s.size() ));
+        res = res
+          .substring( 0, Math.min( res.length(), s.size() ))
+          .trim();
 
         yield  res;
       }
