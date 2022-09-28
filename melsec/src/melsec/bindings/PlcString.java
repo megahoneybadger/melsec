@@ -43,12 +43,4 @@ public record PlcString(WordDeviceCode device, int address, int size,
   public String toString(){
     return Stringer.toString( this, true );
   }
-
-  public PlcString with( String v ){
-    return new PlcString( device, address, size, v, id );
-  }
-
-  public PlcString without(){
-    return new PlcString( device, address, size, "", id );
-  }
 }

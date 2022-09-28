@@ -4,9 +4,9 @@ import melsec.types.DataType;
 import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
 import melsec.utils.ByteConverter;
+import melsec.utils.Copier;
 
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,6 +253,22 @@ public final class PlcStruct implements IPlcWord {
       s.device = proto.device;
       s.id = proto.id;
       s.items = new ArrayList<>( items );
+
+      return s;
+    }
+
+    public PlcStruct without(PlcStruct proto){
+      var s = new PlcStruct();
+
+      s.address = proto.address;
+      s.device = proto.device;
+      s.id = proto.id;
+
+      s.items = proto
+        .items
+        .stream()
+        .map( x -> ( IPlcWord )Copier.withoutValue( x ))
+        .toList();
 
       return s;
     }

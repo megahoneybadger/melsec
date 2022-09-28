@@ -7,8 +7,6 @@ import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.BindingDeserializationException;
 import melsec.types.exceptions.XmlContentException;
-import melsec.utils.Stringer;
-import melsec.utils.XmlHelper;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -102,9 +100,6 @@ public class BindingDeserializer {
       res.addAll( BindingDeserializer.read( p ));
     }
 
-    var r = res.get( res.size() - 1 );
-    System.out.println( Stringer.toString( r ) );
-
     return res;
   }
   /**
@@ -120,7 +115,7 @@ public class BindingDeserializer {
    * @param path
    */
   private BindingDeserializer( String path ) throws BindingDeserializationException {
-    XmlHelper.validate( path );
+    BindingValidator.checkFile( path );
 
     try (var fs = new FileInputStream( path )) {
       var reader = XMLInputFactory
@@ -188,8 +183,7 @@ public class BindingDeserializer {
         results.add( element );
       }
 
-      r.readByEnd( node );
-      System.out.println( r.getNativeReader().getLocation());
+      r.readByClosingTag( node );
     }
   }
   /**
@@ -291,7 +285,7 @@ public class BindingDeserializer {
           b.offset( readWordOffset() );
         }
 
-        default -> r.readByEnd( node );
+        default -> r.readByClosingTag( node );
       };
     }
 
@@ -316,7 +310,7 @@ public class BindingDeserializer {
         throw new XmlContentException( r, "Invalid string size [{0}]", size );
     }
 
-    r.readByEnd( type.toString() );
+    r.readByClosingTag( type.toString() );
 
     return new WordItem( size, value, id );
   }
@@ -331,7 +325,7 @@ public class BindingDeserializer {
     if( size <= 0 )
       throw new XmlContentException( r, "Invalid offset size [{0}]", size );
 
-    r.readByEnd( ELEMENT_OFFSET );
+    r.readByClosingTag( ELEMENT_OFFSET );
 
     return size;
   }

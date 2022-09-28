@@ -1,6 +1,5 @@
 package melsec.utils;
 
-import jdk.jshell.execution.Util;
 import melsec.bindings.*;
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
@@ -82,14 +81,12 @@ public class RandomFactory {
   //endregion
 
   //region Class 'Plc Object' methods
-
   /**
    * @return
    */
   public static PlcU2 getPlcU2() {
     return new PlcU2(getWordDeviceCode(), getWordAddress(), getU2());
   }
-
   /**
    * @param count
    * @return
@@ -97,14 +94,12 @@ public class RandomFactory {
   public static List<IPlcObject> getPlcU2(int count) {
     return getWords( count, () -> getPlcU2() );
   }
-
   /**
    * @return
    */
   public static PlcI2 getPlcI2() {
     return new PlcI2(getWordDeviceCode(), getWordAddress(), getI2());
   }
-
   /**
    * @param count
    * @return
@@ -112,7 +107,6 @@ public class RandomFactory {
   public static List<IPlcObject> getPlcI2(int count) {
     return getWords( count, () -> getPlcI2() );
   }
-
   /**
    * @return
    */
@@ -125,7 +119,6 @@ public class RandomFactory {
 
     return new PlcU4( getWordDeviceCode(), address, getU4());
   }
-
   /**
    * @param count
    * @return
@@ -133,7 +126,6 @@ public class RandomFactory {
   public static List<IPlcObject> getPlcU4(int count) {
     return getWords( count, () -> getPlcU4() );
   }
-
   /**
    * @return
    */
@@ -146,7 +138,6 @@ public class RandomFactory {
 
     return new PlcI4(getWordDeviceCode(), address, getI4());
   }
-
   /**
    * @param count
    * @return
@@ -154,14 +145,12 @@ public class RandomFactory {
   public static List<IPlcObject> getPlcI4(int count) {
     return getWords( count, () -> getPlcI4() );
   }
-
   /**
    * @return
    */
   public static PlcBit getPlcBit() {
     return new PlcBit( getBitDeviceCode(),  getBitAddress(), getBit());
   }
-
   /**
    *
    * @return
@@ -169,7 +158,6 @@ public class RandomFactory {
   public static PlcString getPlcString(){
     return getPlcString( 10 );
   }
-
   /**
    * @return
    */
@@ -185,7 +173,6 @@ public class RandomFactory {
 
     return new PlcString( getWordDeviceCode(),  address, size, getString( size ));
   }
-
   /**
    * @param count
    * @return
@@ -193,7 +180,6 @@ public class RandomFactory {
   public static List<IPlcObject> getString( int size, int count) {
     return getWords( count, () -> getPlcString( size ) );
   }
-
   /**
    *
    * @param count
@@ -217,7 +203,6 @@ public class RandomFactory {
 
     return list;
   }
-
   /**
    *
    * @return
@@ -225,7 +210,6 @@ public class RandomFactory {
   public static int getWordAddress(){
     return random.nextInt(0, MAX_WORDS );
   }
-
   /**
    *
    * @return
@@ -233,7 +217,6 @@ public class RandomFactory {
   public static int getBitAddress(){
     return random.nextInt(0, MAX_WORDS );
   }
-
   /**
    *
    * @param count
@@ -245,7 +228,7 @@ public class RandomFactory {
     };
 
     var list = new ArrayList<IPlcObject>();
-    var checker = new CoordinateIntersectionChecker();
+    var checker = new PlcCoordinate.IntersectionChecker();
 
     for(int i = 0; i < count; ++i) {
       IPlcObject next = null;
@@ -263,14 +246,13 @@ public class RandomFactory {
         };
 
       }
-      while( !checker.accept( ( IPlcWord ) next ) );
+      while( null != checker.add( ( IPlcWord ) next ) );
 
       list.add( next );
     }
 
     return list;
   }
-
   /**
    *
    * @param count
@@ -287,14 +269,13 @@ public class RandomFactory {
 
     return res;
   }
-
   /**
    * @param count
    * @return
    */
   private static <T extends IPlcObject> List<T> getWords(int count, Callable<T> func ) {
     var list = new ArrayList<T>();
-    var checker = new CoordinateIntersectionChecker();
+    var checker = new PlcCoordinate.IntersectionChecker();
 
     for(int i = 0; i < count; ++i) {
       T next = null;
@@ -308,14 +289,13 @@ public class RandomFactory {
         }
 
       }
-      while( !checker.accept( ( IPlcWord ) next ) );
+      while( null != checker.add( ( IPlcWord ) next ) );
 
       list.add( next );
     }
 
     return list;
   }
-
   /**
    * @return
    */
@@ -324,7 +304,6 @@ public class RandomFactory {
     var index = random.nextInt(0, values.length);
     return values[index];
   }
-
   /**
    * @return
    */
@@ -333,33 +312,62 @@ public class RandomFactory {
     var index = random.nextInt(0, values.length);
     return values[index];
   }
-  //endregion
+  /**
+   *
+   * @param size
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getPlcStruct( int size, int count) {
+    return getWords( count, () -> getPlcStruct( size ) );
+  }
+  /**
+   *
+   * @return
+   */
+  public static PlcStruct getPlcStruct(){
+    return getPlcStruct( 10 );
+  }
+  /**
+   *
+   * @param size
+   * @return
+   */
+  public static PlcStruct getPlcStruct( int size ) {
+    //var address = MAX_WORDS - 5;
+    var address = getWordAddress();
+    var b = PlcStruct.builder( getWordDeviceCode(), address );
 
-  //region Class internal structs
-  public static class CoordinateIntersectionChecker{
-    private HashSet<PlcCoordinate> set = new HashSet<>();
+    DataType[] types = {
+      I2, U2, I4, U4, String, Bit
+    };
 
-    public boolean accept( IPlcWord w ){
-      var points = ByteConverter.getPointsCount( w );
-      var coord = UtilityHelper.getCoordinate( w );
+    for( int i = 0; i < size; ++i ){
+      var index = random.nextInt( 0, types.length );
+      var type = types[ index ];
 
-      for( int i = 0; i < points; ++i ){
-        if( set.contains( coord ) )
-          return false;
-
-        coord = coord.shiftRight();
+      switch( type ){
+        case I2 -> b.i2( getI2() );
+        case I4 -> b.i4( getI4() );
+        case U2 -> b.u2( getU2() );
+        case U4 -> b.u4( getU4() );
+        case String -> {
+          var stringSize = random.nextInt( 0, 10 );
+          b.string( stringSize, getString( stringSize ) );
+        }
+        case Bit -> b.offset( random.nextInt( 0, 5 ) );
       }
-
-      coord = UtilityHelper.getCoordinate( w );
-
-      for( int i = 0; i < points; ++i ){
-        set.add( coord );
-
-        coord = coord.shiftRight();
-      }
-
-      return true;
     }
+
+    var stub = b.build();
+
+    var right = address + ByteConverter.getPointsCount( stub );
+
+    address = ( right > MAX_WORDS ) ? address - ( right - MAX_WORDS ) : address;
+
+    var res = Copier.withAddress( stub, address );
+
+    return ( PlcStruct ) res;
   }
   //endregion
 }

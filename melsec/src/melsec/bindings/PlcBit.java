@@ -34,13 +34,5 @@ public record PlcBit( BitDeviceCode device, int address, boolean value, String i
   public String toString() {
     return Stringer.toString( this );
   }
-
-  public PlcBit with( boolean v ){
-    return new PlcBit( device, address, v, id );
-  }
-
-  public PlcBit without(){
-    return new PlcBit( device, address, false );
-  }
 }
 

@@ -1,25 +1,15 @@
 package melsec.io;
 
-import melsec.ClientOptions;
-import melsec.EquipmentClient;
-import melsec.bindings.BaseTest;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcI2;
-import melsec.bindings.PlcU2;
-import melsec.simulation.EquipmentServer;
-import melsec.simulation.ServerOptions;
 import melsec.types.WordDeviceCode;
-import melsec.types.events.net.IConnectionEstablishedEvent;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
-import melsec.utils.IOTestFrame;
 import melsec.utils.RandomFactory;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,7 +29,7 @@ public class ReadI2 extends BaseIOTest {
     var toWrite = new PlcI2( WordDeviceCode.W, ADDRESS_1, ( short )-3542 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -54,7 +44,7 @@ public class ReadI2 extends BaseIOTest {
     var toWrite = new PlcI2( WordDeviceCode.W, ADDRESS_2, RandomFactory.getI2());
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -68,7 +58,7 @@ public class ReadI2 extends BaseIOTest {
     var toWrite = new PlcI2( WordDeviceCode.W, ADDRESS_2, Short.MAX_VALUE);
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -83,7 +73,7 @@ public class ReadI2 extends BaseIOTest {
     var toWrite = new PlcI2( WordDeviceCode.W, ADDRESS_2, Short.MIN_VALUE);
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -104,7 +94,7 @@ public class ReadI2 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -120,7 +110,7 @@ public class ReadI2 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -136,7 +126,7 @@ public class ReadI2 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -152,7 +142,7 @@ public class ReadI2 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -168,7 +158,7 @@ public class ReadI2 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -189,7 +179,7 @@ public class ReadI2 extends BaseIOTest {
   public void Should_NotRead_I2_BadRange() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcI2(WordDeviceCode.W, INVALID_ADDRESS_1, ( short )-200);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -205,7 +195,7 @@ public class ReadI2 extends BaseIOTest {
   public void Should_NotRead_I_NoData() throws InterruptedException {
     var toWrite = new PlcI2(WordDeviceCode.W, ADDRESS_1, ( short )200);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );

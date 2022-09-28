@@ -2,7 +2,7 @@ package melsec.io;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcU4;
+import melsec.bindings.PlcString;
 import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
 import melsec.types.WordDeviceCode;
@@ -25,7 +25,7 @@ public class ReaBit extends BaseIOTest {
     var toWrite = new PlcBit( BitDeviceCode.B, ADDRESS_2, true );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -40,7 +40,7 @@ public class ReaBit extends BaseIOTest {
     var toWrite = new PlcBit( BitDeviceCode.B, ADDRESS_2, RandomFactory.getBit() );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -55,7 +55,7 @@ public class ReaBit extends BaseIOTest {
     var toWrite = new PlcBit( BitDeviceCode.B, Memory.MAX_BITS - 1, RandomFactory.getBit() );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -69,7 +69,7 @@ public class ReaBit extends BaseIOTest {
   public void Should_Read_Bit_BadAddress() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcBit( BitDeviceCode.B, -200, false );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -85,7 +85,7 @@ public class ReaBit extends BaseIOTest {
   public void Should_Read_Bit_BadAddress2() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcBit( BitDeviceCode.B, 1 << 24, false );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -101,7 +101,7 @@ public class ReaBit extends BaseIOTest {
   public void Should_Read_Bit_BadRange() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcBit( BitDeviceCode.B, 1 << 24 - 1, true );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -118,7 +118,7 @@ public class ReaBit extends BaseIOTest {
     var toWrite = new PlcBit( BitDeviceCode.B, Memory.MAX_BITS, true );
     //server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -140,7 +140,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -156,7 +156,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -172,7 +172,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -188,7 +188,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -204,7 +204,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -220,7 +220,7 @@ public class ReaBit extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -241,7 +241,7 @@ public class ReaBit extends BaseIOTest {
   public void Should_NotRead_Bit_NoData() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcBit( BitDeviceCode.B, ADDRESS_2, true );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -252,5 +252,7 @@ public class ReaBit extends BaseIOTest {
     assertTrue( res.success() );
     assertFalse( res.value().equals( toWrite ) );
   }
+
+
   //endregion
 }

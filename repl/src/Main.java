@@ -1,4 +1,5 @@
 import melsec.bindings.files.BindingDeserializer;
+import melsec.bindings.files.BindingValidator;
 import utils.Console;
 
 import java.net.UnknownHostException;
@@ -9,7 +10,10 @@ public class Main {
   public static void main(String[] args) throws UnknownHostException, InterruptedException {
 
     try{
-      var list = BindingDeserializer.read( ".resources/conf1/bits.xml" );
+      var list = BindingDeserializer.read(
+        ".resources/conf1/bits.xml" );
+
+      BindingValidator.checkIntersections( list );
     }
     catch( Exception e ){
       Console.error( e );

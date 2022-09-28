@@ -1,9 +1,7 @@
 package melsec.io;
 
-import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcString;
 import melsec.bindings.PlcU4;
-import melsec.simulation.Memory;
 import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
@@ -31,7 +29,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, SIZE_1, STRING_1 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -46,7 +44,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 1, STRING_1 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -61,7 +59,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 3, STRING_1 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -76,7 +74,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 3, "a" );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -91,7 +89,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 2, STRING_1 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -106,7 +104,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 4, STRING_2 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -121,7 +119,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 4, "ab" );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -136,7 +134,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 0, STRING_1 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -151,7 +149,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 10, null );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -166,7 +164,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getString());
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -181,7 +179,7 @@ public class ReadString extends BaseIOTest {
     var toWrite = RandomFactory.getPlcString( 12 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -197,7 +195,7 @@ public class ReadString extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -213,7 +211,7 @@ public class ReadString extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -229,7 +227,7 @@ public class ReadString extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -245,7 +243,7 @@ public class ReadString extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -266,7 +264,7 @@ public class ReadString extends BaseIOTest {
   public void Should_NotRead_String_NoData() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, SIZE_1, STRING_1 );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -282,7 +280,7 @@ public class ReadString extends BaseIOTest {
   public void Should_NotRead_String_TooManyPoints() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcString( WordDeviceCode.W, ADDRESS_1, 5000, STRING_1 );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );

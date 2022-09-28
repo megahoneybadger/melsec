@@ -1,0 +1,87 @@
+<Bindings>
+
+	<Bit device="X" address="103" id="sensor-a" value="true" />
+	
+	<String device="w" address="100" size="5" >
+		<U2 device="w" address="100" value="6578" />
+		
+		<U4 device="w" address="200" value="45678878"  >
+			<Bit device="X" address="100" id="sensor-a-error" value="true" />
+		</U4>
+		
+		
+	</String>
+	
+	<I2 device="w" address="0x2000" value="-4568" />
+	
+	<f>
+			<s />
+		</f>
+		
+	<s />
+	
+	
+	
+	<String device="w" address="300" size="10"  value="hello-world" />
+	
+	<I2 device="w" address="0x2000" value="-4568" />
+	
+	<I4 device="d" address="20" value="-14574568" />
+	
+	<Struct id="HOST_GLASS_DATA_REQUEST_STRUCT" device="d" address="500">
+		<U2 id="CST_SEQ_NO" />
+		<U2 id="JOB_SEQ_NO" >
+			<Bit device="X" address="100" id="sensor-a" value="true" />
+		</U2>
+		<U2 id="CHIP_POSITION" />
+		<U2 id="PRODUCT_TYPE" />
+		<U2 id="SUBSTRATE_TYPE" />
+		<U2 id="CIM_MODE" />
+		<U2 id="CST_OPERATION_MODE" />
+		<U2 id="JOB_TYPE" />
+		<U2 id="DUMMY_TYPE" />
+		<U2 id="JOB_JUDGE" />
+		<U2 id="JOB_GRADE" />
+		<String id="PPID" size="25" />
+		<String id="GLASS_CHIP_ID" size="8" ></String>
+		
+		<f>
+			<s />
+		</f>
+		
+		<s />
+		
+	</Struct>
+	
+	<I4 device="d" address="2870" value="100" />
+
+	<Struct id="HOST_GLASS_DATA_REQUEST_STRUCT" device="d" address="500">
+	
+		<f>
+			<s />
+		</f>
+		
+		<s />
+		
+
+		<U4 id="JOB_TYPE" />
+		<Offset size="2" />
+		<U2 id="DUMMY_TYPE" />
+		<U4 id="JOB_JUDGE" />
+		<Offset size="1" >
+			<Bit device="X" address="100" id="sensor-a" value="true" />
+		</Offset>
+		<I2 id="JOB_GRADE" />
+		<String id="PPID" size="25" />
+		<Offset size="3" />
+		<String id="GLASS_CHIP_ID" size="8" ></String>
+		
+		<f>
+			<s />
+		</f>
+		
+	</Struct>
+	
+	<U2 device="d" address="2870" value="120" />
+
+</Bindings>

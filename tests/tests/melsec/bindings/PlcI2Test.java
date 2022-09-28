@@ -1,6 +1,5 @@
 package melsec.bindings;
 
-import melsec.bindings.PlcI2;
 import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
 import melsec.utils.Copier;
@@ -48,7 +47,7 @@ public class PlcI2Test extends BaseTest {
   public void Should_Be_Equal2(){
     var n1 = new PlcI2( WordDeviceCode.W, ADDRESS_2, ( short )10 );
 
-    var n2 = Copier.with( n1, ( short )10 );
+    var n2 = Copier.withValue( n1, ( short )10 );
 
     assertTrue( n1.equals( n2 ) );
     assertTrue( n1 != n2 );

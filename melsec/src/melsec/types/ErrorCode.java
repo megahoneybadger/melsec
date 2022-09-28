@@ -12,4 +12,5 @@ public enum ErrorCode {
 
   InvalidDeserialization,
   InvalidSerialization,
+  BadValidation
 }

@@ -1,8 +1,6 @@
 package melsec.io;
 
 import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcI2;
-import melsec.bindings.PlcU2;
 import melsec.bindings.PlcU4;
 import melsec.simulation.Memory;
 import melsec.types.WordDeviceCode;
@@ -32,7 +30,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_1, 548796l );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -47,7 +45,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getU4());
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -62,7 +60,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, 0xFFFF_FFFFl );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -77,7 +75,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.R, ADDRESS_1, 0l );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -92,7 +90,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.W, Memory.MAX_WORDS - 2, 0xFFFF_FFFFl );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -106,7 +104,7 @@ public class ReadU4 extends BaseIOTest {
   public void Should_Read_U4_BadAddress() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcU4( WordDeviceCode.R, -500, 238l );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -122,7 +120,7 @@ public class ReadU4 extends BaseIOTest {
   public void Should_Read_U4_BadAddress2() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcU4( WordDeviceCode.R, 1 << 24, 238l );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -138,7 +136,7 @@ public class ReadU4 extends BaseIOTest {
   public void Should_Read_U4_BadRange() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcU4( WordDeviceCode.R, 1 << 24 - 1, 238l );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -155,7 +153,7 @@ public class ReadU4 extends BaseIOTest {
     var toWrite = new PlcU4( WordDeviceCode.R, Memory.MAX_WORDS - 1, 238l );
     //server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -177,7 +175,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -193,7 +191,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -209,7 +207,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -225,7 +223,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -241,7 +239,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -257,7 +255,7 @@ public class ReadU4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -278,7 +276,7 @@ public class ReadU4 extends BaseIOTest {
   public void Should_NotRead_U4_NoData() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcU4(WordDeviceCode.W, ADDRESS_1, 20087475l);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );

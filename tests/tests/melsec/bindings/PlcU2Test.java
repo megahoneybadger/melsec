@@ -1,6 +1,5 @@
 package melsec.bindings;
 
-import melsec.bindings.PlcU2;
 import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
 import melsec.utils.Copier;
@@ -68,7 +67,7 @@ public class PlcU2Test extends BaseTest {
   public void Should_Be_Equal2() {
     var n1 = new PlcU2( WordDeviceCode.D, ADDRESS_2, 10 );
 
-    var n2 = Copier.with( n1, 10 );
+    var n2 = Copier.withValue( n1, 10 );
 
     assertTrue( n1.equals( n2 ) );
     assertTrue( n1 != n2 );

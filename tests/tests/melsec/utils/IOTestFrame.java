@@ -99,10 +99,6 @@ public record IOTestFrame(EquipmentClient client,
     for(int i = 0; i < list.size(); ++i) {
       var item = results.get(i);
 
-      if( !item.result().equals( list.get( i ) ) ){
-        int a = 123 * 789;
-      }
-
       assertTrue(item.result().success());
       assertEquals(item.result().value(),list.get(i));
     }

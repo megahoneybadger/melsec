@@ -29,7 +29,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_1, -548796 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -44,7 +44,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getI4());
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -59,7 +59,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_2, Integer.MAX_VALUE );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -74,7 +74,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.R, ADDRESS_1, 0 );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -89,7 +89,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.W, Memory.MAX_WORDS - 2, Integer.MAX_VALUE );
     server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -103,7 +103,7 @@ public class ReadI4 extends BaseIOTest {
   public void Should_Read_I4_BadAddress() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcI4( WordDeviceCode.R, -1500, -457238 );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -119,7 +119,7 @@ public class ReadI4 extends BaseIOTest {
   public void Should_Read_I4_BadAddress2() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcI4( WordDeviceCode.R, 1 << 24, 238 );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -135,7 +135,7 @@ public class ReadI4 extends BaseIOTest {
   public void Should_Read_I4_BadRange() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcI4( WordDeviceCode.R, 1 << 24 - 1, 238 );
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -152,7 +152,7 @@ public class ReadI4 extends BaseIOTest {
     var toWrite = new PlcI4( WordDeviceCode.R, Memory.MAX_WORDS - 1, 23887 );
     //server.write(toWrite);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -174,7 +174,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -190,7 +190,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -206,7 +206,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -222,7 +222,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -238,7 +238,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -254,7 +254,7 @@ public class ReadI4 extends BaseIOTest {
 
     server.write( toWrite );
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -275,7 +275,7 @@ public class ReadI4 extends BaseIOTest {
   public void Should_NotRead_I4_NoData() throws InterruptedException {
     var toWrite = new PlcI4(WordDeviceCode.W, ADDRESS_1, 20087475);
 
-    var toRead = toWrite.without();
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );

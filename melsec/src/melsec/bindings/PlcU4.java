@@ -42,13 +42,4 @@ public record PlcU4(WordDeviceCode device, int address, Long value, String id )
   public String toString() {
     return Stringer.toString( this );
   }
-
-  @Override
-  public IPlcNumber<Long> with( Long v ){
-    return new PlcU4( device, address, v, id );
-  }
-
-  public IPlcNumber<Long> without(){
-    return new PlcU4( device, address, 0l, id );
-  }
 }

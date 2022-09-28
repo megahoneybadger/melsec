@@ -99,7 +99,7 @@ public class WriteCommand extends BaseIOCommand {
       obj = new PlcBit((BitDeviceCode) device, address, value );
     }
 
-    obj = Copier.with( obj, toTypedValue( obj, type, value ) );
+    obj = Copier.withValue( obj, toTypedValue( obj, type, value ) );
 
     memory.write( obj );
   }

@@ -1,7 +1,5 @@
 package melsec.bindings.files;
 
-import melsec.utils.XmlHelper;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -11,11 +9,11 @@ public class BindingReader {
   /**
    *
    */
-  private XMLStreamReader reader;
+  private final XMLStreamReader reader;
   /**
    *
    */
-  private String path;
+  private final String path;
   //endregion
 
   //region Class properties
@@ -41,68 +39,185 @@ public class BindingReader {
   /**
    *
    * @param r
+   * @param p
    */
-  BindingReader( XMLStreamReader r, String p ){
+  public BindingReader( XMLStreamReader r, String p ){
     reader = r;
     path = p;
   }
   //endregion
 
-  //region Class public methods
-  public boolean shouldSkip(){
-    return XmlHelper.shouldSkip( reader );
-  }
+  //region Class 'Navigation' methods
   /**
-   * **/
-  public boolean shouldBreak( String n ){
-    return XmlHelper.shouldBreak( reader, n );
+   *
+   * @param node
+   * @return
+   */
+  public boolean shouldBreak( String node ){
+    return ( reader.isEndElement() ) && node.equalsIgnoreCase( reader.getLocalName() );
   }
   /**
    *
+   * @return
    */
-  public void readByEnd( String node ) throws XMLStreamException {
-    XmlHelper.tillEnd( reader, node );
+  public boolean shouldSkip() {
+    return ( reader.isEndElement() || !reader.isStartElement() );
   }
   /**
-   * **/
-  public boolean hasNext() throws XMLStreamException {
-    return reader.hasNext();
+   *
+   * @param node
+   * @throws XMLStreamException
+   */
+  public void readByClosingTag( String node ) throws XMLStreamException {
+    var count = 0;
+
+    do{
+      if( reader.isStartElement() )count++;
+
+      if( reader.isEndElement() ){
+        count = Math.max( 0, count - 1 );
+      }
+
+      if( !reader.hasNext() || ( 0 == count && reader.getLocalName() == node ) )
+        break;
+
+      reader.next();
+    }
+    while( true );
   }
   /**
-   * **/
-  public int next() throws XMLStreamException {
-    return reader.next();
-  }
-  /**
-   * **/
+   *
+   * @return
+   */
   public String getLocalName(){
     return reader.getLocalName();
   }
   /**
-   * **/
-  public String readAttrAsString( String name ){
-    return XmlHelper.readAttrAsString( reader, name );
+   *
+   * @return
+   * @throws XMLStreamException
+   */
+  public boolean hasNext() throws XMLStreamException {
+    return reader.hasNext();
   }
   /**
-   * **/
-  public int readAttrAsInt( String name, int radix, int dv ){
-    return XmlHelper.readAttrAsInt( reader, name, radix, dv );
+   *
+   * @return
+   * @throws XMLStreamException
+   */
+  public int next() throws XMLStreamException {
+    return reader.next();
+  }
+  //endregion
+
+  //region Class 'Read Attribute' methods
+  /**
+   *
+   * @param name
+   * @return
+   */
+  public String readAttrAsString( String name ){
+    return reader.getAttributeValue( "", name );
+  }
+  /**
+   *
+    * @param name
+   * @return
+   */
+  public int readAttrAsInt( String name ){
+    String v = reader.getAttributeValue( "", name );
+
+    if( null == v || 0 == v.length() )
+      return 0;
+
+    try {
+      return Integer.parseInt( v );
+    }
+    catch( Exception e ){
+    }
+
+    return 0;
   }
   /**
    *
    * @param name
    * @return
    */
-  public short readAttrAsShort( String name ){
-    return XmlHelper.readAttrAsShort( reader, name );
+  public long readAttrAsLong( String name ){
+    String v = reader.getAttributeValue( "", name );
+
+    if( null == v || 0 == v.length() )
+      return 0l;
+
+    try {
+      return Long.parseLong( v );
+    }
+    catch( Exception e ){
+    }
+
+    return 0l;
   }
   /**
-   * **/
-  public int readAttrAsInt( String name ){
-    return XmlHelper.readAttrAsInt( reader, name );
+   *
+   * @param name
+   * @return
+   */
+  public Short readAttrAsShort( String name ){
+    String v = reader.getAttributeValue( "", name );
+
+    if( null == v || 0 == v.length() )
+      return (short)0;
+
+    try {
+      return Short.parseShort( v );
+    }
+    catch( Exception e ){
+    }
+
+    return ( short )0;
   }
-  public long readAttrAsLong( String name ){
-    return XmlHelper.readAttrAsLong( reader, name );
+  /**
+   *
+   * @param name
+   * @param radix
+   * @param dv
+   * @return
+   */
+  public int readAttrAsInt( String name, int radix, int dv ){
+    String v = reader.getAttributeValue( "", name );
+
+    if( null == v || 0 == v.length() )
+      return dv;
+
+    try {
+      if( v.startsWith( "0x" ) && radix == 16 )
+        return Integer.decode( v );
+
+      return Integer.parseInt( v, radix );
+    }
+    catch( Exception e ){
+    }
+
+    return dv;
+  }
+  /**
+   *
+   * @param name
+   * @return
+   */
+  public boolean readAttrAsBool( String name ){
+    String v = reader.getAttributeValue( "", name );
+
+    if( null == v || 0 == v.length() )
+      return false;
+
+    try {
+      return Boolean.parseBoolean( v );
+    }
+    catch( Exception e ){
+    }
+
+    return false;
   }
   /**
    *
@@ -113,14 +228,25 @@ public class BindingReader {
    * @param <T>
    */
   public <T extends Enum<T>> T readAttrAsEnum( String name, Class<T> type, T dv ){
-    return XmlHelper.readAttrAsEnum( reader, name, type, dv );
+    return readStringAsEnum( reader.getAttributeValue( "", name ), type, dv );
   }
-  /**
+  /*
    * **/
-  public boolean readAttrAsBool( String name ){
-    return XmlHelper.readAttrAsBool( reader, name );
+  public <T extends Enum<T>> T readStringAsEnum( String v, Class<T> type, T dv ){
+    T res = dv;
+
+    try {
+      for (T enumValue : type.getEnumConstants()) {
+        if (enumValue.name().equalsIgnoreCase(v)) {
+          return enumValue;
+        }
+      }
+
+    }catch( Exception e ){
+
+    }
+
+    return res;
   }
-
-
   //endregion
 }

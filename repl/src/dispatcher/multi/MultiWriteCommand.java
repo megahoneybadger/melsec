@@ -111,7 +111,7 @@ public class MultiWriteCommand extends BaseMultiCommand {
       obj = new PlcBit((BitDeviceCode) device, address, value );
     }
 
-    obj = Copier.with( obj, toTypedValue( obj, type, value ) );
+    obj = Copier.withValue( obj, toTypedValue( obj, type, value ) );
 
     return new IORequestItem( IOType.Write, obj );
   }

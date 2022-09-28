@@ -176,7 +176,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
       // I am reading only one bit from the response
       var word = r.readUnsignedShort();
       var val = ( 1 == ( 1 & word ));
-      list.add( ( PlcBit ) Copier.with( proto, val ) );
+      list.add( ( PlcBit ) Copier.withValue( proto, val ) );
     }
 
     return list;
@@ -252,7 +252,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
       default -> null;
     };
 
-    return Copier.with( o, value );
+    return Copier.withValue( o, value );
   }
   //endregion
 }

@@ -1,12 +1,8 @@
 package melsec.io;
 
-import melsec.bindings.IPlcObject;
-import melsec.bindings.PlcI2;
-import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
 import melsec.utils.RandomFactory;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,7 +26,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -47,7 +43,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -63,7 +59,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -79,7 +75,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -104,7 +100,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -120,7 +116,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
@@ -136,7 +132,7 @@ public class ReadNumeric extends BaseIOTest {
 
     server.write(toWrite);
 
-    var toRead = Copier.without( toWrite );
+    var toRead = Copier.withoutValue( toWrite );
 
     var f = createFrame();
     f.readAsync( toRead );
