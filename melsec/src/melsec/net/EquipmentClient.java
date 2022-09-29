@@ -1,5 +1,6 @@
-package melsec;
+package melsec.net;
 
+import melsec.commands.CommandFactory;
 import melsec.types.events.IEventDispatcher;
 
 import melsec.types.io.IORequest;
@@ -99,7 +100,9 @@ public class EquipmentClient {
 //      if( !run )
 //        throw new DriverNotRunningException();
 
-      connection.enqueue( r.toMultiBlockBatchCommands() );
+      var commands = new CommandFactory().toCommands( r );
+
+      connection.enqueue( /*r.toMultiBlockBatchCommands()*/ commands );
     }
   }
   //endregion

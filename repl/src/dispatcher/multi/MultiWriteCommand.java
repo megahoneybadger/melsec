@@ -1,6 +1,6 @@
 package dispatcher.multi;
 
-import melsec.EquipmentClient;
+import melsec.net.EquipmentClient;
 import melsec.bindings.*;
 import melsec.types.io.IORequest;
 import melsec.types.io.IORequestItem;

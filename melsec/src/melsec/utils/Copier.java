@@ -46,6 +46,10 @@ public class Copier {
         var t = (( PlcStruct ) proto );
         yield PlcStruct.builder().with( t, ( List<IPlcWord> )value );
       }
+      case Binary -> {
+        var t = (( PlcBinary ) proto );
+        yield new PlcBinary( t.device(), t.address(), t.size(), ( byte[] )value, t.id() );
+      }
 
       default -> null;
     };
@@ -94,6 +98,11 @@ public class Copier {
         yield new PlcString( t.device(), address, t.size(), t.value(), t.id() );
       }
       case Struct -> withAddress( ( PlcStruct ) proto, address );
+
+      case Binary -> {
+        var t = (( PlcBinary ) proto );
+        yield new PlcBinary( t.device(), address, t.size(), t.value(), t.id() );
+      }
 
       default -> null;
     };
@@ -151,6 +160,11 @@ public class Copier {
         yield new PlcString( t.device(), t.address(), t.size(), null, t.id() );
       }
       case Struct -> PlcStruct.builder().without( (( PlcStruct ) proto ) );
+
+      case Binary -> {
+        var t = (( PlcBinary ) proto );
+        yield new PlcBinary( t.device(), t.address(), t.size(), null, t.id() );
+      }
 
 
       default -> null;

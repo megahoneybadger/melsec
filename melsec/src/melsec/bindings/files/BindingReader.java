@@ -17,7 +17,6 @@ public class BindingReader {
   //endregion
 
   //region Class properties
-
   /**
    *
    * @return
@@ -25,7 +24,6 @@ public class BindingReader {
   public XMLStreamReader getNativeReader() {
     return reader;
   }
-
   /**
    *
    * @return
@@ -177,13 +175,12 @@ public class BindingReader {
     return ( short )0;
   }
   /**
-   *
    * @param name
    * @param radix
    * @param dv
    * @return
    */
-  public int readAttrAsInt( String name, int radix, int dv ){
+  public int readAttrAsInt( String name, int radix, int dv ) {
     String v = reader.getAttributeValue( "", name );
 
     if( null == v || 0 == v.length() )
@@ -195,17 +192,16 @@ public class BindingReader {
 
       return Integer.parseInt( v, radix );
     }
-    catch( Exception e ){
+    catch( Exception e ) {
     }
 
     return dv;
   }
   /**
-   *
    * @param name
    * @return
    */
-  public boolean readAttrAsBool( String name ){
+  public boolean readAttrAsBool( String name ) {
     String v = reader.getAttributeValue( "", name );
 
     if( null == v || 0 == v.length() )
@@ -214,7 +210,7 @@ public class BindingReader {
     try {
       return Boolean.parseBoolean( v );
     }
-    catch( Exception e ){
+    catch( Exception e ) {
     }
 
     return false;

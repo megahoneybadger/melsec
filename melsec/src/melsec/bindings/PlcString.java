@@ -3,8 +3,11 @@ package melsec.bindings;
 import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
 import melsec.utils.Stringer;
+import melsec.utils.UtilityHelper;
 
 import java.text.MessageFormat;
+
+import static melsec.utils.UtilityHelper.EMPTY_STRING;
 
 public record PlcString(WordDeviceCode device, int address, int size,
                         String value, String id )  implements IPlcWord {

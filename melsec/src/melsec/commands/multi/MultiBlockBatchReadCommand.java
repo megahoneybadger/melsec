@@ -45,7 +45,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param unit
    * @return
    */
-  public static List<ICommand> split(IORequestUnit unit ){
+  public static List<ICommand> split( IORequestUnit unit ){
     var res = new ArrayList<ICommand>();
     var items = new ArrayList<IORequestItem>();
 
@@ -77,16 +77,6 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
     return res;
   }
-  /**
-   *
-   * @return
-   */
-  @Override
-  public ICommand copy(){
-    var copy = new MultiBlockBatchReadCommand( unit );
-    copy.id = id;
-    return copy;
-  }
   //endregion
 
   //region Class 'Encoding' methods
@@ -97,8 +87,8 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    */
   @Override
   protected void encode( DataOutput w ) throws IOException {
-    int iTotalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
-    Coder.encodeHeader( w, iTotalSize );
+    int totalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
+    Coder.encodeHeader( w, totalSize );
 
     // Command
     w.write( ByteConverter.toBytes( CODE, 2 ) );

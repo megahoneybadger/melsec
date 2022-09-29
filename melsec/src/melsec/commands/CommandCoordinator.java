@@ -1,13 +1,11 @@
 package melsec.commands;
 
-import melsec.Connection;
+import melsec.net.Connection;
 import melsec.types.io.IOResponse;
 import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 
 public class CommandCoordinator {

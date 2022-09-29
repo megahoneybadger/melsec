@@ -8,8 +8,6 @@ import java.text.MessageFormat;
 
 public interface IPlcObject {
 
-  String EMPTY_STRING = "";
-
   IDeviceCode device();
 
   int address();

@@ -83,16 +83,6 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
     return res;
   }
-  /**
-   *
-   * @return
-   */
-  @Override
-  public ICommand copy(){
-    var copy = new MultiBlockBatchWriteCommand( unit );
-    copy.id = id;
-    return copy;
-  }
   //endregion
 
   //region Class 'Encoding' methods

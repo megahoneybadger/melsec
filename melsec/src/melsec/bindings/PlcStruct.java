@@ -10,6 +10,8 @@ import melsec.utils.Copier;
 import java.util.ArrayList;
 import java.util.List;
 
+import static melsec.utils.UtilityHelper.EMPTY_STRING;
+
 public final class PlcStruct implements IPlcWord {
 
   //region Class members

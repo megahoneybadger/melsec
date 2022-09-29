@@ -1,4 +1,4 @@
-package melsec;
+package melsec.net;
 
 import melsec.types.log.IPlcLogger;
 import melsec.types.Endpoint;

@@ -1,7 +1,7 @@
 package melsec.io;
 
-import melsec.ClientOptions;
-import melsec.EquipmentClient;
+import melsec.net.ClientOptions;
+import melsec.net.EquipmentClient;
 import melsec.bindings.BaseTest;
 import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;

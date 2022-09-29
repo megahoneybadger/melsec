@@ -10,5 +10,7 @@ public enum DataType {
   I4,
 
   String,
-  Struct
+  Struct,
+
+  Binary
 }

@@ -4,11 +4,9 @@ import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.types.IDeviceCode;
 import melsec.types.PlcCoordinate;
-import melsec.types.WordDeviceCode;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IOResponseItem;
 import melsec.types.io.IOType;
-import org.apache.logging.log4j.message.Message;
 
 import java.text.MessageFormat;
 
@@ -52,18 +50,28 @@ public class Stringer {
   public static String toString( IPlcObject o ){
     return toString( o, true );
   }
-
+  /**
+   *
+   * @param o
+   * @param displayValue
+   * @return
+   */
   public static String toString( IPlcObject o, boolean displayValue ){
     return switch( o.type() ){
       case Bit -> toBitString( (PlcBit) o, displayValue );
       case U2, U4, I2, I4 -> toNumericString( (IPlcNumber) o, displayValue );
       case String -> toString( (PlcString) o, displayValue );
       case Struct -> toString( (PlcStruct) o, displayValue );
+      case Binary -> toString( ( PlcBinary ) o);
 
       default -> "plc object";
     };
   }
-
+  /**
+   *
+   * @param o
+   * @return
+   */
   private static String toBitString( PlcBit o ){
     return toBitString( o, true );
   }
@@ -104,6 +112,35 @@ public class Stringer {
     return MessageFormat.format("A{4} [{0}{1}{2}]{3}",
       toString( o.device() ), o.device().toStringAddress( o.address() ),
       id, v, Integer.toString( o.size() ));
+  }
+
+  public static String toString( PlcBinary r ){
+    var from = r.device().toStringAddress( r.address() );
+    var to = r.device().toStringAddress( r.address() + r.size() - 1 );
+
+    var value = "";
+
+    if( r.value() != null &&  r.value().length > 0 ){
+      var sb = new StringBuilder();
+      var len = Math.min( 10, r.value().length );
+
+      for( int i = 0; i < len; ++i ){
+        if( sb.length() > 0 ) {
+          sb.append( " " );
+        }
+
+        sb.append( String.format( "%02X", r.value()[ i ] ) );
+      }
+
+      if( r.value().length > 10 ){
+        sb.append( " ..." );
+      }
+
+      value = MessageFormat.format( " {0}", sb.toString() );
+    }
+
+    return MessageFormat.format("binary [{0}{1}-{0}{2}]{3}",
+      toString( r.device() ), from, to, value );
   }
 
   public static String toString( PlcStruct st ){
@@ -152,7 +189,7 @@ public class Stringer {
       return ( result.success() ) ?
 
         MessageFormat.format( "Read [{0}] {1}", resPrefix,
-          Stringer.toString( result.value() ) ) :
+          Stringer.toString( result.value(), true ) ) :
 
         MessageFormat.format( "Read [{0}] {1} -> {2}", resPrefix,
           Stringer.toString( item.proto(), false ),

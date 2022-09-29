@@ -1,7 +1,42 @@
+import melsec.bindings.files.BindingDeserializer;
+import melsec.bindings.files.BindingValidator;
+import utils.Console;
+
 public class Ideas {
 
   public void todo(){
 
+    //    var st = PlcStruct
+//      .builder( WordDeviceCode.W, 0x100, "Glass" )
+//      .offset( 2 )
+//      .u2( 101 )
+//      .u2( 27894 )
+//      .u2( 31254 )
+//      .offset( 3 )
+//      .i2( ( short )-1456 )
+//      .offset( 1 )
+//      .i2( ( short )5567 )
+//      .string( 4, "helloworld" )
+//      .build();
+
+    ////
+//    var request = IORequest
+//      .builder()
+//      .write( st )
+//      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
+//      .build();
+////
+//    driver.exec( request );
+
+//    try{
+//      var list = BindingDeserializer.read(
+//        ".resources/conf1/bits.xml" );
+//
+//      BindingValidator.checkIntersections( list );
+//    }
+//    catch( Exception e ){
+//      Console.error( e );
+//    }
 //    var request = IORequest
 //      .builder()
 //      .read( new PlcBit( B, 100, "RecvGlassRequestBit1"  ) )

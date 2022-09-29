@@ -5,6 +5,8 @@ import melsec.types.WordDeviceCode;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 
+import static melsec.utils.UtilityHelper.EMPTY_STRING;
+
 public record PlcU4(WordDeviceCode device, int address, Long value, String id )
   implements IPlcNumber<Long> {
 

@@ -1,4 +1,4 @@
-package melsec;
+package melsec.net;
 
 import melsec.commands.CommandCoordinator;
 import melsec.types.exceptions.ConnectionNotEstablishedException;
@@ -24,7 +24,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static melsec.types.events.EventType.*;
-import static melsec.Connection.State.*;
+import static melsec.net.Connection.State.*;
 
 public class Connection {
 

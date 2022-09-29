@@ -2,7 +2,7 @@ package dispatcher;
 
 import dispatcher.multi.MultiReadCommand;
 import dispatcher.multi.MultiWriteCommand;
-import melsec.EquipmentClient;
+import melsec.net.EquipmentClient;
 
 import java.util.Arrays;
 import java.util.List;

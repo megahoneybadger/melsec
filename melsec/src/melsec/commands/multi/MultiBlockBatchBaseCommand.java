@@ -145,7 +145,6 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
 
     return new IOResponse( items );
   }
-
   /**
    *
    * @param e

@@ -1,6 +1,6 @@
 package melsec.utils;
 
-import melsec.EquipmentClient;
+import melsec.net.EquipmentClient;
 import melsec.bindings.IPlcObject;
 import melsec.types.io.IORequest;
 import melsec.types.io.IOResponseItem;
@@ -8,7 +8,6 @@ import melsec.simulation.EquipmentServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

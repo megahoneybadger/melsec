@@ -5,6 +5,8 @@ import melsec.types.DataType;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 
+import static melsec.utils.UtilityHelper.EMPTY_STRING;
+
 public record PlcBit( BitDeviceCode device, int address, boolean value, String id ) implements IPlcObject {
 
   public PlcBit {

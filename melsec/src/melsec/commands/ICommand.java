@@ -47,11 +47,6 @@ public abstract class ICommand {
   public ICommand(){
     id = UUID.randomUUID().toString();
   }
-  /**
-   *
-   * @return
-   */
-  public abstract ICommand copy();
   //endregion
 
   //region Class 'Encoding' methods
