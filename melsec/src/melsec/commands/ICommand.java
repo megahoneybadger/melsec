@@ -7,7 +7,6 @@ import melsec.types.exceptions.EncodingException;
 import melsec.types.io.IORequestUnit;
 import melsec.types.io.IOResponse;
 import melsec.utils.EndianDataInputStream;
-import melsec.utils.UtilityHelper;
 
 import java.io.*;
 import java.util.UUID;
@@ -26,12 +25,12 @@ public abstract class ICommand {
    *
    * @return
    */
-  public abstract CommandCode code();
+  public abstract CommandCode getCode();
   /**
    *
    * @return
    */
-  public String id(){
+  public String getId(){
     return id;
   }
   /**

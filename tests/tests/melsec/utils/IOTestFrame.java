@@ -2,6 +2,7 @@ package melsec.utils;
 
 import melsec.net.EquipmentClient;
 import melsec.bindings.IPlcObject;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.io.IORequest;
 import melsec.types.io.IOResponseItem;
 import melsec.simulation.EquipmentServer;
@@ -20,7 +21,6 @@ public record IOTestFrame(EquipmentClient client,
                           ArrayList<IOResponseItem> results ) {
 
   //region Class 'IO' methods
-
   /**
    * @param proto
    */
@@ -34,7 +34,6 @@ public record IOTestFrame(EquipmentClient client,
       })
       .build());
   }
-
   /**
    * @param proto
    */
@@ -48,7 +47,41 @@ public record IOTestFrame(EquipmentClient client,
       })
       .build());
   }
-
+  /**
+   *
+   * @param proto
+   */
+  public void writeAsync(IPlcObject proto) {
+    client.exec(IORequest
+      .builder()
+      .write(proto)
+      .complete(y -> {
+        results.addAll(UtilityHelper.toList(y.items()));
+        lock.countDown();
+      })
+      .build());
+  }
+  /**
+   *
+   * @param arr
+   */
+  public void writeAsync(IPlcObject [] arr){
+    writeAsync( List.of( arr ) );
+  }
+  /**
+   *
+   * @param proto
+   */
+  public void writeAsync(List<IPlcObject> proto) {
+    client.exec(IORequest
+      .builder()
+      .write(proto)
+      .complete(y -> {
+        results.addAll( UtilityHelper.toList(y.items()) );
+        lock.countDown();
+      })
+      .build());
+  }
   /**
    * @throws InterruptedException
    */
@@ -67,6 +100,12 @@ public record IOTestFrame(EquipmentClient client,
   public void await() throws InterruptedException {
     await( 0 );
   }
+  /**
+   *
+   */
+  public void decreaseLock(){
+    lock.countDown();
+  }
   //endregion
 
   //region Class 'Assert' methods
@@ -74,25 +113,23 @@ public record IOTestFrame(EquipmentClient client,
   /**
    * @param o
    */
-  public void assertResults(IPlcObject o) {
+  public void assertReadResults( IPlcObject o) {
     var list = new ArrayList<IPlcObject>();
     list.add(o);
 
-    assertResults(list);
+    assertReadResults(list);
   }
-
   /**
    *
    * @param arr
    */
-  public void assertResults(IPlcObject [] arr) {
-    assertResults(Arrays.stream( arr ).toList());
+  public void assertReadResults( IPlcObject [] arr) {
+    assertReadResults( List.of( arr ));
   }
-
   /**
    * @param list
    */
-  public void assertResults(List<IPlcObject> list) {
+  public void assertReadResults( List<IPlcObject> list) {
     assertEquals(list.size(), results().size());
 
     for(int i = 0; i < list.size(); ++i) {
@@ -100,6 +137,41 @@ public record IOTestFrame(EquipmentClient client,
 
       assertTrue(item.result().success());
       assertEquals(item.result().value(),list.get(i));
+    }
+  }
+  /**
+   *
+   * @param o
+   */
+  public void assertWriteResults( IPlcObject o) throws InvalidRangeException {
+    var list = new ArrayList<IPlcObject>();
+    list.add(o);
+
+    assertWriteResults(list);
+  }
+  /**
+   *
+   * @param arr
+   */
+  public void assertWriteResults( IPlcObject[] arr ) throws InvalidRangeException {
+    assertWriteResults( List.of( arr ) );
+  }
+  /**
+   *
+   * @param list
+   */
+  public void assertWriteResults( List<IPlcObject> list ) throws InvalidRangeException {
+    assertEquals(list.size(), results().size());
+
+    for(int i = 0; i < list.size(); ++i) {
+      var item = results.get(i);
+      var next = list.get( i );
+
+      var serverValue = server.read( next );
+      var writtenValue = Valuer.getValue( next );
+
+      assertTrue( item.result().success());
+      assertEquals( serverValue, writtenValue );
     }
   }
   //endregion

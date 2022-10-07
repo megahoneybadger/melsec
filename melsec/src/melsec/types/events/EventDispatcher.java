@@ -1,12 +1,13 @@
 package melsec.types.events;
 
-import melsec.commands.ICommand;
-import melsec.types.events.commands.CommandEventArgs;
-import melsec.types.events.commands.ICommandAfterSendEvent;
-import melsec.types.events.commands.ICommandBeforeSendEvent;
-import melsec.types.events.client.IClientStoppedEvent;
 import melsec.types.events.client.IClientStartedEvent;
+import melsec.types.events.client.IClientStoppedEvent;
 import melsec.types.events.net.*;
+import melsec.types.events.scanner.IScannerChangeEvent;
+import melsec.types.events.scanner.ScannerEventArgs;
+import melsec.types.log.LogLevel;
+import melsec.utils.Stringer;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,11 +45,7 @@ public final class EventDispatcher implements IEventDispatcher  {
   /**
    *
    */
-  private EventBox<CommandEventArgs> commandBeforeSend = new EventBox();
-  /**
-   *
-   */
-  private EventBox<CommandEventArgs> commandAfterSend = new EventBox();
+  private EventBox<ScannerEventArgs> scannerChange = new EventBox();
   /**
    *
    */
@@ -160,29 +157,18 @@ public final class EventDispatcher implements IEventDispatcher  {
     }
   }
 
-  public void subscribe( ICommandBeforeSendEvent handler ){
+  public void subscribe( IScannerChangeEvent handler ){
     synchronized( syncObject ) {
-      commandBeforeSend.add(handler);
+      scannerChange.add(handler);
     }
   }
 
-  public void unsubscribe( ICommandBeforeSendEvent handler ){
+  public void unsubscribe( IScannerChangeEvent handler ){
     synchronized( syncObject ) {
-      commandBeforeSend.remove(handler);
+      scannerChange.remove(handler);
     }
   }
 
-  public void subscribe( ICommandAfterSendEvent handler ){
-    synchronized( syncObject ) {
-      commandAfterSend.add(handler);
-    }
-  }
-
-  public void unsubscribe( ICommandAfterSendEvent handler ){
-    synchronized( syncObject ) {
-      commandAfterSend.remove(handler);
-    }
-  }
   //endregion
 
   //region Class 'Processor' methods
@@ -192,14 +178,6 @@ public final class EventDispatcher implements IEventDispatcher  {
    */
   public void enqueue( EventType type ){
     enqueue( type, ( IEventArgs )null );
-  }
-  /**
-   *
-   * @param type
-   * @param command
-   */
-  public void enqueue( EventType type, ICommand command ){
-    enqueue( type, new CommandEventArgs( command ) );
   }
   /**
    *
@@ -273,13 +251,14 @@ public final class EventDispatcher implements IEventDispatcher  {
           (( ConnectionEventArgs )args ).id() );
         conDropped.fire( ( ConnectionEventArgs ) args );
       }
-      case CommandBeforeSend ->{
-        logger().debug( "Before send {}", (( CommandEventArgs )args ).command() );
-        commandBeforeSend.fire( ( CommandEventArgs) args );
-      }
-      case CommandAfterSend -> {
-        logger().debug( "After send {}", (( CommandEventArgs )args ).command() );
-        commandAfterSend.fire( ( CommandEventArgs ) args );
+
+      case ScannerChanges ->{
+        var level = Level.getLevel( String.valueOf( LogLevel.SCAN ) );
+        var changes = (( ScannerEventArgs ) args ).changes();
+
+        changes.forEach( x -> logger().log( level, Stringer.toString( x, true )));
+
+        scannerChange.fire( ( ScannerEventArgs ) args );
       }
     }
   }

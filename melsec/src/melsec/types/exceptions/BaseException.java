@@ -15,5 +15,7 @@ public class BaseException extends Exception {
 
   public BaseException( ErrorCode code, String message ){
     super( message );
+
+    this.code = code;
   }
 }

@@ -6,6 +6,7 @@ import melsec.bindings.PlcBit;
 import melsec.types.CommandCode;
 import melsec.commands.ICommand;
 import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.exceptions.TooManyPointsException;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IORequestUnit;
 import melsec.utils.ByteConverter;
@@ -19,14 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
-
-  //region Class constants
-  /**
-   *
-   */
-  public static final int CODE = 0x1406;
-  //endregion
+public final class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
   //region Class properties
   /**
@@ -34,7 +28,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @return
    */
   @Override
-  public CommandCode code() {
+  public CommandCode getCode() {
     return CommandCode.MultiBlockBatchWrite;
   }
   //endregion
@@ -62,19 +56,23 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
     for( var item: unit.items() ){
       var itemPoints = getPointsCount( item.object() );
 
-      var shouldCreateCommand =
-        ( blocks >= MAX_BLOCKS ) || ( points + itemPoints > MAX_POINTS );
+      var condBlocksViolation = blocks >= MAX_BLOCKS;
 
-      if( shouldCreateCommand ){
+      var condPointsViolation = 4 * blocks + points + itemPoints > MAX_POINTS;
+
+      var shouldCreateCommand = condBlocksViolation || condPointsViolation;
+
+      if( shouldCreateCommand && items.size() > 0 ){
         res.add( new MultiBlockBatchWriteCommand( unit.with( items ) ) );
+
         items.clear();
         blocks = 0;
         points = 0;
       }
 
+      items.add( item );
       blocks++;
       points += itemPoints;
-      items.add( item );
     }
 
     if( items.size() > 0 ){
@@ -93,32 +91,22 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    */
   @Override
   protected void encode( DataOutput w ) throws IOException {
+    if( 4 * ( words.size() + bits.size() ) + getTotalPointsCount() > MAX_POINTS )
+      throw new TooManyPointsException();
+
     int wordSize = 0;
 
     for( var x: words ) {
       wordSize += ( 3 + 1 + 2 + getPointsCount( x ) * 2 );
     }
 
-    int iBitsSize = bits.size() * 8 /* 3 + 1 + 2 + 2*/;
-    int iTotalSize = 2 + 6 + wordSize + iBitsSize;
+    int bitSize = bits.size() * 8 /* 3 + 1 + 2 + 2*/;
 
-    Coder.encodeHeader( w, iTotalSize );
+    int totalSize = 2 + 6 + wordSize + bitSize;
+    encodePrologue( w, totalSize );
 
-    // Command
-    w.write( ByteConverter.toBytes( CODE, 2 ) );
-
-    // Subcommand 00 means use children units (bit packed in word bits)
-    w.writeByte( 0x00 );
-    w.writeByte( 0x00 );
-
-    // Number of word device blocks
-    w.writeByte( words.size() );
-
-    // Number of bit device blocks
-    w.writeByte( bits.size() );
-
-    encodeBlocks( w, words );
-    encodeBlocks( w, bits );
+    encode( w, words );
+    encode( w, bits );
   }
   /**
    *
@@ -126,19 +114,10 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @param list
    * @throws IOException
    */
-  private void encodeBlocks( DataOutput w, Iterable<IPlcObject> list ) throws IOException {
+  protected void encode( DataOutput w, Iterable<IPlcObject> list ) throws IOException {
     for( var item: list ) {
-      // Word device number
-      Coder.encodeDeviceNumber( w, item.address() );
-
-      // Device code
-      w.write( ( byte )item.device().value() );
-
-      // Number of device points
-      var size = getPointsCount( item );
-      w.write( ByteConverter.toBytes( size, 2 ) );
-
-      encode( w, item );
+      encodeItemHeader( w, item );
+      encodeItemBody( w, item );
     }
   }
   /**
@@ -147,7 +126,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
    * @param o
    * @return
    */
-  protected void encode( DataOutput w, IPlcObject o ) throws IOException {
+  protected void encodeItemBody( DataOutput w, IPlcObject o ) throws IOException {
     var buffer = switch( o.type() ){
       case Bit -> {
         // this is incorrect: I will not use bit writes with this command
@@ -184,8 +163,7 @@ public class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseCommand {
 
     results = Stream
       .concat( words.stream(), bits.stream())
-      .collect( Collectors.toList());
+      .toList();
   }
-
   //endregion
 }

@@ -1,14 +1,17 @@
 package melsec.types.events;
 
-import melsec.types.events.commands.ICommandAfterSendEvent;
-import melsec.types.events.commands.ICommandBeforeSendEvent;
-import melsec.types.events.client.IClientStoppedEvent;
 import melsec.types.events.client.IClientStartedEvent;
+import melsec.types.events.client.IClientStoppedEvent;
+import melsec.types.events.net.IConnectionConnectingEvent;
 import melsec.types.events.net.IConnectionDisposedEvent;
 import melsec.types.events.net.IConnectionEstablishedEvent;
-import melsec.types.events.net.IConnectionConnectingEvent;
+import melsec.types.events.scanner.IScannerChangeEvent;
 
 public interface IEventDispatcher {
+
+  void enqueue( EventType type );
+  void enqueue( EventType type, IEventArgs args );
+
   void subscribe( IClientStartedEvent h );
   void unsubscribe( IClientStartedEvent h );
 
@@ -24,9 +27,6 @@ public interface IEventDispatcher {
   void subscribe( IConnectionDisposedEvent h );
   void unsubscribe( IConnectionDisposedEvent h );
 
-  void subscribe( ICommandBeforeSendEvent h );
-  void unsubscribe( ICommandBeforeSendEvent h );
-
-  void subscribe( ICommandAfterSendEvent h );
-  void unsubscribe( ICommandAfterSendEvent h );
+  void subscribe( IScannerChangeEvent h );
+  void unsubscribe( IScannerChangeEvent h );
 }

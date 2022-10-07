@@ -6,6 +6,8 @@ import melsec.bindings.BaseTest;
 import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;
 import melsec.types.events.net.IConnectionEstablishedEvent;
+import melsec.types.log.ConsoleLogger;
+import melsec.types.log.LogLevel;
 import melsec.utils.IOTestFrame;
 import org.junit.jupiter.api.*;
 
@@ -69,7 +71,7 @@ public class BaseIOTest extends BaseTest {
       .builder()
       .address("127.0.0.1")
       .port(PORT)
-      //.loggers( new ConsoleLogger( LogLevel.INFO ) )
+      //.loggers( new ConsoleLogger( LogLevel.NET ) )
       .build());
   }
 

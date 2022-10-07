@@ -1,7 +1,7 @@
-package melsec.io;
+package melsec.io.read;
 
-import melsec.bindings.PlcString;
 import melsec.bindings.PlcStruct;
+import melsec.io.BaseIOTest;
 import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
@@ -48,7 +48,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -76,7 +76,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -108,7 +108,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -124,7 +124,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -140,7 +140,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -156,7 +156,7 @@ public class ReadStruct extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test

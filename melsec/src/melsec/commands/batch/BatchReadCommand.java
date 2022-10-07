@@ -3,7 +3,9 @@ package melsec.commands.batch;
 import melsec.bindings.PlcBinary;
 import melsec.types.CommandCode;
 import melsec.commands.ICommand;
+import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.exceptions.TooManyPointsException;
 import melsec.types.io.IORequestUnit;
 import melsec.types.io.IOResponse;
 import melsec.types.io.IOResponseItem;
@@ -23,11 +25,7 @@ public class BatchReadCommand extends ICommand {
   /**
    *
    */
-  protected static final int MAX_POINTS = 960;
-  /**
-   *
-   */
-  public static final int CODE = 0x0401;
+  public static final int MAX_POINTS = 960;
   //endregion
 
   //region Class members
@@ -47,8 +45,23 @@ public class BatchReadCommand extends ICommand {
    * @return
    */
   @Override
-  public CommandCode code() {
+  public CommandCode getCode() {
     return CommandCode.BatchRead;
+  }
+  /**
+   *
+   * @return
+   */
+  private int getPointsCount(){
+    var size = target.size();
+
+    if( target.device() instanceof WordDeviceCode ){
+      var extra = ( size % 2 == 0 ) ? 0 : 1;
+      return size / 2 + extra;
+    } else {
+      var extra = ( size % 16 == 0 ) ? 0 : 1;
+      return size / 16 + extra;
+    }
   }
   //endregion
 
@@ -75,6 +88,7 @@ public class BatchReadCommand extends ICommand {
       .map( x -> ( ICommand )new BatchReadCommand( unit.with( x ) ) )
       .toList();
   }
+
   /**
    *
    * @return
@@ -83,17 +97,8 @@ public class BatchReadCommand extends ICommand {
   public String toString(){
     var shortId = id.substring( 0, 3 );
 
-    var from = target
-      .device()
-      .toStringAddress( target.address() );
-
-    var to = target
-      .device()
-      .toStringAddress( target.address() + target.size() - 1 );
-
-    var device = Stringer.toString( target.device() );
-
-    return MessageFormat.format( "br#{0} [{1}{2}-{1}{3}]", shortId, device, to, from );
+    return MessageFormat.format( "br#{0} {1}",
+      shortId, Stringer.toRangeString( target ) );
   }
   //endregion
 
@@ -107,7 +112,7 @@ public class BatchReadCommand extends ICommand {
     Coder.encodeHeader( w, 0x0C );
 
     // Command
-    w.write( ByteConverter.toBytes( CODE, 2 ) );
+    w.write( ByteConverter.toBytes( getCode().value(), 2 ) );
 
     // Subcommand 00 means use children units (bit packed in word bits)
     w.write( ByteConverter.toBytes( 0, 2 ) );
@@ -119,8 +124,12 @@ public class BatchReadCommand extends ICommand {
     w.write( target.device().value() );
 
     // Number of device points
-    var size = target.size();
-    w.write( ByteConverter.toBytes( size, 2 ) );
+    var points = getPointsCount();
+
+    if( points > MAX_POINTS )
+      throw new TooManyPointsException();
+
+    w.write( ByteConverter.toBytes( points, 2 ) );
   }
   //endregion
 
@@ -139,7 +148,7 @@ public class BatchReadCommand extends ICommand {
     if( 0 != completionCode )
       throw new BadCompletionCodeException( completionCode );
 
-    var buffer = new byte[ target.size() * 2 ];
+    var buffer = new byte[ dataSize - 2/*completion code*/ ];
     r.readFully( buffer );
 
     result = ( PlcBinary ) Copier.withValue( target, buffer );

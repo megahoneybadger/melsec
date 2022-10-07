@@ -1,7 +1,8 @@
-package melsec.io;
+package melsec.io.read;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcU2;
+import melsec.io.BaseIOTest;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.WordDeviceCode;
 import melsec.utils.Copier;
@@ -36,7 +37,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -51,7 +52,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -66,7 +67,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -81,7 +82,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
 
@@ -102,7 +103,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -118,7 +119,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -134,7 +135,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -150,7 +151,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -166,7 +167,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -182,7 +183,7 @@ public class ReadU2 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test

@@ -11,11 +11,14 @@ import melsec.types.io.IOResponse;
 import melsec.types.io.IOResponseItem;
 import melsec.utils.*;
 
+import java.io.DataOutput;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class MultiBlockBatchBaseCommand extends ICommand {
 
@@ -99,7 +102,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
     String b = bits.size() > 0 ? MessageFormat.format( "{0}b", bits.size() ) : "";
     String sep = ( !w.isEmpty() && !b.isEmpty() ) ? "|" : "";
 
-    var c = ( code() == CommandCode.MultiBlockBatchWrite ) ? "w" : "r";
+    var c = ( getCode() == CommandCode.MultiBlockBatchWrite ) ? "w" : "r";
     var shortId = id.substring( 0, 3 );
 
     return MessageFormat.format( "mbb{4}#{3} [{0}{1}{2}]", w, sep, b, shortId, c );
@@ -157,6 +160,63 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
       .toList();
 
     return new IOResponse(items);
+  }
+  //endregion
+
+  //region Class utility methods
+  /**
+   *
+   * @return
+   */
+  protected int getTotalPointsCount(){
+    var list = Stream
+      .concat( words.stream(), bits.stream())
+      .toList();
+
+    var totalPoints = UtilityHelper
+      .toStream( list )
+      .map( x -> getPointsCount( x ) )
+      .reduce( 0, ( a, b ) -> a + b );
+
+    return totalPoints;
+  }
+  /**
+   *
+   * @param w
+   * @param totalSize
+   * @throws IOException
+   */
+  protected void encodePrologue( DataOutput w, int totalSize ) throws IOException {
+    Coder.encodeHeader( w, totalSize );
+
+    // Command
+    w.write( ByteConverter.toBytes( getCode().value(), 2 ) );
+
+    // Subcommand 00 means use children units (bit packed in word bits)
+    w.write( ByteConverter.toBytes( 0, 2 ));
+
+    // Number of word device blocks
+    w.writeByte( words.size() );
+
+    // Number of bit device blocks
+    w.writeByte( bits.size() );
+  }
+  /**
+   *
+   * @param w
+   * @param item
+   * @throws IOException
+   */
+  protected void encodeItemHeader(DataOutput w, IPlcObject item ) throws IOException {
+    // Word device number
+    Coder.encodeDeviceNumber( w, item.address() );
+
+    // Device code
+    w.write( ( byte )item.device().value() );
+
+    // Number of device points
+    var size = getPointsCount( item );
+    w.write( ByteConverter.toBytes( size, 2 ) );
   }
   //endregion
 }

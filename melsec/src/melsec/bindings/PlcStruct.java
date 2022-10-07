@@ -51,7 +51,7 @@ public final class PlcStruct implements IPlcWord {
   }
 
   public List<IPlcWord> items(){
-    return items.stream().toList();
+    return new ArrayList<>( items );
   }
 
   public static Builder builder(){

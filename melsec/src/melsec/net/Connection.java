@@ -6,9 +6,11 @@ import melsec.commands.ICommand;
 import melsec.types.events.EventDispatcher;
 import melsec.types.events.net.ConnectionEventArgs;
 import melsec.types.Endpoint;
+import melsec.types.log.LogLevel;
 import melsec.utils.Coder;
 import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +24,8 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static melsec.types.events.EventType.*;
 import static melsec.net.Connection.State.*;
@@ -55,21 +59,25 @@ public class Connection {
 
   private EventDispatcher events;
   private CommandCoordinator coordinator;
+
+  private Logger logger;
   //endregion
 
   //region Class properties
+  /**
+   *
+   * @return
+   */
   public Endpoint endpoint(){
     return endpoint;
   }
-
+  /**
+   *
+   * @return
+   */
   public String id(){
     return id;
   }
-
-  Logger logger(){
-    return LogManager.getLogger();
-  }
-
   /**
    *
    * @return
@@ -100,6 +108,8 @@ public class Connection {
     processingThread = new Thread( () -> processor() );
     processingThread.start();
 
+    logger = LogManager.getLogger();
+
     reconnect( CONNECTION_SHORT_TIMEOUT, true );
   }
   /**
@@ -125,7 +135,7 @@ public class Connection {
     try {
       processingThread.join();
     } catch ( InterruptedException e ) {
-      logger().error( "failed to stop processing thread" );
+      logger.error( "failed to stop processing thread" );
     }
 
     if( hadOpenConnection ){
@@ -218,7 +228,7 @@ public class Connection {
       try {
         socket.close();
       } catch( IOException e ) {
-        logger().error("Failed to close socket [{}]. {}", id(), e.getMessage());
+        logger.error("Failed to close socket [{}]. {}", id(), e.getMessage());
       }
 
       socket = null;
@@ -242,7 +252,7 @@ public class Connection {
       if( !run )
         return;
 
-      logger().debug( "Enqueue {}", Stringer.toString( commands ) );
+      logDebug( "Enqueue {}", () -> Stringer.toString( commands ) );
 
       coordinator.group( commands );
 
@@ -255,51 +265,59 @@ public class Connection {
    */
   private void processor(){
     while( true ){
+      ICommand command = null;
+
       synchronized ( syncObject ){
         if( !run )
           break;
 
         if( queue.size() > 0 && null == currentPendingCommand ){
-          sendAsync( queue.remove() );
+          command = queue.remove();
         } else {
           try {
             syncObject.wait();
           } catch (InterruptedException e) {
-            logger().error( "Failed to put connection#{} processor to sleep", id() );
+            logger.error( "Failed to put connection#{} processor to sleep", id() );
           }
         }
       }
+
+      if( null != command ){
+        sendAsync( command );
+      }
     }
 
-    logger().debug( "Connection#{} processor stopped", id() );
+    logger.debug( "Connection#{} processor stopped", id() );
   }
   /**
    *
    * @param command
    */
-  private void sendAsync(ICommand command ){
+  private void sendAsync( ICommand command ){
     try {
-      currentPendingCommand = command;
+      synchronized( syncObject ){
+        currentPendingCommand = command;
 
-      events.enqueue( CommandBeforeSend, command );
+        logDebug( "Process {}", () -> command.toString() );
 
-      if( state != Connected )
-        throw new ConnectionNotEstablishedException( endpoint );
+        if( state != Connected )
+          throw new ConnectionNotEstablishedException( endpoint );
 
-      var buffer = ByteBuffer.wrap( command.encode() );
+        var buffer = ByteBuffer.wrap( command.encode() );
 
-      socket.write( buffer, command, new CompletionHandler<>() {
-        @Override
-        public void completed( Integer count, ICommand command ) {
-          events.enqueue( CommandAfterSend, command );
-          recvHeaderAsync( command );
-        }
+        socket.write( buffer, command, new CompletionHandler<>() {
+          @Override
+          public void completed( Integer count, ICommand command ) {
+            logNet( "After send {}", command );
+            recvHeaderAsync( command );
+          }
 
-        @Override
-        public void failed( Throwable e, ICommand command ) {
-          drop( command, e );
-        }
-      } );
+          @Override
+          public void failed( Throwable e, ICommand command ) {
+            drop( command, e );
+          }
+        } );
+      }
     }
     catch( Exception e ){
       done( command, e );
@@ -312,7 +330,7 @@ public class Connection {
   private void recvHeaderAsync(ICommand command ){
     try {
       var buffer = ByteBuffer.allocate( Coder.HEADER_LENGTH );
-      logger().debug( "Receiving {} header", command );
+      logNet( "Receiving {} header", command );
 
       synchronized( syncObject ) {
         socket.read( buffer, 1, TimeUnit.SECONDS, command, new CompletionHandler<>() {
@@ -324,7 +342,7 @@ public class Connection {
               var replyBodySize = Coder.getCommandBodySize( buffer.array() );
               var replyTotalSize = Coder.HEADER_LENGTH + replyBodySize;
 
-              logger().debug( "Received {} header: expecting {} bytes in body", command, replyBodySize );
+              logNet( "Received {} header: expecting {} bytes in body", command, replyBodySize );
 
               var bufferTotal = ByteBuffer.allocate( replyTotalSize );
               System.arraycopy( buffer.array(), 0, bufferTotal.array(), 0, Coder.HEADER_LENGTH );
@@ -352,7 +370,7 @@ public class Connection {
    */
   private void recvBodyAsync( BodyRecvProgress p ){
     try{
-      logger().debug( "Receiving {} body: {} bytes left", p.command, p.bytesToReadLeft );
+      logNet( "Receiving {} body: {} bytes left", p.command, p.bytesToReadLeft );
 
       synchronized( syncObject ){
         socket.read( p.buffer, 1, TimeUnit.SECONDS, p, new CompletionHandler<>() {
@@ -384,11 +402,11 @@ public class Connection {
    */
   private void decode( BodyRecvProgress p ){
     try{
-      logger().debug( "Received {} body", p.command );
+      logNet( "Received {} body", p.command );
 
       p.command.decode( p.buffer.array() );
 
-      logger().debug( "Decoded {}", p.command, p.bytesToReadLeft );
+      logDebug( "Complete {}", () -> p.command.toString() );
 
       done( p.command, null );
     }
@@ -408,8 +426,8 @@ public class Connection {
     }
 
     if( null != e ){
-      logger().error( "Failed to complete {}. {}", c,
-        UtilityHelper.coalesce( e.getMessage(), e.toString() )  );
+      logger.error( "Failed to complete {}. {}", c,
+        UtilityHelper.coalesce( e.getMessage(), e.toString() ) );
     }
 
     coordinator.complete( c, e );
@@ -429,6 +447,30 @@ public class Connection {
 
     reconnect( CONNECTION_SHORT_TIMEOUT, true );
   }
+  //endregion
+
+  //region Class 'Log' methods
+
+  /**
+   *
+   * @param message
+   */
+  private void logNet( String message, Object...args ){
+    var verb = String.valueOf( LogLevel.NET );
+    var level = Level.getLevel( verb );
+    logger.log( level, message, args );
+  }
+  /**
+   *
+   * @param message
+   * @param func
+   */
+  private void logDebug( String message, Supplier<String > func ){
+    if( Level.DEBUG.compareTo( logger.getLevel() ) != 1 ){
+      logger.debug( message, func.get() );
+    }
+  }
+
   //endregion
 
   //region Class internal structs

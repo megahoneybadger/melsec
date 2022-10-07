@@ -1,11 +1,10 @@
-package melsec.io;
+package melsec.io.read;
 
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcString;
+import melsec.io.BaseIOTest;
 import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
 import melsec.utils.RandomFactory;
@@ -32,7 +31,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -47,7 +46,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -62,7 +61,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -147,7 +146,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -163,7 +162,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -179,7 +178,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -195,7 +194,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -211,7 +210,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -227,7 +226,7 @@ public class ReaBit extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test

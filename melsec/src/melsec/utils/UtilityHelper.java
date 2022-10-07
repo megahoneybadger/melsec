@@ -38,7 +38,7 @@ public class UtilityHelper {
    * @return
    * @param <T>
    */
-  public static  <T> T coalesce( T x, T v ){
+  public static <T> T coalesce( T x, T v ){
     return ( x == null ) ? v : x;
   }
 

@@ -5,10 +5,12 @@ import melsec.utils.UtilityHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class IORequest {
 
   //region Class members
+  private String id;
   /**
    *
    */
@@ -34,15 +36,19 @@ public class IORequest {
   public Iterable<IORequestItem> getItems(){
     return new ArrayList<>( list );
   }
-  //endregion
-
-  //region Class properties
   /**
    *
    * @return
    */
   public static Builder builder() {
     return new Builder();
+  }
+  /**
+   *
+   * @return
+   */
+  public String getId() {
+    return id;
   }
   //endregion
 
@@ -88,11 +94,7 @@ public class IORequest {
      * @return
      */
     public Builder read( IPlcObject... arr ){
-      for( var o : arr ){
-        read( o );
-      }
-
-      return this;
+      return read( List.of( arr ) );
     }
     /**
      *
@@ -111,6 +113,24 @@ public class IORequest {
      */
     public Builder write( IPlcObject o ){
       return add( new IORequestItem( IOType.Write, o ) );
+    }
+    /**
+     *
+     * @param arr
+     * @return
+     */
+    public Builder write( IPlcObject... arr ){
+      return write( List.of( arr ) );
+    }
+    /**
+     *
+     * @param list
+     * @return
+     */
+    public Builder write( List<IPlcObject> list ){
+      list.forEach( x -> write( x ) );
+
+      return this;
     }
     /**
      *
@@ -150,6 +170,7 @@ public class IORequest {
       var res = new IORequest();
       res.list = new ArrayList<IORequestItem>( list );
       res.completeHandler = eventHandler;
+      res.id = UUID.randomUUID().toString();
 
       return res;
     }

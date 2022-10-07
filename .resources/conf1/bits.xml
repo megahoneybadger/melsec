@@ -1,36 +1,28 @@
 <Bindings>
 
-	<Bit device="X" address="100" id="sensor-a" value="true" />
-	<Bit device="X" address="101" id="sensor-b" />
+	<Bit device="M" address="200" />
+	<Bit device="M" address="201" />
+	<Bit device="M" address="202" />
+	<Bit device="M" address="203" />
+	<Bit device="M" address="204" />
+	<Bit device="M" address="205" />
 	
-	<U2 device="d" address="122" />
-	<U4 device="d" address="100" />
-	
-	<String device="d" address="200" size="200" />
-	<String device="d" address="300" size="200" />
-	
-	<Struct id="HOST_GLASS_DATA_REQUEST_STRUCT" device="d" address="105">
-		<U2 id="CST_SEQ_NO" />
-		<U2 id="CHIP_POSITION" />
-		<U2 id="PRODUCT_TYPE" />
-		<U2 id="SUBSTRATE_TYPE" />
-		<U2 id="CIM_MODE" />
-		<U2 id="CST_OPERATION_MODE" />
-		<U2 id="JOB_TYPE" />
-		<U2 id="DUMMY_TYPE" />
-		<U2 id="JOB_JUDGE" />
-		<U2 id="JOB_GRADE" />
-		<String id="GLASS_CHIP_ID" size="8" ></String>
-		
-	</Struct>
+	<Bit device="M" address="100" />
+	<Bit device="M" address="101" />
+	<Bit device="M" address="102" />
+	<Bit device="M" address="103" />
+	<Bit device="M" address="104" />
+	<Bit device="M" address="105" />
+	<Bit device="M" address="106" />
+	<Bit device="M" address="107" />
+	<Bit device="M" address="108" />
+	<Bit device="M" address="109" />
+	<Bit device="M" address="110" />
+	<Bit device="M" address="111" />
+	<Bit device="M" address="112" />
+	<Bit device="M" address="113" />
 	
 	
-	<Struct id="HOST_GLASS_DATA_REPLY_STRUCT" device="d" address="119">
-		<U2 id="CST_SEQ_NO" />
-		<U2 id="CHIP_POSITION" />
-		<U2 id="PRODUCT_TYPE" />	
-		
-	</Struct>
 	
 	
 

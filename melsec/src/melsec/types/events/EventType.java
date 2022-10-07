@@ -9,6 +9,5 @@ public enum EventType {
   ConnectionDropped,
   ConnectionDisposed,
 
-  CommandBeforeSend,
-  CommandAfterSend,
+  ScannerChanges
 }

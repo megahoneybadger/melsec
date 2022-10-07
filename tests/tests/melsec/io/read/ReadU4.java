@@ -1,6 +1,8 @@
-package melsec.io;
+package melsec.io.read;
 
-import melsec.bindings.*;
+import melsec.bindings.IPlcObject;
+import melsec.bindings.PlcU4;
+import melsec.io.BaseIOTest;
 import melsec.simulation.Memory;
 import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
@@ -16,17 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class ReadI4 extends BaseIOTest {
+public class ReadU4 extends BaseIOTest {
 
-  //region Class 'I4' methods
+  //region Class 'U4' methods
   /**
    * @throws IOException
    * @throws InvalidRangeException
    * @throws InterruptedException
    */
   @Test
-  public void Should_Read_I4_1() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_1, -548796 );
+  public void Should_Read_U4_1() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_1, 548796l );
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -36,12 +38,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_I4_2() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getI4());
+  public void Should_Read_U4_4() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getU4());
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -51,12 +53,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_I4_Max() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.W, ADDRESS_2, Integer.MAX_VALUE );
+  public void Should_Read_U4_Max() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, 0xFFFF_FFFFl );
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -66,12 +68,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_I4_Min() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.R, ADDRESS_1, 0 );
+  public void Should_Read_U4_Min() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.R, ADDRESS_1, 0l );
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -81,12 +83,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_I4_MaxAddressRight() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.W, Memory.MAX_WORDS - 2, Integer.MAX_VALUE );
+  public void Should_Read_U4_MaxAddressRight() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.W, Memory.MAX_WORDS - 2, 0xFFFF_FFFFl );
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -96,12 +98,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_I4_BadAddress() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.R, -1500, -457238 );
+  public void Should_Read_U4_BadAddress() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.R, -500, 238l );
 
     var toRead = Copier.withoutValue( toWrite );
 
@@ -116,8 +118,8 @@ public class ReadI4 extends BaseIOTest {
   }
 
   @Test
-  public void Should_Read_I4_BadAddress2() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.R, 1 << 24, 238 );
+  public void Should_Read_U4_BadAddress2() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.R, 1 << 24, 238l );
 
     var toRead = Copier.withoutValue( toWrite );
 
@@ -132,8 +134,8 @@ public class ReadI4 extends BaseIOTest {
   }
 
   @Test
-  public void Should_Read_I4_BadRange() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.R, 1 << 24 - 1, 238 );
+  public void Should_Read_U4_BadRange() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.R, 1 << 24 - 1, 238l );
 
     var toRead = Copier.withoutValue( toWrite );
 
@@ -148,8 +150,8 @@ public class ReadI4 extends BaseIOTest {
   }
 
   @Test
-  public void Should_Read_I4_BadRange2() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcI4( WordDeviceCode.R, Memory.MAX_WORDS - 1, 23887 );
+  public void Should_Read_U4_BadRange2() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4( WordDeviceCode.R, Memory.MAX_WORDS - 1, 238l );
     //server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );
@@ -165,11 +167,11 @@ public class ReadI4 extends BaseIOTest {
   }
 
   @Test
-  public void Should_Read_MultipleI4_1() throws InvalidRangeException, InterruptedException {
-    IPlcWord[] toWrite = {
-      new PlcI4( WordDeviceCode.W, ADDRESS_1, 50845120 ),
-      new PlcI4( WordDeviceCode.R, ADDRESS_1, 65412700 ),
-      new PlcI4( WordDeviceCode.D, ADDRESS_1, 70870 )
+  public void Should_Read_MultipleU4_1() throws InvalidRangeException, InterruptedException {
+    IPlcObject[] toWrite = {
+      new PlcU4( WordDeviceCode.W, ADDRESS_1, 50845120l ),
+      new PlcU4( WordDeviceCode.R, ADDRESS_1, 65412700l ),
+      new PlcU4( WordDeviceCode.D, ADDRESS_1, 70870l )
     };
 
     server.write( toWrite );
@@ -181,12 +183,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_2() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcI4( 10 );
+  public void Should_Read_MultipleU4_2() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcU4( 10 );
 
     server.write( toWrite );
 
@@ -197,12 +199,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_3() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcI4( 100 );
+  public void Should_Read_MultipleU4_3() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcU4( 100 );
 
     server.write( toWrite );
 
@@ -213,12 +215,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_4() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcI4( 200 );
+  public void Should_Read_MultipleU4_4() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcU4( 200 );
 
     server.write( toWrite );
 
@@ -229,12 +231,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_5() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcI4( 500 );
+  public void Should_Read_MultipleU4_5() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcU4( 500 );
 
     server.write( toWrite );
 
@@ -245,12 +247,12 @@ public class ReadI4 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_6() throws InvalidRangeException, InterruptedException {
-    var toWrite = RandomFactory.getPlcI4( 75000 );
+  public void Should_Read_MultipleU4_6() throws InvalidRangeException, InterruptedException {
+    var toWrite = RandomFactory.getPlcU4( 70000 );
 
     server.write( toWrite );
 
@@ -261,19 +263,19 @@ public class ReadI4 extends BaseIOTest {
 
     f.await( 0 );
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
-  public void Should_Read_MultipleI4_7() throws InvalidRangeException, InterruptedException {
+  public void Should_Read_MultipleU4_7() throws InvalidRangeException, InterruptedException {
     for( int i = 0; i < 10; ++i ){
-      Should_Read_MultipleI4_5();
+      Should_Read_MultipleU4_5();
     }
   }
 
   @Test
-  public void Should_NotRead_I4_NoData() throws InterruptedException {
-    var toWrite = new PlcI4(WordDeviceCode.W, ADDRESS_1, 20087475);
+  public void Should_NotRead_U4_NoData() throws InvalidRangeException, InterruptedException {
+    var toWrite = new PlcU4(WordDeviceCode.W, ADDRESS_1, 20087475l);
 
     var toRead = Copier.withoutValue( toWrite );
 

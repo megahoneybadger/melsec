@@ -1,5 +1,6 @@
-package melsec.io;
+package melsec.io.read;
 
+import melsec.io.BaseIOTest;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
 import melsec.utils.RandomFactory;
@@ -33,7 +34,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
 
@@ -50,7 +51,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -66,7 +67,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -82,7 +83,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -107,7 +108,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -123,7 +124,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test
@@ -139,7 +140,7 @@ public class ReadNumeric extends BaseIOTest {
 
     f.await();
 
-    f.assertResults( toWrite );
+    f.assertReadResults( toWrite );
   }
 
   @Test

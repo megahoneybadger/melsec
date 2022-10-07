@@ -2,7 +2,6 @@ package melsec.commands;
 
 import melsec.net.Connection;
 import melsec.types.io.IOResponse;
-import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,15 +21,19 @@ public class CommandCoordinator {
   /**
    *
    */
-  private HashMap<String, List<String>> dictGroupToCommands;
+  private HashMap<Integer, List<String>> dictGroupToCommands;
   /**
    *
    */
-  private HashMap<String, List<CompleteCommand>> dictGroupToResults;
+  private HashMap<Integer, List<CompleteCommand>> dictGroupToResults;
   /**
    *
    */
-  private HashMap<String, String> dictCommandsToGroup;
+  private HashMap<String, Integer> dictCommandsToGroup;
+  /**
+   *
+   */
+  private Random random = new Random();
   //endregion
 
   //region Class properties
@@ -71,12 +74,18 @@ public class CommandCoordinator {
   public void group(Iterable<ICommand> commands ){
     try{
       synchronized( syncObject ){
-        var group = UUID.randomUUID().toString();
+        var group = random.nextInt(); //UUID.randomUUID().toString();
 
-        var ids = UtilityHelper
-          .toStream( commands )
-          .map( x -> x.id )
-          .toList();
+        var ids = new ArrayList<String>();
+
+        for( var c : commands ){
+          ids.add( c.getId() );
+        }
+
+//        var ids = UtilityHelper
+//          .toStream( commands )
+//          .map( x -> x.id )
+//          .toList();
 
         dictGroupToCommands.put( group, ids );
         dictGroupToResults.put( group, new ArrayList<>() );

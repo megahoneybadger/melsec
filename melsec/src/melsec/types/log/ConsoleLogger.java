@@ -32,7 +32,7 @@ public record ConsoleLogger( LogLevel level ) implements IPlcLogger {
     builder.add(appender);
 
     var logger = builder
-      .newRootLogger(getNativeLevel())
+      .newRootLogger( getNativeLevel())
       .add( builder.newAppenderRef( NAME ));
 
     builder.add(logger);
@@ -43,6 +43,8 @@ public record ConsoleLogger( LogLevel level ) implements IPlcLogger {
       case INFO -> Level.INFO;
       case DEBUG -> Level.DEBUG;
       case ERROR -> Level.ERROR;
+      case NET -> Level.getLevel( String.valueOf( LogLevel.NET ) );
+      case SCAN -> Level.getLevel( String.valueOf( LogLevel.SCAN ) );
       default -> Level.OFF;
     };
   }

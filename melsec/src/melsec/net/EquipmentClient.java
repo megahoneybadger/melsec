@@ -1,10 +1,15 @@
 package melsec.net;
 
 import melsec.commands.CommandFactory;
+import melsec.commands.ICommand;
 import melsec.types.events.IEventDispatcher;
 
 import melsec.types.io.IORequest;
 import melsec.types.events.EventDispatcher;
+import melsec.utils.UtilityHelper;
+
+import java.util.Dictionary;
+import java.util.HashMap;
 
 import static melsec.types.events.EventType.*;
 
@@ -31,6 +36,10 @@ public class EquipmentClient {
    *
    */
   private EventDispatcher events;
+  /**
+   *
+   */
+  private HashMap<String, Iterable<ICommand>> cache;
   // endregion
 
   //region Class properties
@@ -52,6 +61,7 @@ public class EquipmentClient {
     config = c;
     syncObject = new Object();
     events = new EventDispatcher();
+    cache = new HashMap<>();
   }
   //endregion
 
@@ -65,6 +75,7 @@ public class EquipmentClient {
         return;
 
       run = true;
+      cache.clear();
 
       connection = new Connection( config.endpoint(), events );
     }
@@ -80,6 +91,8 @@ public class EquipmentClient {
         return;
 
       run = false;
+
+      cache.clear();
 
       if( null != connection ) {
         connection.dispose();
@@ -100,10 +113,25 @@ public class EquipmentClient {
 //      if( !run )
 //        throw new DriverNotRunningException();
 
-      var commands = new CommandFactory().toCommands( r );
-
-      connection.enqueue( /*r.toMultiBlockBatchCommands()*/ commands );
+      connection.enqueue( toCommands( r ) );
     }
+  }
+  /**
+   *
+   * @param r
+   * @return
+   */
+  private Iterable<ICommand> toCommands( IORequest r ){
+    var commands = cache.get( r.getId() );
+
+    if( null == commands ){
+      // This is optimization step for scanning:
+      // avoid splitting the same request
+      commands = new CommandFactory().toCommands( r );
+      cache.put( r.getId(), commands );
+    }
+
+    return commands;
   }
   //endregion
 }

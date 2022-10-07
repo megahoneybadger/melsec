@@ -3,6 +3,7 @@ package melsec.commands.multi;
 import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.types.exceptions.BadCompletionCodeException;
+import melsec.types.exceptions.TooManyPointsException;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IORequestUnit;
 import melsec.types.CommandCode;
@@ -11,15 +12,9 @@ import melsec.utils.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
-
-  //region Class constants
-  /**
-   *
-   */
-  public static final int CODE = 0x0406;
-  //endregion
+public final class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
 
   //region Class properties
   /**
@@ -27,7 +22,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @return
    */
   @Override
-  public CommandCode code() {
+  public CommandCode getCode() {
     return CommandCode.MultiBlockBatchRead;
   }
   //endregion
@@ -87,21 +82,11 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    */
   @Override
   protected void encode( DataOutput w ) throws IOException {
+    if( getTotalPointsCount() > MAX_POINTS )
+      throw new TooManyPointsException();
+
     int totalSize = 2 + 6 + ( bits.size() + words.size() ) * 6;
-    Coder.encodeHeader( w, totalSize );
-
-    // Command
-    w.write( ByteConverter.toBytes( CODE, 2 ) );
-
-    // Subcommand 00 means use children units (bit packed in word bits)
-    w.writeByte( 0x00 );
-    w.writeByte( 0x00 );
-
-    // Number of word device blocks
-    w.writeByte( words.size() );
-
-    // Number of bit device blocks
-    w.writeByte( bits.size() );
+    encodePrologue( w, totalSize );
 
     encode( w, words );
     encode( w, bits );
@@ -113,24 +98,8 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @throws IOException
    */
   private void encode( DataOutput w, Iterable<IPlcObject> list ) throws IOException {
-    var totalPoints = UtilityHelper
-      .toStream( list )
-      .map( x -> getPointsCount( x ) )
-      .reduce( 0, ( a, b ) -> a + b );
-
-    if( totalPoints > MAX_POINTS )
-      throw new IOException( "Too many points" );
-
     for( var item: list ){
-      // Word device number
-      Coder.encodeDeviceNumber( w, item.address() );
-
-      // Device code
-      w.write( item.device().value() );
-
-      // Number of device points
-      var size = getPointsCount( item );
-      w.write( ByteConverter.toBytes( size, 2 ) );
+      encodeItemHeader( w, item );
     }
   }
   //endregion
@@ -159,7 +128,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
     * @param r
    * @return
    */
-  private List<PlcBit> decodeBits( DataInput r ) throws IOException {
+  protected List<PlcBit> decodeBits( DataInput r ) throws IOException {
     var list = new ArrayList<PlcBit>();
 
     for( var proto: bits ){
@@ -176,7 +145,7 @@ public class MultiBlockBatchReadCommand extends MultiBlockBatchBaseCommand {
    * @param r
    * @return
    */
-  private List<IPlcWord> decodeWords( DataInput r ) throws IOException {
+  protected List<IPlcWord> decodeWords( DataInput r ) throws IOException {
     var list = new ArrayList<IPlcWord>();
 
     for( var proto: words ){

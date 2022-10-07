@@ -25,11 +25,28 @@ public record ServerOptions(Memory memory,
   }
 
   public static class Builder {
+    //region Class members
+    /**
+     *
+     */
     private Memory memory = new Memory();
+    /**
+     *
+     */
     private InetAddress address;
+    /**
+     *
+     */
     private int port = 8000;
+    /**
+     *
+     */
     private boolean useLogger = true;
+    /**
+     *
+     */
     private ConfigurationBuilder logNativeBuilder;
+    //endregion
 
     public Builder port(int p) {
       port = p;
@@ -47,7 +64,6 @@ public record ServerOptions(Memory memory,
     }
 
     //region Class Log4j settings
-
     /**
      *
      */

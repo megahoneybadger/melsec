@@ -4,11 +4,13 @@ import melsec.bindings.*;
 import melsec.commands.ICommand;
 import melsec.types.IDeviceCode;
 import melsec.types.PlcCoordinate;
+import melsec.types.PlcRegion;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IOResponseItem;
 import melsec.types.io.IOType;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 public class Stringer {
 
@@ -41,6 +43,25 @@ public class Stringer {
     }
 
     return d;
+  }
+  /**
+   *
+   * @param list
+   * @param displayValue
+   * @return
+   */
+  public static String toString( List<IPlcObject> list, boolean displayValue ){
+    var sb = new StringBuilder();
+
+    for( var l: list ){
+      if( sb.length() > 0 ){
+        sb.append( ", " );
+      }
+
+      sb.append( Stringer.toString( l, displayValue ) );
+    }
+
+    return sb.toString();
   }
   /**
    *
@@ -115,9 +136,6 @@ public class Stringer {
   }
 
   public static String toString( PlcBinary r ){
-    var from = r.device().toStringAddress( r.address() );
-    var to = r.device().toStringAddress( r.address() + r.size() - 1 );
-
     var value = "";
 
     if( r.value() != null &&  r.value().length > 0 ){
@@ -139,8 +157,68 @@ public class Stringer {
       value = MessageFormat.format( " {0}", sb.toString() );
     }
 
-    return MessageFormat.format("binary [{0}{1}-{0}{2}]{3}",
-      toString( r.device() ), from, to, value );
+    return MessageFormat.format("binary {0}{1}",
+      toRangeString( r ), value );
+  }
+
+  public static String toRangeString( PlcBinary r ){
+    var from = r
+      .device()
+      .toStringAddress( r.address() );
+
+    var to = r
+      .device()
+      .toStringAddress( r.address() + r.size() - 1 );
+
+    if( 0 == r.size() ){
+      to = from;
+    }
+
+    var device = Stringer.toString( r.device() );
+
+    return MessageFormat.format( "[{0}{1}-{0}{2}]", device, from, to );
+  }
+
+  /**
+   *
+   * @param list
+   * @return
+   */
+  public static String toString( List<PlcRegion> list ){
+    var sb = new StringBuilder();
+
+    for( var l: list ){
+      if( sb.length() > 0 ){
+        sb.append( ", " );
+      }
+
+      sb.append( Stringer.toString( l ) );
+    }
+
+    return sb.toString();
+  }
+  /**
+   *
+   * @param r
+   * @return
+   */
+  public static String toString( PlcRegion r ){
+
+    var from = r
+      .device()
+      .toStringAddress( r.start() );
+
+    var to = r
+      .device()
+      .toStringAddress( r.start() + r.size() - 1 );
+
+    if( 0 == r.size() ){
+      to = from;
+    }
+
+    var device = Stringer.toString( r.device() );
+
+    return MessageFormat.format( "[{0}{1}-{0}{2}]", device, from, to );
   }
 
   public static String toString( PlcStruct st ){
