@@ -77,8 +77,8 @@ public class MultiBlockBatchReadHandler extends BaseHandler {
 
         w.write( ByteConverter.toBytes( size, 2 )  );
 
-        var iCompletionCode = 0;
-        w.write( ByteConverter.toBytes( iCompletionCode, 2 ) );
+        var completionCode = 0;
+        w.write( ByteConverter.toBytes( completionCode, 2 ) );
 
         if( null != words ){
           w.write( words );

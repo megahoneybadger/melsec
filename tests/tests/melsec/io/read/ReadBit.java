@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReaBit extends BaseIOTest {
+public class ReadBit extends BaseIOTest {
 
   //region Class 'Bit' methods
 

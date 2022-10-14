@@ -209,7 +209,7 @@ public abstract class MultiBlockBatchBaseCommand extends ICommand {
    */
   protected void encodeItemHeader(DataOutput w, IPlcObject item ) throws IOException {
     // Word device number
-    Coder.encodeDeviceNumber( w, item.address() );
+    Coder.encodeDeviceAddress( w, item.address() );
 
     // Device code
     w.write( ( byte )item.device().value() );

@@ -169,19 +169,17 @@ public class EquipmentServer {
    * @throws InvalidRangeException
    */
   public void write( IPlcObject [] arr ) throws InvalidRangeException {
-    write( Arrays.stream(arr).toList() );
+    write( List.of( arr ) );
   }
-
   /**
    *
    * @param list
-   * @throws InvalidRangeException
    */
   public void write( List<IPlcObject> list ) throws InvalidRangeException {
-    for( var x: list ){
-      write( x );
-    }
+    options.memory().write( list );
   }
+
+
   /**
    *
    * @param o

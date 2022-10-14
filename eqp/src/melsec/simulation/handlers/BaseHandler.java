@@ -9,7 +9,13 @@ import java.io.IOException;
 public abstract class BaseHandler {
 
   //region Class members
+  /**
+   *
+   */
   protected DataInput reader;
+  /**
+   *
+   */
   protected Memory memory;
   //endregion
 

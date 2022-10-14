@@ -1,6 +1,7 @@
 package melsec.types.io;
 
 import melsec.bindings.IPlcObject;
+import melsec.types.events.IOCompleteEvent;
 import melsec.utils.UtilityHelper;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class IORequest {
   /**
    *
    */
-  private IOCompleteEventHandler completeHandler;
+  private IOCompleteEvent completeHandler;
   //endregion
 
   //region Class properties
@@ -26,7 +27,7 @@ public class IORequest {
    *
    * @return
    */
-  public IOCompleteEventHandler getCompleteHandler(){
+  public IOCompleteEvent getCompleteHandler(){
     return completeHandler;
   }
   /**
@@ -66,7 +67,7 @@ public class IORequest {
     /**
      *
      */
-    private IOCompleteEventHandler eventHandler;
+    private IOCompleteEvent eventHandler;
     //endregion
 
     //region Class properties
@@ -157,7 +158,7 @@ public class IORequest {
      * @param e
      * @return
      */
-    public Builder complete( IOCompleteEventHandler e){
+    public Builder complete( IOCompleteEvent e){
       eventHandler = e;
 
       return this;

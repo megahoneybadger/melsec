@@ -118,7 +118,7 @@ public class BatchReadCommand extends ICommand {
     w.write( ByteConverter.toBytes( 0, 2 ) );
 
     // Head device
-    Coder.encodeDeviceNumber( w, target.address() );
+    Coder.encodeDeviceAddress( w, target.address() );
 
     // Device code
     w.write( target.device().value() );

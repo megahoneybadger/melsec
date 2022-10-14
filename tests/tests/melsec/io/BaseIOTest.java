@@ -1,19 +1,24 @@
 package melsec.io;
 
+import melsec.bindings.IPlcObject;
 import melsec.net.ClientOptions;
 import melsec.net.EquipmentClient;
 import melsec.bindings.BaseTest;
+import melsec.scanner.EquipmentScanner;
 import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;
+import melsec.types.PlcRegion;
 import melsec.types.events.net.IConnectionEstablishedEvent;
-import melsec.types.log.ConsoleLogger;
-import melsec.types.log.LogLevel;
 import melsec.utils.IOTestFrame;
+import melsec.utils.MemoryRandomUpdater;
+import melsec.utils.RandomFactory;
+import melsec.utils.ScanTestFrame;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -35,6 +40,10 @@ public class BaseIOTest extends BaseTest {
    *
    */
   protected EquipmentClient client;
+  /**
+   *
+   */
+  protected EquipmentScanner scanner;
   //endregion
 
   //region Class initialization
@@ -44,12 +53,12 @@ public class BaseIOTest extends BaseTest {
    * @throws InterruptedException
    */
   @BeforeAll
-  private void initAll() throws IOException, InterruptedException {
+  protected void initAll() throws IOException, InterruptedException {
     server = createServer();
 
     client = createClient();
 
-    var lock = new CountDownLatch(1);
+    var lock = new CountDownLatch( 1 );
 
     client
       .events()
@@ -60,7 +69,6 @@ public class BaseIOTest extends BaseTest {
 
     lock.await();
   }
-
   /**
    *
    * @return
@@ -71,10 +79,13 @@ public class BaseIOTest extends BaseTest {
       .builder()
       .address("127.0.0.1")
       .port(PORT)
-      //.loggers( new ConsoleLogger( LogLevel.NET ) )
+      //.loggers( new ConsoleLogger( LogLevel.DEBUG ) )
       .build());
   }
-
+  /**
+   *
+   * @return
+   */
   protected EquipmentServer createServer(){
     return new EquipmentServer(ServerOptions
       .builder()
@@ -90,7 +101,6 @@ public class BaseIOTest extends BaseTest {
     server.stop();
     client.stop();
   }
-
   /**
    *
    */
@@ -98,22 +108,19 @@ public class BaseIOTest extends BaseTest {
   private void initEach() throws IOException {
     server.reset();
   }
-
   /**
    *
    */
   @AfterEach
   private void cleanEach() {
-
+    scanner.dispose();
   }
-
   /**
    * @return
    */
   protected IOTestFrame createFrame() {
     return createFrame(1);
   }
-
   /**
    * @param iAsyncSteps
    * @return
@@ -122,5 +129,43 @@ public class BaseIOTest extends BaseTest {
     return new IOTestFrame(client, server,
       new CountDownLatch(iAsyncSteps), new ArrayList<>());
   }
+  /**
+   *
+   * @param regions
+   * @return
+   */
+  protected ScanTestFrame createScanFrame( List<PlcRegion> regions,
+                                           List<IPlcObject> bindings,
+                                           int cycles ){
+    var timeout = 10;
+
+    var lock = new CountDownLatch( cycles );
+    var results = new ArrayList<List<IPlcObject>>();
+    var changer = new MemoryRandomUpdater( server, bindings );
+
+    scanner = EquipmentScanner
+      .builder()
+      .binding( bindings )
+      .region( regions )
+      .timeout( timeout )
+      .changed( x -> {
+        if( x.changes().size() > 0 ){
+          var changes = new ArrayList<>( x.changes() );
+          RandomFactory.sort( changes );
+          results.add( changes );
+        }
+
+        lock.countDown();
+
+        if( lock.getCount() > 0){
+          changer.update();
+        }
+
+      } )
+      .build( client );
+
+    return new ScanTestFrame(client, server, scanner, lock, results, changer );
+  }
+
   //endregion
 }

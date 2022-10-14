@@ -13,6 +13,7 @@ import melsec.utils.ByteConverter;
 
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.List;
 
 public class Memory {
 
@@ -162,6 +163,18 @@ public class Memory {
       write( ( PlcBit ) o );
     } else{
       write( ( IPlcWord ) o );
+    }
+  }
+  /**
+   *
+   * @param list
+   * @throws InvalidRangeException
+   */
+  public void write( List<IPlcObject> list ) throws InvalidRangeException {
+    synchronized( syncObject ){
+      for( var next: list ){
+        write( next );
+      }
     }
   }
   /**

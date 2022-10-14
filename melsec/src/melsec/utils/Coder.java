@@ -4,8 +4,11 @@ import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class Coder {
 
@@ -61,7 +64,7 @@ public class Coder {
    * @param w
    * @param address
    */
-  public static void encodeDeviceNumber( DataOutput w, int address ) throws IOException {
+  public static void encodeDeviceAddress( DataOutput w, int address ) throws IOException {
     if( address < 0 || address > ( 1 << 24 ) - 1 )
       throw new IOException( "Invalid device address" );
 
@@ -101,6 +104,20 @@ public class Coder {
     }
 
     return null;
+  }
+  /**
+   *
+   * @param r
+   * @return
+   */
+  public static int decodeDeviceAddress( DataInput r ) throws IOException {
+    var buffer = new byte[ 4 ];
+    r.readFully( buffer, 0, 3 );
+
+    return ByteBuffer
+      .wrap( buffer )
+      .order( ByteOrder.LITTLE_ENDIAN )
+      .getInt();
   }
   //endregion
 }

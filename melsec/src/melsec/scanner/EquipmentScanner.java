@@ -6,6 +6,7 @@ import melsec.commands.batch.BatchReadCommand;
 import melsec.net.EquipmentClient;
 import melsec.types.*;
 import melsec.types.events.EventType;
+import melsec.types.events.scanner.IScannerChangeEvent;
 import melsec.types.events.scanner.ScannerEventArgs;
 import melsec.types.exceptions.BaseException;
 import melsec.types.io.IORequest;
@@ -14,6 +15,8 @@ import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -50,6 +53,10 @@ public class EquipmentScanner {
    *
    */
   private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+  /**
+   *
+   */
+  private IScannerChangeEvent eventHandler;
   //endregion
 
   //region Class properties
@@ -108,15 +115,21 @@ public class EquipmentScanner {
       .toList();
 
     var changes = cache.update( bins );
+    var args = new ScannerEventArgs( changes );
 
     if( changes.size() > 0 ){
       client
         .events()
-        .enqueue( EventType.ScannerChanges, new ScannerEventArgs( changes ));
+        .enqueue( EventType.ScannerChanges, args );
+    }
+
+    if( null != eventHandler ){
+      eventHandler.executed( args );
     }
 
     scan(shouldUseBackoff( response ));
   }
+  private Instant starts;
   /**
    *
    * @param response
@@ -161,6 +174,10 @@ public class EquipmentScanner {
      *
      */
     private int timeout;
+    /**
+     *
+     */
+    private IScannerChangeEvent eventHandler;
     //endregion
 
     //region Class 'Add' methods
@@ -172,6 +189,23 @@ public class EquipmentScanner {
      */
     public Builder region( IDeviceCode device, int start, int size ){
       regions.add( new PlcRegion( device, start, size ) );
+      return this;
+    }
+    /**
+     *
+     * @param arr
+     * @return
+     */
+    public Builder region( PlcRegion... arr ){
+      return region( List.of( arr ) );
+    }
+    /**
+     *
+     * @param list
+     * @return
+     */
+    public Builder region( List<PlcRegion> list ){
+      regions.addAll( list );
       return this;
     }
     /**
@@ -210,6 +244,16 @@ public class EquipmentScanner {
       timeout = t;
       return this;
     }
+    /**
+     *
+     * @param e
+     * @return
+     */
+    public Builder changed( IScannerChangeEvent e){
+      eventHandler = e;
+
+      return this;
+    }
     //endregion
 
     //region Class 'Build' methods
@@ -239,6 +283,7 @@ public class EquipmentScanner {
         .build();
 
       s.timeout = timeout;
+      s.eventHandler = eventHandler;
 
       LogManager.getLogger().info( "Scanner started {}", Stringer.toString( regs ) );
 

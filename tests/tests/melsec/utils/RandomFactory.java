@@ -1,5 +1,6 @@
 package melsec.utils;
 
+import jdk.jshell.execution.Util;
 import melsec.bindings.*;
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
@@ -149,7 +150,23 @@ public class RandomFactory {
    * @return
    */
   public static PlcBit getPlcBit() {
-    return new PlcBit( getBitDeviceCode(),  getBitAddress(), getBit());
+    return getPlcBit( null );
+  }
+  /**
+   *
+   * @param device
+   * @return
+   */
+  public static PlcBit getPlcBit( BitDeviceCode device ) {
+    return new PlcBit( null == device ? getBitDeviceCode() : device,  getBitAddress(), getBit());
+  }
+  /**
+   *
+   * @param proto
+   * @return
+   */
+  public static PlcBit flipPlcBit( PlcBit proto ){
+    return ( PlcBit )Copier.withValue( proto, !proto.value());
   }
   /**
    *
@@ -186,6 +203,14 @@ public class RandomFactory {
    * @return
    */
   public static List<IPlcObject> getPlcBit(int count) {
+    return getPlcBit( count, null );
+  }
+  /**
+   *
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getPlcBit(int count, BitDeviceCode device ) {
     var list = new ArrayList<IPlcObject>();
     var set = new HashSet<PlcCoordinate>();
 
@@ -193,7 +218,7 @@ public class RandomFactory {
       PlcBit next;
 
       do{
-        next = getPlcBit();
+        next = getPlcBit( device );
       }
       while( set.contains( UtilityHelper.getCoordinate( next ) ) );
 
@@ -201,7 +226,17 @@ public class RandomFactory {
       set.add(UtilityHelper.getCoordinate( next ));
     }
 
+    sort( list );
+
     return list;
+  }
+  /**
+   *
+   * @param list
+   */
+  public static void sort( List<IPlcObject> list ){
+    Collections.sort( list, ( a, b ) -> ( a.device() == b.device() ) ?
+      a.address() - b.address() : a.device().value() - b.device().value()  );
   }
   /**
    *
@@ -368,6 +403,82 @@ public class RandomFactory {
     var res = Copier.withAddress( stub, address );
 
     return ( PlcStruct ) res;
+  }
+  /**
+   *
+   * @param list
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> select( List<IPlcObject> list, int count ){
+    var res = new ArrayList<IPlcObject>( count );
+
+    var set = new HashSet<Integer>();
+
+    while( count > 0 ){
+      var index = 0;
+
+      do{
+        index = random.nextInt( 0, list.size() );
+      }
+      while( set.contains( index ) );
+
+      set.add( index );
+      res.add( list.get( index ) );
+      count--;
+    }
+
+    sort( res );
+
+    return res;
+  }
+  /**
+   *
+   * @param list
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> update( List<IPlcObject> list, int count ) {
+    return update( select( list, count ));
+  }
+  /**
+   *
+   * @param list
+   * @return
+   */
+  public static List<IPlcObject> update( List<IPlcObject> list ){
+    return list
+      .stream()
+      .map( x -> update( x ) )
+      .toList();
+  }
+  /**
+   *
+   * @param o
+   * @return
+   */
+  public static IPlcObject update( IPlcObject o ){
+    return switch( o.type() ){
+      case Bit -> flipPlcBit( ( PlcBit )o );
+      default -> null;
+    };
+  }
+
+  public static List<IPlcObject> merge( List<IPlcObject> workingSet, List<IPlcObject> changes ){
+    var res = new ArrayList<IPlcObject>();
+
+    var dict = new HashMap<PlcCoordinate, IPlcObject>();
+
+    for( var c : changes ){
+      dict.put( UtilityHelper.getCoordinate( c ), c );
+    }
+
+    for( var next : workingSet ){
+      var coord = UtilityHelper.getCoordinate( next );
+      res.add( dict.containsKey( coord ) ? dict.get( coord ) : next );
+    }
+
+    return res;
   }
   //endregion
 }

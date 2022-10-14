@@ -175,5 +175,4 @@ public record IOTestFrame(EquipmentClient client,
     }
   }
   //endregion
-
 }

@@ -54,23 +54,6 @@ public class Main {
 //      .region( WordDeviceCode.W, 0, 300 )
       .timeout( 20 )
       .build( client );
-
-//    var request = IORequest
-//      .builder()
-////      .read( new PlcBit( B, 100, "RecvGlassRequestBit1" ) )
-////      .read( new PlcBit( B, 200, "RecvGlassRequestBit2" ) )
-////      .read( new PlcU2( W, 300, "GlassId" ) )
-//      //.write( new PlcBit( B, 401, true, "RecvGlassReplyBit" ) )
-////      .write( new PlcI4( D, 401, -78945, "a1" ) )
-//      .read(new PlcBinary( D, 0, 5 ))
-////      .read(new PlcBinary( D, 50, 150 ))
-////      .read(new PlcBinary( D, 300, 50))
-//      //.read(new PlcBinary( B, 0, 50 ))
-////      .read( new PlcU2( W, 400, "Something" ) )
-////      .write( new PlcU4( D, 402, 78945l, "a2" ) )
-////      .write( new PlcU4( D, 407, 5l, "a3" ) )
-//      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
-//      .build();
   }
 }
 

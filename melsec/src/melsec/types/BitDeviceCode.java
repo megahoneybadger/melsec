@@ -33,4 +33,13 @@ public enum BitDeviceCode implements IDeviceCode {
     return MessageFormat.format( "{0}{1}",
       super.toString(), isDecimalAddress() ? "d" : "h" );
   }
+
+  public static BitDeviceCode fromInt( int v ) {
+    for (var type : values()) {
+      if ( type.value() == v) {
+        return type;
+      }
+    }
+    return null;
+  }
 }

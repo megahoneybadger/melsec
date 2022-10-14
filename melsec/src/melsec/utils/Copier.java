@@ -128,6 +128,7 @@ public class Copier {
 
     return PlcStruct.builder().with( newBase, items );
   }
+
   /**
    *
    * @param proto
@@ -176,20 +177,24 @@ public class Copier {
    * @return
    */
   public static List<IPlcObject> withoutValue( IPlcObject [] proto ){
-    return withoutValue( Arrays.stream( proto ).toList() );
-  }
-  /**
-   *
-   * @param proto
-   * @return
-   */
-  public static List<IPlcObject> withoutValue( Iterable<IPlcObject> proto ){
-    return UtilityHelper
-      .toStream( proto )
-      .map( x -> withoutValue( x ) )
-      .toList();
+    return withoutValue( List.of( proto ) );
   }
 
+//  public static List<IPlcObject> withoutValue( Iterable<IPlcObject> proto ){
+//    return UtilityHelper
+//      .toStream( proto )
+//      .map( x -> withoutValue( x ) )
+//      .toList();
+//  }
+
+  public static List<IPlcObject> withoutValue( Iterable<IPlcObject> ... protos ){
+    return Arrays
+      .stream( protos )
+      .flatMap( x -> UtilityHelper.toStream( x ) )
+      .map( x -> withoutValue( x ) )
+      .toList();
+
+  }
   //endregion
 
 }

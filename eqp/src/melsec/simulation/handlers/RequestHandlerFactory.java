@@ -2,6 +2,7 @@ package melsec.simulation.handlers;
 
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
+import melsec.simulation.handlers.batch.BatchReadHandler;
 import melsec.types.CommandCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
@@ -36,6 +37,7 @@ public class RequestHandlerFactory {
         BaseHandler req = switch( CommandCode.fromInt( command )  ) {
           case MultiBlockBatchRead -> new MultiBlockBatchReadHandler( m, r );
           case MultiBlockBatchWrite -> new MultiBlockBatchWriteHandler( m, r );
+          case BatchRead -> new BatchReadHandler( m, r );
           default -> null;
         };
 
