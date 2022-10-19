@@ -1,14 +1,13 @@
 package melsec.bindings;
 
 
-import melsec.bindings.PlcBit;
 import melsec.types.*;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class Bit extends BaseTest {
+public class TestBit extends BaseTest {
 
   @Test
   public void Should_CreateBit(){

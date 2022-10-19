@@ -4,11 +4,13 @@ import melsec.bindings.IPlcObject;
 import melsec.net.EquipmentClient;
 import melsec.scanner.EquipmentScanner;
 import melsec.simulation.EquipmentServer;
+import melsec.types.PlcCoordinate;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.io.IORequest;
 import melsec.types.io.IOResponseItem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +39,20 @@ public record ScanTestFrame( EquipmentClient client,
     for(int i = 0; i < list.size(); ++i) {
       var nextListScan = results.get(i);
       var nextListWrite = list.get( i );
+
+      if( nextListScan.size() != nextListWrite.size() ){
+        var set = new HashSet<>( nextListScan
+          .stream()
+          .map( x -> UtilityHelper.getCoordinate( x ) )
+          .toList());
+
+        for( var y : nextListWrite ){
+          if( !set.contains( UtilityHelper.getCoordinate( y ) ) ){
+            System.out.println( y );
+            System.out.println( nextListWrite.indexOf( y ) );
+          }
+        }
+      }
 
       assertEquals(nextListScan.size(), nextListWrite.size());
 

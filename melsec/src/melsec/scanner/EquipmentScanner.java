@@ -57,6 +57,8 @@ public class EquipmentScanner {
    *
    */
   private IScannerChangeEvent eventHandler;
+  private Instant start;
+  private Instant end;
   //endregion
 
   //region Class properties
@@ -100,36 +102,47 @@ public class EquipmentScanner {
     var actualTimeout = useBackoff ?
       Math.max( 5000, timeout ) : timeout;
 
-    executor.schedule( () -> client.exec( request ), actualTimeout, TimeUnit.MILLISECONDS );
+    executor.schedule( () -> {
+      start = Instant.now();
+      client.exec( request );
+      }, actualTimeout, TimeUnit.MILLISECONDS );
   }
   /**
    *
    * @param response
    */
   private void onScanComplete( IOResponse response ){
-    var bins = UtilityHelper
-      .toStream( response.items())
-      .filter( x -> x.result().success() )
-      .filter( x -> x.result().value().type() == DataType.Binary )
-      .map( x -> ( PlcBinary )x.result().value() )
-      .toList();
+    try{
+      var bins = UtilityHelper
+        .toStream( response.items())
+        .filter( x -> x.result().success() )
+        .filter( x -> x.result().value().type() == DataType.Binary )
+        .map( x -> ( PlcBinary )x.result().value() )
+        .toList();
 
-    var changes = cache.update( bins );
-    var args = new ScannerEventArgs( changes );
+      var changes = cache.update( bins );
+      var args = new ScannerEventArgs( changes );
+      end = Instant.now();
 
-    if( changes.size() > 0 ){
-      client
-        .events()
-        .enqueue( EventType.ScannerChanges, args );
+      //System.out.println(Duration.between(start, end).toMillis());
+
+      if( changes.size() > 0 ){
+        client
+          .events()
+          .enqueue( EventType.ScannerChanges, args );
+      }
+
+      if( null != eventHandler ){
+        eventHandler.executed( args );
+      }
     }
-
-    if( null != eventHandler ){
-      eventHandler.executed( args );
+    catch( Exception exc ){
+      LogManager.getLogger().error( "Failed to complete scan cycle: {}", exc.toString() );
     }
-
-    scan(shouldUseBackoff( response ));
+    finally {
+      scan(shouldUseBackoff( response ));
+    }
   }
-  private Instant starts;
   /**
    *
    * @param response

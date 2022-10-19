@@ -286,6 +286,73 @@ public class RandomFactory {
       list.add( next );
     }
 
+    sort( list );
+
+    return list;
+  }
+  /**
+   *
+   * @param sizeTo
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getPlcString( int sizeFrom, int sizeTo, int count ){
+    var list = new ArrayList<IPlcObject>();
+    var checker = new PlcCoordinate.IntersectionChecker();
+
+    for(int i = 0; i < count; ++i) {
+      IPlcObject next = null;
+
+      do{
+        var size = random.nextInt( sizeFrom, sizeTo + 1 );
+        next = getPlcString( size );
+      }
+      while( null != checker.add( ( IPlcWord ) next ) );
+
+      list.add( next );
+    }
+
+    sort( list );
+
+    return list;
+  }
+  /**
+   *
+   * @param count
+   * @return
+   */
+  public static List<IPlcObject> getPlcWords( int count ){
+    DataType[] types = {
+      I2, U2, I4, U4, String
+    };
+
+    var list = new ArrayList<IPlcObject>();
+    var checker = new PlcCoordinate.IntersectionChecker();
+
+    for(int i = 0; i < count; ++i) {
+      IPlcObject next = null;
+
+      var index = random.nextInt( 0, types.length );
+      var type = types[ index ];
+
+      do{
+        next = switch( type ){
+          case I2 -> getPlcI2();
+          case I4 -> getPlcI4();
+          case U2 -> getPlcU2();
+          case U4 -> getPlcU4();
+          case String -> getPlcString( random.nextInt( 1, 10 ) );
+          default -> null;
+        };
+
+      }
+      while( null != checker.add( ( IPlcWord ) next ) );
+
+      list.add( next );
+    }
+
+    sort( list );
+
     return list;
   }
   /**
@@ -297,7 +364,7 @@ public class RandomFactory {
     var nums = getPlcNumerics( count );
     var bits = getPlcBit( count );
 
-    var res = new ArrayList<IPlcObject>( nums );
+    var res = new ArrayList<>( nums );
     res.addAll( bits );
 
     Collections.shuffle( res );
@@ -458,8 +525,31 @@ public class RandomFactory {
    * @return
    */
   public static IPlcObject update( IPlcObject o ){
+    var old = Valuer.getValue( o );
+    Object v;
+
     return switch( o.type() ){
       case Bit -> flipPlcBit( ( PlcBit )o );
+      case I2 -> {
+        while( Valuer.equals( v = getI2(), o ) );
+        yield Copier.withValue( o, v );
+      }
+      case U2 -> {
+        while( Valuer.equals( v = getU2(), o ) );
+        yield Copier.withValue( o, v );
+      }
+      case I4 -> {
+        while( Valuer.equals( v = getI4(), o ) );
+        yield Copier.withValue( o, v );
+      }
+      case U4 -> {
+        while( Valuer.equals( v = getU4(), o ) );
+        yield Copier.withValue( o, v );
+      }
+      case String -> {
+        while( Valuer.equals( v = getString( (( PlcString )o).size() ), o ) );
+        yield Copier.withValue( o, v );
+      }
       default -> null;
     };
   }

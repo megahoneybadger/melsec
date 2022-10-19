@@ -22,6 +22,8 @@ public class BaseTest {
   protected static final int SIZE_1 = 10;
   protected static final int SIZE_2 = 20;
   protected static final int SIZE_3 = 30;
+  protected static final int SIZE_ODD = 5;
+  protected static final int SIZE_EVEN = 4;
 
   protected static final String STRING_1 = "Very long string";
   protected static final String STRING_2 = "Hello world, New York";

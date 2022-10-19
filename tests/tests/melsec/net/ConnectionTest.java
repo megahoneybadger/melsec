@@ -18,33 +18,12 @@ import java.util.concurrent.TimeUnit;
 import static melsec.types.events.EventType.*;
 
 public class ConnectionTest extends BaseTest {
-  //region Class utility methods
 
-  /**
-   *
-   */
-  private EquipmentClient createDriver() {
-    ClientOptions config = null;
-
-    try {
-      config = ClientOptions
-        .builder()
-        .address( "127.21.5.7" )
-        .port( 5000 )
-        .build();
-    } catch (UnknownHostException e) {
-      throw new RuntimeException(e);
-    }
-
-    return new EquipmentClient( config );
-  }
-  //endregion
-
-  //region Class tests
+  //region Class tests methods
   @Test
   public void Should_RecvDriverStartedEvent() throws InterruptedException {
     var lock = new CountDownLatch( 1 );
-    var d = createDriver();
+    var d = createClient();
 
     d.events().subscribe( (IClientStartedEvent)(x ) -> lock.countDown() );
 
@@ -56,7 +35,7 @@ public class ConnectionTest extends BaseTest {
   @Test
   public void ShouldNot_RecvDriverStartedEvent() throws InterruptedException {
     var lock = new CountDownLatch( 1 );
-    var d = createDriver();
+    var d = createClient();
 
     d.events().subscribe( (IClientStartedEvent)(x ) -> lock.countDown() );
 
@@ -67,7 +46,7 @@ public class ConnectionTest extends BaseTest {
   public void Should_RecvDriverStopped() throws InterruptedException {
     var lock = new CountDownLatch( 2 );
     var registeredEvents = new ArrayList<>();
-    var d = createDriver();
+    var d = createClient();
 
     d.events().subscribe( (IClientStartedEvent)(x ) ->{
       registeredEvents.add(ClientStarted);
@@ -93,7 +72,7 @@ public class ConnectionTest extends BaseTest {
   @Test
   public void ShouldNot_RecvDriverStopped() throws InterruptedException {
     var lock = new CountDownLatch( 1 );
-    var d = createDriver();
+    var d = createClient();
 
     d.events().subscribe( (IClientStartedEvent)(x ) -> lock.countDown() );
 
@@ -109,7 +88,7 @@ public class ConnectionTest extends BaseTest {
   @Test
   public void ShouldNot_RecvDriverStopped2() throws InterruptedException {
     var lock = new CountDownLatch( 1 );
-    var d = createDriver();
+    var d = createClient();
 
     d.events().subscribe((IClientStoppedEvent) (x) -> lock.countDown());
 
@@ -120,7 +99,7 @@ public class ConnectionTest extends BaseTest {
 
   @Test
   public void Should_RecvConnecting() throws InterruptedException {
-    var d = createDriver();
+    var d = createClient();
     var lock = new CountDownLatch( 4 );
     var registeredEvents = new ArrayList<>();
 
@@ -160,7 +139,7 @@ public class ConnectionTest extends BaseTest {
 
   @Test
   public void Should_RecvConnectingMultipleTimes() throws InterruptedException {
-    var d = createDriver();
+    var d = createClient();
     final ResettableCountDownLatch lock = new ResettableCountDownLatch( 4 );
     var registeredEvents = new ArrayList<>();
 
@@ -201,6 +180,27 @@ public class ConnectionTest extends BaseTest {
 
       Assertions.assertIterableEquals( registeredEvents, Arrays.asList(expectedEvents));
     }
+  }
+  //endregion
+
+  //region Class utility methods
+  /**
+   *
+   */
+  private EquipmentClient createClient() {
+    ClientOptions config = null;
+
+    try {
+      config = ClientOptions
+        .builder()
+        .address( "127.21.5.7" )
+        .port( 5000 )
+        .build();
+    } catch (UnknownHostException e) {
+      throw new RuntimeException(e);
+    }
+
+    return new EquipmentClient( config );
   }
   //endregion
 }

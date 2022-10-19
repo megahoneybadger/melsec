@@ -7,6 +7,7 @@ import melsec.types.WordDeviceCode;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 public class ByteConverter {
@@ -183,6 +184,49 @@ public class ByteConverter {
         s = s.substring( 0, Math.min( s.length(), (( PlcString ) proto ).size() ));
         s = s.trim();
         yield s;
+      }
+      default -> null;
+    };
+  }
+  /**
+   *
+   * @param buffer
+   * @param index
+   * @param proto
+   * @return
+   */
+  public static Object fromBytes( ByteBuffer buffer, int index, IPlcWord proto ){
+    return switch( proto.type() ){
+      case I2 -> buffer.getShort( index );
+      case U2 -> buffer.getShort( index ) & 0xFFFF;
+      case I4 -> buffer.getInt( index );
+      case U4 -> buffer.getInt( index ) & 0xFFFF_FFFFl;
+      case Binary ->{
+        buffer.position( index );
+        var barr = new byte[ (( PlcBinary )proto).count() * 2 ];
+        buffer.get( barr );
+        yield barr;
+      }
+      case String -> {
+        var so = ( PlcString ) proto;
+        buffer.position( index );
+        var arr = new byte[ so.size() + so.size() % 2 ];
+        buffer.get( arr );
+        var s = new String( arr );
+        yield  s.substring( 0, Math.min( s.length(), (( PlcString ) proto ).size() )).trim();
+      }
+      case Struct -> {
+        var pr = ( PlcStruct )proto;
+        var items = pr.items();
+        var res = new ArrayList<IPlcWord>();
+
+        for( var next: items ){
+          var shift = index + ( next.address() - proto.address() ) * 2;
+          var value = fromBytes( buffer, shift, next );
+          res.add( ( IPlcWord ) Copier.withValue( next, value ));
+        }
+
+        yield res;
       }
       default -> null;
     };

@@ -3,7 +3,7 @@ package melsec.bindings.files;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-public class BindingReader {
+public class BindingReader{
 
   //region Class members
   /**

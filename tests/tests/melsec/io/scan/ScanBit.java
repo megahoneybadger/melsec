@@ -21,26 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class ScanBit extends BaseIOTest {
-
-  //region Class members
-  /**
-   *
-   */
-  private EquipmentScanner scanner;
-  //endregion
-
-  //region Class initialization
-  /**
-   *
-   */
-  @AfterEach
-  private void cleanEach() {
-    if( null != scanner ){
-      scanner.dispose();
-    }
-  }
-  //endregion
+public class ScanBit extends BaseScanTest {
 
   //region Class 'Bit' methods
   /**
@@ -106,30 +87,5 @@ public class ScanBit extends BaseIOTest {
   }
   //endregion
 
-  //region Class utility methods
-  /**
-   *
-   * @return
-   */
-  private List<PlcRegion> getBitRegions(){
-    var res = new ArrayList<PlcRegion>();
-
-    for( var d : BitDeviceCode.values() ){
-      res.add( getBitRegion( d, 0, Memory.MAX_BITS ));
-    }
-
-    return res;
-  }
-  /**
-   *
-   * @param device
-   * @param start
-   * @param size
-   * @return
-   */
-  private PlcRegion getBitRegion( BitDeviceCode device, int start, int size ){
-    return new PlcRegion( device, start, size );
-  }
-  //endregion
 }
 

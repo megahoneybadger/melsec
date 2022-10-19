@@ -53,15 +53,13 @@ public class BatchReadCommand extends ICommand {
    * @return
    */
   private int getPointsCount(){
-    var size = target.size();
+    var count = target.count();
 
-    if( target.device() instanceof WordDeviceCode ){
-      var extra = ( size % 2 == 0 ) ? 0 : 1;
-      return size / 2 + extra;
-    } else {
-      var extra = ( size % 16 == 0 ) ? 0 : 1;
-      return size / 16 + extra;
-    }
+    if( target.device() instanceof WordDeviceCode )
+      return count;
+
+    var extra = ( count % 16 == 0 ) ? 0 : 1;
+    return count / 16 + extra;
   }
   //endregion
 

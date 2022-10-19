@@ -20,70 +20,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BindingSerializer {
-
-  //region Class constants
-  /**
-   *
-   */
-  static final String ELEMENT_ROOT = "Bindings";
-  /**
-   *
-   */
-  static final String ELEMENT_BIT = "Bit";
-  /**
-   *
-   */
-  static final String ELEMENT_I2 = "I2";
-  /**
-   *
-   */
-  static final String ELEMENT_I4 = "I4";
-  /**
-   *
-   */
-  static final String ELEMENT_U2 = "U2";
-  /**
-   *
-   */
-  static final String ELEMENT_U4 = "U4";
-  /**
-   *
-   */
-  static final String ELEMENT_STRING = "String";
-  /**
-   *
-   */
-  static final String ELEMENT_OFFSET = "Offset";
-  /**
-   *
-   */
-  static final String ELEMENT_STRUCT = "Struct";
-  /**
-   *
-   */
-  static final String ATTR_ID = "id";
-  /**
-   *
-   */
-  static final String ATTR_VALUE = "value";
-  /**
-   *
-   */
-  static final String ATTR_ADDRESS = "address";
-  /**
-   *
-   */
-  static final String ATTR_DEVICE = "device";
-  /**
-   *
-   */
-  static final String ATTR_SIZE = "size";
-  /**
-   *
-   */
-  static final int BAD_INDEX = -1;
-  //endregion
+public class BindingSerializer extends BindingXmlBase {
 
   //region Class members
   /**
@@ -138,9 +75,12 @@ public class BindingSerializer {
     w.writeStartElement( ELEMENT_ROOT );
 
     for( var o: items ){
-      if( o.type() == DataType.Bit ){
-        writeBit( ( PlcBit )o );
+
+      switch( o.type() ){
+        case Bit -> writeBit( ( PlcBit )o );
+        case U2, I2, U4, I4 -> writeNumeric( ( IPlcNumber )o );
       }
+
     }
 
     w.writeEndElement();
@@ -156,6 +96,16 @@ public class BindingSerializer {
     w.writeAttribute( ATTR_DEVICE, Stringer.toString( bit.device(), false ) );
 
     w.writeAttribute( ATTR_ADDRESS, bit.device().toStringAddress( bit.address() ) );
+
+    //w.writeEndElement();
+  }
+
+  private void writeNumeric( IPlcNumber n ) throws XMLStreamException {
+    w.writeEmptyElement( n.type().toString() );
+
+    w.writeAttribute( ATTR_DEVICE, Stringer.toString( n.device(), false ) );
+
+    w.writeAttribute( ATTR_ADDRESS, n.device().toStringAddress( n.address() ) );
 
     //w.writeEndElement();
   }

@@ -9,6 +9,8 @@ import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;
 import melsec.types.PlcRegion;
 import melsec.types.events.net.IConnectionEstablishedEvent;
+import melsec.types.log.ConsoleLogger;
+import melsec.types.log.LogLevel;
 import melsec.utils.IOTestFrame;
 import melsec.utils.MemoryRandomUpdater;
 import melsec.utils.RandomFactory;
@@ -40,10 +42,7 @@ public class BaseIOTest extends BaseTest {
    *
    */
   protected EquipmentClient client;
-  /**
-   *
-   */
-  protected EquipmentScanner scanner;
+
   //endregion
 
   //region Class initialization
@@ -109,13 +108,6 @@ public class BaseIOTest extends BaseTest {
     server.reset();
   }
   /**
-   *
-   */
-  @AfterEach
-  private void cleanEach() {
-    scanner.dispose();
-  }
-  /**
    * @return
    */
   protected IOTestFrame createFrame() {
@@ -129,43 +121,5 @@ public class BaseIOTest extends BaseTest {
     return new IOTestFrame(client, server,
       new CountDownLatch(iAsyncSteps), new ArrayList<>());
   }
-  /**
-   *
-   * @param regions
-   * @return
-   */
-  protected ScanTestFrame createScanFrame( List<PlcRegion> regions,
-                                           List<IPlcObject> bindings,
-                                           int cycles ){
-    var timeout = 10;
-
-    var lock = new CountDownLatch( cycles );
-    var results = new ArrayList<List<IPlcObject>>();
-    var changer = new MemoryRandomUpdater( server, bindings );
-
-    scanner = EquipmentScanner
-      .builder()
-      .binding( bindings )
-      .region( regions )
-      .timeout( timeout )
-      .changed( x -> {
-        if( x.changes().size() > 0 ){
-          var changes = new ArrayList<>( x.changes() );
-          RandomFactory.sort( changes );
-          results.add( changes );
-        }
-
-        lock.countDown();
-
-        if( lock.getCount() > 0){
-          changer.update();
-        }
-
-      } )
-      .build( client );
-
-    return new ScanTestFrame(client, server, scanner, lock, results, changer );
-  }
-
   //endregion
 }

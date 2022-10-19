@@ -1,20 +1,16 @@
 package melsec.scanner;
 
 import melsec.bindings.IPlcObject;
+import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBinary;
 import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;
 import melsec.types.PlcCoordinate;
-import melsec.utils.Copier;
-import melsec.utils.Stringer;
-import melsec.utils.UtilityHelper;
-import melsec.utils.Valuer;
+import melsec.utils.*;
 
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.*;
 
 public class Cache {
 
@@ -58,7 +54,7 @@ public class Cache {
 
     for( var entry : protoStorage.entrySet() ){
       Collections.sort( entry.getValue(),
-        ( a, b ) -> a.address() - b.address() );
+        Comparator.comparingInt( IPlcObject::address ) );
     }
   }
   //endregion
@@ -98,8 +94,8 @@ public class Cache {
       var objAddress = b.address();
 
       var notInRange =
-        (objAddress < bin.address()) ||
-        (objAddress >= ( bin.address() + buffer.length * 8 ));
+        ( objAddress < bin.address()) ||
+        ( objAddress >= ( bin.address() + buffer.length * 8 ));
 
       if( notInRange )
         continue;
@@ -130,9 +126,65 @@ public class Cache {
    * @param bin
    */
   private List<IPlcObject> updateWordCache( PlcBinary bin ){
+    var bindings = protoStorage.get( bin.device() );
     var res = new ArrayList<IPlcObject>();
 
+    if( null == bindings )
+      return res;
+
+    var buffer = ByteBuffer
+      .wrap( bin.value() )
+      .order( ByteOrder.LITTLE_ENDIAN );
+
+    var l = getBindingsLeftBorder( bin.address(), bindings );
+
+    for( int i = l; i < bindings.size(); ++i ){
+      var b = bindings.get( i );
+      var n = (IPlcWord)b;
+      var objAddress = b.address();
+
+      var notInRange =
+        ( objAddress < bin.address()) ||
+        ( objAddress + ByteConverter.getPointsCount( n ) - 1 >= ( bin.address() + bin.value().length / 2 ));
+
+      if( notInRange )
+        break;
+
+      var shift = ( n.address() - bin.address() ) * 2;
+      var value = ByteConverter.fromBytes( buffer, shift, n );
+
+      var coord = UtilityHelper.getCoordinate( b );
+      var existingObject = latestStorage.get( coord );
+
+      if( null == existingObject || !Valuer.equals( value, existingObject ) ){
+        var newObject = Copier.withValue( b, value );
+        latestStorage.put( coord, newObject );
+        res.add( newObject );
+      }
+    }
+
     return res;
+  }
+
+  private int getBindingsLeftBorder( int target, List<IPlcObject> list ){
+    var l = 0;
+    var r = list.size() - 1;
+
+    while( l <= r ){
+      var m = l + ( r - l ) / 2;
+      var mv = list.get( m ).address();
+
+      if( mv == target )
+        return m;
+
+      if( mv < target ){
+        l = m + 1;
+      } else {
+        r = m - 1;
+      }
+    }
+
+    return l;
   }
   //endregion
 }

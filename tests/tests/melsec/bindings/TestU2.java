@@ -2,12 +2,13 @@ package melsec.bindings;
 
 import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
+import melsec.utils.ByteConverter;
 import melsec.utils.Copier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlcU2Test extends BaseTest {
+public class TestU2 extends BaseTest {
 
   //region Class 'Test' methods
   @Test
@@ -19,6 +20,7 @@ public class PlcU2Test extends BaseTest {
     assertTrue( n.value() == 0 );
     assertTrue( n.id().isEmpty() );
     assertEquals( n.type(), DataType.U2 );
+    assertEquals( 1, ByteConverter.getPointsCount( n ) );
   }
 
   @Test

@@ -1,0 +1,28 @@
+<Bindings>
+
+	<I2 device="D" address="10" />
+	<I2 device="D" address="11" />
+	<I2 device="D" address="12" />
+	<I2 device="D" address="13" />
+	<I2 device="D" address="14" />
+	<I2 device="D" address="15" />
+	<I2 device="D" address="16" />
+	
+	<String device="D" address="20" size="10" />
+	
+	<Struct device="D" address="30">
+		<U2 id="age" />
+		<U2 id="weight" />
+		<Offset size="3" />
+		<String id="name" size="10" />
+	</Struct>
+	
+	<I2 device="D" address="1100" />
+	<I2 device="D" address="1101" />
+	<I2 device="D" address="1102" />
+	<I2 device="D" address="1103" />
+	<I2 device="D" address="1104" />
+	<I2 device="D" address="1105" />
+
+
+</Bindings>

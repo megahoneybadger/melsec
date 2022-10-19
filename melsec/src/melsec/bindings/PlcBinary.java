@@ -6,11 +6,11 @@ import melsec.utils.Stringer;
 
 import static melsec.utils.UtilityHelper.EMPTY_STRING;
 
-public record PlcBinary( IDeviceCode device, int address, int size,
-                         byte[] value, String id ) implements IPlcObject {
+public record PlcBinary( IDeviceCode device, int address, int count,
+                         byte[] value, String id ) implements IPlcWord  {
 
-  public PlcBinary( IDeviceCode device, int address, int size ) {
-    this( device, address, size, null, EMPTY_STRING );
+  public PlcBinary( IDeviceCode device, int address, int count ) {
+    this( device, address, count, null, EMPTY_STRING );
   }
 
   @Override

@@ -37,6 +37,10 @@ public class CommandCoordinator {
   //endregion
 
   //region Class properties
+  /**
+   *
+   * @return
+   */
   private Logger logger(){
     return LogManager.getLogger();
   }
@@ -74,18 +78,13 @@ public class CommandCoordinator {
   public void group(Iterable<ICommand> commands ){
     try{
       synchronized( syncObject ){
-        var group = random.nextInt(); //UUID.randomUUID().toString();
+        var group = random.nextInt();
 
         var ids = new ArrayList<String>();
 
         for( var c : commands ){
           ids.add( c.getId() );
         }
-
-//        var ids = UtilityHelper
-//          .toStream( commands )
-//          .map( x -> x.id )
-//          .toList();
 
         dictGroupToCommands.put( group, ids );
         dictGroupToResults.put( group, new ArrayList<>() );
@@ -122,9 +121,16 @@ public class CommandCoordinator {
       }
     }
 
-    if( null != results ){
-      fire( sort( order, results ) );
+    try{
+      if( null != results ){
+        fire( sort( order, results ) );
+      }
     }
+    catch( Exception exc ){
+      //System.out.println( exc );
+      // todo ?
+    }
+
   }
   /**
    *

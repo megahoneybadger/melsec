@@ -21,6 +21,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.security.SecureRandom;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -420,14 +421,17 @@ public class Connection {
    * @param e
    */
   private void done( ICommand c, Throwable e ){
-    synchronized( syncObject ){
-      currentPendingCommand = null;
-      syncObject.notify();
-    }
-
     if( null != e ){
       logger.error( "Failed to complete {}. {}", c,
         UtilityHelper.coalesce( e.getMessage(), e.toString() ) );
+    }
+
+    synchronized( syncObject ){
+      currentPendingCommand = null;
+      syncObject.notify();
+
+      if( !run )
+        return;
     }
 
     coordinator.complete( c, e );

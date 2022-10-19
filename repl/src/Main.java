@@ -47,10 +47,10 @@ public class Main {
   private static EquipmentScanner addScanner( EquipmentClient client ) throws BindingDeserializationException {
     return EquipmentScanner
       .builder()
-      .binding( BindingDeserializer.read( ".resources/conf_big/file1.xml" ) )
-      //.region( BitDeviceCode.M, 15000, 30000 )
-      .region( BitDeviceCode.B, 0, 50000 )
-      .region( BitDeviceCode.M, 0, 50000 )
+      .binding( BindingDeserializer.read( ".resources/conf_big/file2.xml" ) )
+      .region( BitDeviceCode.M, 0, 30000 )
+      //.region( WordDeviceCode.D, 0, 2000 )
+      //.region( BitDeviceCode.M, 0, 50000 )
 //      .region( WordDeviceCode.W, 0, 300 )
       .timeout( 20 )
       .build( client );

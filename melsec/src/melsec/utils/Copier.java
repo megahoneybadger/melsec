@@ -48,12 +48,13 @@ public class Copier {
       }
       case Binary -> {
         var t = (( PlcBinary ) proto );
-        yield new PlcBinary( t.device(), t.address(), t.size(), ( byte[] )value, t.id() );
+        yield new PlcBinary( t.device(), t.address(), t.count(), ( byte[] )value, t.id() );
       }
 
       default -> null;
     };
   }
+
   /**
    *
    * @param p
@@ -101,7 +102,7 @@ public class Copier {
 
       case Binary -> {
         var t = (( PlcBinary ) proto );
-        yield new PlcBinary( t.device(), address, t.size(), t.value(), t.id() );
+        yield new PlcBinary( t.device(), address, t.count(), t.value(), t.id() );
       }
 
       default -> null;
@@ -164,7 +165,7 @@ public class Copier {
 
       case Binary -> {
         var t = (( PlcBinary ) proto );
-        yield new PlcBinary( t.device(), t.address(), t.size(), null, t.id() );
+        yield new PlcBinary( t.device(), t.address(), t.count(), null, t.id() );
       }
 
 

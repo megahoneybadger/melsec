@@ -2,6 +2,7 @@ package melsec.bindings;
 
 import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
+import melsec.utils.ByteConverter;
 import melsec.utils.Copier;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PlcI2Test extends BaseTest {
+public class TestI2 extends BaseTest {
 
   //region Class 'Test' methods
   @Test
@@ -20,6 +21,7 @@ public class PlcI2Test extends BaseTest {
     assertEquals( n.address(), ADDRESS_1 );
     assertTrue( n.value() == 0 );
     assertTrue( n.id().isEmpty() );
+    assertEquals( 1, ByteConverter.getPointsCount( n ) );
     assertEquals( n.type(), DataType.I2 );
   }
 

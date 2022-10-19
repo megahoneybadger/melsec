@@ -252,6 +252,12 @@ public final class EventDispatcher implements IEventDispatcher  {
         conDropped.fire( ( ConnectionEventArgs ) args );
       }
 
+      case ConnectionDisposed ->{
+        logger().info( "Connection#{} disposed",
+          (( ConnectionEventArgs )args ).id() );
+        conDisposed.fire( ( ConnectionEventArgs ) args );
+      }
+
       case ScannerChanges ->{
         var level = Level.getLevel( String.valueOf( LogLevel.SCAN ) );
         var changes = (( ScannerEventArgs ) args ).changes();

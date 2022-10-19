@@ -168,9 +168,9 @@ public class Stringer {
 
     var to = r
       .device()
-      .toStringAddress( r.address() + r.size() - 1 );
+      .toStringAddress( r.address() + r.count() /* 2 + r.count() % 2  */ - 1);
 
-    if( 0 == r.size() ){
+    if( 0 == r.count() ){
       to = from;
     }
 

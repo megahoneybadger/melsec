@@ -23,6 +23,12 @@ public record PlcCoordinate( IDeviceCode device, int address ) {
       var points = ByteConverter.getPointsCount( w );
       var coord = UtilityHelper.getCoordinate( w );
 
+      var start = w.address();
+      var end = start + points - 1;
+
+      if( start / 960 != end / 960 )
+        return w;
+
       for( int i = 0; i < points; ++i ){
         if( dict.containsKey( coord ) )
           return dict.get( coord );

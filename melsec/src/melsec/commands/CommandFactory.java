@@ -22,34 +22,6 @@ public class CommandFactory {
   private IORequest request;
   //endregion
 
-  //region Class public methods
-
-
-
-//  /**
-//   * Splits units multi block batch commands.
-//   * @return
-//   */
-//  public Iterable<ICommand> toMultiBlockBatchCommands(){
-//    var units = toUnits();
-//    var res = new ArrayList<ICommand>();
-//
-//    for( var u : units ){
-//      var commands = switch( u.operation() ){
-//        case Read -> MultiBlockBatchReadCommand.split( u );
-//        case Write -> MultiBlockBatchWriteCommand.split( u );
-//      };
-//
-//      if( null != commands && commands.size() > 0 ){
-//        res.addAll( commands );
-//      }
-//    }
-//
-//    return res;
-//  }
-
-  //endregion
-
   //region Class 'Unit stage' methods
   /**
    *
