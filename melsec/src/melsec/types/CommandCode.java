@@ -7,7 +7,7 @@ public enum CommandCode {
   MultiBlockBatchRead( 0x0406 ),
   MultiBlockBatchWrite( 0x1406 ),
 
-  RandomWrite( 0x0403 );
+  RandomWrite( 0x1402 );
 
   private int value;
 

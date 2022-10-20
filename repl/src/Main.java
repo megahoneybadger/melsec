@@ -26,7 +26,7 @@ public class Main {
       .address( "127.0.0.1" )
       .port( 8000 )
       .loggers(
-        new ConsoleLogger( LogLevel.SCAN ))
+        new ConsoleLogger( LogLevel.DEBUG ))
       .build();
 
     var client = new EquipmentClient( config );
@@ -34,7 +34,7 @@ public class Main {
 
     Thread.sleep( 500 );
 
-    addScanner( client );
+    //addScanner( client );
 
 //    System.out.println( "before ordinary request " + Thread.currentThread().getId());
 //    client.exec( request );

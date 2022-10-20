@@ -52,6 +52,21 @@ public record RequestBlock(IDeviceCode device, int address, int points, byte [] 
    * @return
    * @throws IOException
    */
+  public static RequestBlock decodeRandomWrite( DataInput r ) throws IOException {
+    int address = readDeviceNumber( r );
+    var device = readDeviceCode( r );
+
+    var buffer = new byte[ 1 ];
+    r.readFully( buffer );
+
+    return new RequestBlock( device, address, 1, buffer );
+  }
+  /**
+   *
+   * @param r
+   * @return
+   * @throws IOException
+   */
   protected static int readDeviceNumber(DataInput r ) throws IOException {
     var headDevice = new byte[ 3 ];
     r.readFully( headDevice );

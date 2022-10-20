@@ -3,6 +3,7 @@ package melsec.simulation.handlers;
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
 import melsec.simulation.handlers.batch.BatchReadHandler;
+import melsec.simulation.handlers.random.RandomWriteHandler;
 import melsec.types.CommandCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.Memory;
@@ -38,6 +39,7 @@ public class RequestHandlerFactory {
           case MultiBlockBatchRead -> new MultiBlockBatchReadHandler( m, r );
           case MultiBlockBatchWrite -> new MultiBlockBatchWriteHandler( m, r );
           case BatchRead -> new BatchReadHandler( m, r );
+          case RandomWrite -> new RandomWriteHandler( m, r );
           default -> null;
         };
 

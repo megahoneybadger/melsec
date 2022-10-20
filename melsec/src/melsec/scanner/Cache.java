@@ -71,7 +71,11 @@ public class Cache {
       for( var bin : bins ) {
         var isBit = bin.device() instanceof BitDeviceCode;
 
-        res.addAll( isBit ?  updateBitCache( bin ) : updateWordCache( bin ) );
+        var next = isBit ?  updateBitCache( bin ) : updateWordCache( bin );
+
+        if( null != next ){
+          res.addAll( next );
+        }
       }
     }
 
@@ -83,22 +87,20 @@ public class Cache {
    */
   private List<IPlcObject> updateBitCache( PlcBinary bin ){
     var bindings = protoStorage.get( bin.device() );
-    var res = new ArrayList<IPlcObject>();
 
     if( null == bindings )
-      return res;
+      return null;
 
     var buffer = bin.value();
 
-    for( var b : bindings ){
+    var l = findFirstBinding( bin.address(), bindings );
+    var r = findFirstBinding( bin.address() + buffer.length * 8, bindings );
+    var res = new ArrayList<IPlcObject>( r - l );
+
+    for( int i = l; i < r; ++i ){
+      var b = bindings.get( i );
+
       var objAddress = b.address();
-
-      var notInRange =
-        ( objAddress < bin.address()) ||
-        ( objAddress >= ( bin.address() + buffer.length * 8 ));
-
-      if( notInRange )
-        continue;
 
       objAddress -= bin.address();
       var byteAddress = objAddress / 8;
@@ -127,16 +129,17 @@ public class Cache {
    */
   private List<IPlcObject> updateWordCache( PlcBinary bin ){
     var bindings = protoStorage.get( bin.device() );
-    var res = new ArrayList<IPlcObject>();
 
     if( null == bindings )
-      return res;
+      return null;
+
+    var res = new ArrayList<IPlcObject>();
 
     var buffer = ByteBuffer
       .wrap( bin.value() )
       .order( ByteOrder.LITTLE_ENDIAN );
 
-    var l = getBindingsLeftBorder( bin.address(), bindings );
+    var l = findFirstBinding( bin.address(), bindings );
 
     for( int i = l; i < bindings.size(); ++i ){
       var b = bindings.get( i );
@@ -165,8 +168,13 @@ public class Cache {
 
     return res;
   }
-
-  private int getBindingsLeftBorder( int target, List<IPlcObject> list ){
+  /**
+   *
+   * @param target
+   * @param list
+   * @return
+   */
+  private int findFirstBinding( int target, List<IPlcObject> list ){
     var l = 0;
     var r = list.size() - 1;
 

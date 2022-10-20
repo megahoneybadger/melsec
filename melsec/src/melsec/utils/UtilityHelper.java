@@ -5,6 +5,9 @@ import melsec.types.PlcCoordinate;
 import melsec.types.PlcKey;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -26,6 +29,35 @@ public class UtilityHelper {
 
   public static <T> Stream<T> toStream(final Iterable<T> iterable) {
     return StreamSupport.stream(iterable.spliterator(), false);
+  }
+  /**
+   *
+   * @param protos
+   * @return
+   */
+  public static List<IPlcObject> union( Iterable<IPlcObject> ... protos ){
+    return Arrays
+      .stream( protos )
+      .flatMap( x -> UtilityHelper.toStream( x ) )
+      .toList();
+  }
+
+  /**
+   *
+   * @param protos
+   * @return
+   */
+  public static List<IPlcObject> unionShuffle( Iterable<IPlcObject> ... protos ){
+    var list = Arrays
+      .stream( protos )
+      .flatMap( x -> UtilityHelper.toStream( x ) )
+      .toList();
+
+    var res = new ArrayList<>( list );
+
+    Collections.shuffle( res );
+
+    return res;
   }
   //endregion
 

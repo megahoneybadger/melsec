@@ -85,6 +85,19 @@ public class ScanBit extends BaseScanTest {
 
     f.assertScanResults();
   }
+
+  @Test
+  public void Should_Scan_Bits_5() throws InvalidRangeException, InterruptedException {
+
+    var prototypes = Copier.withoutValue(
+      RandomFactory.getPlcBit( 50000 ));
+
+    var f = createScanFrame( getBitRegions(), prototypes, 200 );
+
+    f.await();
+
+    f.assertScanResults();
+  }
   //endregion
 
 }

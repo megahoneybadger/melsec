@@ -4,6 +4,7 @@ import melsec.bindings.IPlcObject;
 import melsec.commands.batch.BatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchReadCommand;
 import melsec.commands.multi.MultiBlockBatchWriteCommand;
+import melsec.commands.random.RandomWriteCommand;
 import melsec.types.CommandCode;
 import melsec.types.io.IORequest;
 import melsec.types.io.IORequestItem;
@@ -189,7 +190,7 @@ public class CommandFactory {
     var commands = switch( code ){
       //case BatchWrite -> BatchReadCommand.split( unit );todo
       case MultiBlockBatchWrite -> MultiBlockBatchWriteCommand.split( unit );
-      //case RandomWrite -> null; todo
+      case RandomWrite -> RandomWriteCommand.split( unit );
       default -> null;
     };
 
