@@ -86,8 +86,8 @@ public final class PlcStruct implements IPlcWord {
 
     var st = ( PlcStruct )o;
 
-//    if( st.count() != size() )
-//      return false;
+    if( st.items.size() != items.size() )
+      return false;
 
     for( var i = 0; i < st.count(); ++i ){
       if( !st.items.get( i ).equals( items.get( i ) ) )

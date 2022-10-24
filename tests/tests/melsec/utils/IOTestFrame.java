@@ -6,6 +6,8 @@ import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.io.IORequest;
 import melsec.types.io.IOResponseItem;
 import melsec.simulation.EquipmentServer;
+import melsec.types.io.IOResult;
+import melsec.types.io.IOType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,14 +54,7 @@ public record IOTestFrame(EquipmentClient client,
    * @param proto
    */
   public void writeAsync(IPlcObject proto) {
-    client.exec(IORequest
-      .builder()
-      .write(proto)
-      .complete(y -> {
-        results.addAll(UtilityHelper.toList(y.items()));
-        lock.countDown();
-      })
-      .build());
+    writeAsync( List.of( proto ) );
   }
   /**
    *
@@ -77,7 +72,19 @@ public record IOTestFrame(EquipmentClient client,
       .builder()
       .write(proto)
       .complete(y -> {
-        results.addAll( UtilityHelper.toList(y.items()) );
+        for( var item : y.items() ){
+          if( item.result().success() ){
+            var obj = Copier.withoutValue( item.result().value() );
+            var value = server.read( obj );
+            var newObj = Copier.withValue( obj, value );
+            results.add( new IOResponseItem( IOType.Write, obj, IOResult.create( newObj ) ) );
+          } else{
+            results.add( item );
+          }
+
+        }
+
+        //results.addAll(UtilityHelper.toList(y.items()));
         lock.countDown();
       })
       .build());
@@ -169,6 +176,10 @@ public record IOTestFrame(EquipmentClient client,
 
       var serverValue = server.read( next );
       var writtenValue = Valuer.getValue( next );
+
+      if( !item.result().success() ){
+        System.out.println( "fuck" );
+      }
 
       assertTrue( item.result().success());
       assertEquals( serverValue, writtenValue );

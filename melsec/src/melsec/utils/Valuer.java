@@ -1,6 +1,7 @@
 package melsec.utils;
 
 import melsec.bindings.*;
+import melsec.types.DataType;
 import melsec.types.WordDeviceCode;
 
 import java.util.ArrayList;
@@ -35,7 +36,9 @@ public class Valuer {
    * @return
    */
   public static boolean equals( Object v, IPlcObject o ){
-    return v.equals( getValue( o ) );
+    return ( o.type() == DataType.Binary ) ?
+      Arrays.equals( ( byte[] )getValue( o ), ( byte[] )getValue( ( IPlcObject )v ) ) :
+      v.equals( getValue( o ));
   }
   //endregion
 

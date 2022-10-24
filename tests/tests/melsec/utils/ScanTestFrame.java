@@ -50,6 +50,7 @@ public record ScanTestFrame( EquipmentClient client,
           if( !set.contains( UtilityHelper.getCoordinate( y ) ) ){
             System.out.println( y );
             System.out.println( nextListWrite.indexOf( y ) );
+
           }
         }
       }

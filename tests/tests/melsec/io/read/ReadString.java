@@ -162,7 +162,8 @@ public class ReadString extends BaseIOTest {
 
   @Test
   public void Should_Read_String_2() throws InvalidRangeException, InterruptedException {
-    var toWrite = new PlcU4( WordDeviceCode.W, ADDRESS_2, RandomFactory.getString());
+    var s = RandomFactory.getString();
+    var toWrite = new PlcString( WordDeviceCode.W, 0, s.length(), s );
     server.write(toWrite);
 
     var toRead = Copier.withoutValue( toWrite );

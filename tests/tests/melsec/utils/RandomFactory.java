@@ -68,6 +68,9 @@ public class RandomFactory {
    * @return
    */
   public static String getString(int size) {
+    if( size == 0 )
+      return UtilityHelper.EMPTY_STRING;
+
     int leftLimit = 48; // numeral '0'
     int rightLimit = 122; // letter 'z'
 
@@ -323,7 +326,7 @@ public class RandomFactory {
    */
   public static List<IPlcObject> getPlcWords( int count ){
     DataType[] types = {
-      I2, U2, I4, U4, String
+      I2, U2, I4, U4, String, Struct
     };
 
     var list = new ArrayList<IPlcObject>();
@@ -342,9 +345,9 @@ public class RandomFactory {
           case U2 -> getPlcU2();
           case U4 -> getPlcU4();
           case String -> getPlcString( random.nextInt( 1, 10 ) );
+          case Struct -> getPlcStruct( random.nextInt( 2, 7 ) );
           default -> null;
         };
-
       }
       while( null != checker.add( ( IPlcWord ) next ) );
 
@@ -444,7 +447,7 @@ public class RandomFactory {
       I2, U2, I4, U4, String, Bit
     };
 
-    for( int i = 0; i < size; ++i ){
+    for( int i = 0; i < size; ){
       var index = random.nextInt( 0, types.length );
       var type = types[ index ];
 
@@ -459,6 +462,8 @@ public class RandomFactory {
         }
         case Bit -> b.offset( random.nextInt( 0, 5 ) );
       }
+
+      if( type != Bit )i++;
     }
 
     var stub = b.build();
@@ -547,8 +552,20 @@ public class RandomFactory {
         yield Copier.withValue( o, v );
       }
       case String -> {
-        while( Valuer.equals( v = getString( (( PlcString )o).size() ), o ) );
+        var so =  ( PlcString )o;
+        while( Valuer.equals( v = getString( so.size() ), o ) && so.size() > 0 );
         yield Copier.withValue( o, v );
+      }
+      case Struct ->{
+        var st = ( PlcStruct )o;
+
+        var list = st
+          .items()
+          .stream()
+          .map( x -> ( IPlcWord )update( x ) )
+          .toList();
+
+        yield Copier.withValue( st, list );
       }
       default -> null;
     };

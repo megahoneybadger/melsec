@@ -1,6 +1,7 @@
 package melsec.commands;
 
 import melsec.net.Connection;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.io.IOResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -155,7 +156,7 @@ public class CommandCoordinator {
    *
    * @param list
    */
-  private void fire( List<CompleteCommand> list ){
+  private void fire( List<CompleteCommand> list ) throws InvalidRangeException {
     var response = IOResponse.empty();
 
     for( var next : list ){

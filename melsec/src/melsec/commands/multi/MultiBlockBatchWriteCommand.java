@@ -58,7 +58,7 @@ public final class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseComman
 
       var condBlocksViolation = blocks >= MAX_BLOCKS;
 
-      var condPointsViolation = 4 * blocks + points + itemPoints > MAX_POINTS;
+      var condPointsViolation = 4 * ( blocks + 1 ) + points + itemPoints > MAX_POINTS;
 
       var shouldCreateCommand = condBlocksViolation || condPointsViolation;
 

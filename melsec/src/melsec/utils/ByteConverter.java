@@ -22,6 +22,7 @@ public class ByteConverter {
     var val = switch( o.type() ){
       case I2, I4, U2, U4 -> ((IPlcNumber)o ).value();
       case String -> ((PlcString)o).value();
+      case Binary -> ( ( PlcBinary )o ).value();
       default -> null;
     };
 
@@ -68,6 +69,17 @@ public class ByteConverter {
           System.arraycopy( arr, 0, arrAligned, 0, arr.length );
           arr = arrAligned;
         }
+
+        yield arr;
+      }
+
+      case Binary -> {
+        var bo = ( PlcBinary )o;
+        var length = bo.count();
+
+        var arr = new byte[ length + length % 2 ];
+        System.arraycopy( bo.value(), 0,
+          arr, 0, Math.min( arr.length, bo.value().length ) );
 
         yield arr;
       }
@@ -185,6 +197,7 @@ public class ByteConverter {
         s = s.trim();
         yield s;
       }
+      case Struct -> fromBytes( buffer, 0, proto );
       default -> null;
     };
   }
