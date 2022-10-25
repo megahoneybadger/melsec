@@ -1,20 +1,12 @@
 package melsec.io.scan;
 
-import melsec.io.BaseIOTest;
-import melsec.scanner.EquipmentScanner;
-import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
-import melsec.types.PlcRegion;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
-import melsec.utils.MemoryRandomUpdater;
 import melsec.utils.RandomFactory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;

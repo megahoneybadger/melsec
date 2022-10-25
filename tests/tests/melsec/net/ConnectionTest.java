@@ -7,7 +7,7 @@ import melsec.types.events.client.IClientStoppedEvent;
 import melsec.types.events.net.IConnectionDisposedEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import utils.ResettableCountDownLatch;
+import melsec.utils.ResettableCountDownLatch;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

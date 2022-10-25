@@ -1,26 +1,20 @@
 package melsec.io;
 
-import melsec.bindings.IPlcObject;
+import melsec.bindings.BaseTest;
 import melsec.net.ClientOptions;
 import melsec.net.EquipmentClient;
-import melsec.bindings.BaseTest;
-import melsec.scanner.EquipmentScanner;
 import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;
-import melsec.types.PlcRegion;
 import melsec.types.events.net.IConnectionEstablishedEvent;
-import melsec.types.log.ConsoleLogger;
-import melsec.types.log.LogLevel;
 import melsec.utils.IOTestFrame;
-import melsec.utils.MemoryRandomUpdater;
-import melsec.utils.RandomFactory;
-import melsec.utils.ScanTestFrame;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -96,7 +90,7 @@ public class BaseIOTest extends BaseTest {
    * @throws IOException
    */
   @AfterAll
-  private void cleanAll() throws IOException {
+  protected void cleanAll() throws IOException {
     server.stop();
     client.stop();
   }
@@ -104,7 +98,7 @@ public class BaseIOTest extends BaseTest {
    *
    */
   @BeforeEach
-  private void initEach() throws IOException {
+  protected void initEach() throws IOException {
     server.reset();
   }
   /**

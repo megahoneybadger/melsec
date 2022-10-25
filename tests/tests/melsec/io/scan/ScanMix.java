@@ -1,12 +1,9 @@
 package melsec.io.scan;
 
-import melsec.types.BitDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.Copier;
 import melsec.utils.RandomFactory;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 
 public class ScanMix extends BaseScanTest {

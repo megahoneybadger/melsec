@@ -1,10 +1,9 @@
 package melsec.net;
 
-import melsec.types.log.IPlcLogger;
 import melsec.types.Endpoint;
+import melsec.types.log.IPlcLogger;
 import melsec.types.log.LogLevel;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;

@@ -4,16 +4,11 @@ import melsec.bindings.IPlcObject;
 import melsec.net.EquipmentClient;
 import melsec.scanner.EquipmentScanner;
 import melsec.simulation.EquipmentServer;
-import melsec.types.PlcCoordinate;
-import melsec.types.exceptions.InvalidRangeException;
-import melsec.types.io.IORequest;
-import melsec.types.io.IOResponseItem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

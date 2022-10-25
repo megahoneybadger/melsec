@@ -3,12 +3,12 @@ package melsec.simulation;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.types.exceptions.InvalidRangeException;
 import melsec.simulation.handlers.RequestBlock;
 import melsec.types.BitDeviceCode;
 import melsec.types.DataType;
 import melsec.types.IDeviceCode;
 import melsec.types.WordDeviceCode;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.ByteConverter;
 
 import java.util.BitSet;

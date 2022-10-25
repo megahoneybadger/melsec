@@ -1,12 +1,9 @@
 package melsec.io.write;
 
-import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcBit;
-import melsec.bindings.PlcI2;
 import melsec.io.BaseIOTest;
 import melsec.simulation.Memory;
 import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.RandomFactory;
 import melsec.utils.Valuer;

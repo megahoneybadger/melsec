@@ -1,20 +1,6 @@
 package melsec.io.read;
 
-import melsec.bindings.PlcBinary;
-import melsec.bindings.PlcString;
 import melsec.io.BaseIOTest;
-import melsec.types.WordDeviceCode;
-import melsec.types.exceptions.InvalidRangeException;
-import melsec.utils.Copier;
-import melsec.utils.RandomFactory;
-import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ReadBin extends BaseIOTest {

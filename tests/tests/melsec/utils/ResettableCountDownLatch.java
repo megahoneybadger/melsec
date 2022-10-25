@@ -1,4 +1,4 @@
-package utils;
+package melsec.utils;
 
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;

@@ -1,8 +1,6 @@
 package melsec.bindings;
 
 import melsec.utils.ByteConverter;
-import melsec.utils.Copier;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,7 +115,7 @@ public class TestStruct extends BaseTest {
     assertEquals( s.type(), DataType.Struct );
     assertEquals( ByteConverter.getPointsCount( s ), 3 );
 
-    Assertions.assertIterableEquals( s.items(), expected );
+    assertIterableEquals( s.items(), expected );
   }
 
   @Test
@@ -155,7 +153,7 @@ public class TestStruct extends BaseTest {
     assertEquals( s.type(), DataType.Struct );
     assertEquals( ByteConverter.getPointsCount( s ), 30 );
 
-    Assertions.assertIterableEquals( s.items(), expected );
+    assertIterableEquals( s.items(), expected );
   }
 
   @Test
@@ -178,7 +176,7 @@ public class TestStruct extends BaseTest {
 
     assertEquals( ByteConverter.getPointsCount( s ), 1 );
     assertEquals( s.count(), 1 );
-    Assertions.assertIterableEquals( s.items(), expected );
+    assertIterableEquals( s.items(), expected );
   }
 
   @Test
@@ -201,7 +199,7 @@ public class TestStruct extends BaseTest {
 
     assertEquals( s.count(), 1 );
     assertEquals( ByteConverter.getPointsCount( s ), 1 );
-    Assertions.assertIterableEquals( s.items(), expected );
+    assertIterableEquals( s.items(), expected );
   }
 
 }

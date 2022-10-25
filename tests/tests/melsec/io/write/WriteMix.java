@@ -1,19 +1,10 @@
 package melsec.io.write;
 
-import melsec.bindings.PlcBit;
 import melsec.io.BaseIOTest;
-import melsec.simulation.Memory;
-import melsec.types.BitDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;
-import melsec.utils.Copier;
 import melsec.utils.RandomFactory;
 import melsec.utils.UtilityHelper;
-import melsec.utils.Valuer;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

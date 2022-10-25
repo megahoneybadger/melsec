@@ -1,7 +1,6 @@
 package melsec.io.read;
 
 import melsec.bindings.PlcString;
-import melsec.bindings.PlcU4;
 import melsec.io.BaseIOTest;
 import melsec.types.WordDeviceCode;
 import melsec.types.exceptions.InvalidRangeException;

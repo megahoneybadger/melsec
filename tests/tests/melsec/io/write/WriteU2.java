@@ -2,7 +2,6 @@ package melsec.io.write;
 
 import melsec.bindings.IPlcWord;
 import melsec.bindings.PlcU2;
-import melsec.bindings.PlcI4;
 import melsec.io.BaseIOTest;
 import melsec.simulation.Memory;
 import melsec.types.WordDeviceCode;

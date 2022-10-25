@@ -15,12 +15,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReadBit extends BaseIOTest {
+public class ReadBitTest extends BaseIOTest {
 
   //region Class 'Bit' methods
 
   @Test
-  public void Should_Read_Bit_1() throws InvalidRangeException, InterruptedException {
+  public void TestShould_Read_Bit_1() throws InvalidRangeException, InterruptedException {
     var toWrite = new PlcBit( BitDeviceCode.B, ADDRESS_2, true );
     server.write(toWrite);
 

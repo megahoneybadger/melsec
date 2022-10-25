@@ -1,10 +1,6 @@
 package melsec.io.write;
 
-import melsec.bindings.PlcBinary;
 import melsec.io.BaseIOTest;
-import melsec.types.WordDeviceCode;
-import melsec.types.exceptions.InvalidRangeException;
-import org.junit.jupiter.api.Test;
 
 public class WriteBin extends BaseIOTest {
 
