@@ -1,35 +1,29 @@
 import dispatcher.ClientCommandLineDispatcher;
-import melsec.bindings.*;
 import melsec.bindings.files.BindingDeserializer;
 import melsec.net.ClientOptions;
 import melsec.net.EquipmentClient;
 import melsec.scanner.EquipmentScanner;
 import melsec.types.BitDeviceCode;
-import melsec.types.WordDeviceCode;
-import melsec.types.events.client.IClientStartedEvent;
-import melsec.types.events.client.IClientStoppedEvent;
-import melsec.types.events.net.IConnectionConnectingEvent;
-import melsec.types.events.net.IConnectionDisposedEvent;
-import melsec.types.events.net.IConnectionEstablishedEvent;
+import melsec.types.Endpoint;
 import melsec.types.exceptions.BindingDeserializationException;
-import melsec.types.io.IORequest;
 import melsec.types.log.ConsoleLogger;
 import melsec.types.log.LogLevel;
-import utils.Console;
+import melsec.utils.UtilityHelper;
 
 import java.net.UnknownHostException;
-import java.util.Scanner;
-
-import static melsec.types.WordDeviceCode.D;
 
 public class Main {
 
   public static void main(String[] args) throws UnknownHostException, BindingDeserializationException, InterruptedException {
 
+    var ep = UtilityHelper.coalesce(
+      Endpoint.fromArgs( args ),
+      Endpoint.getDefault() );
+
+    //mvn -pl monitor compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"
     var config = ClientOptions
       .builder()
-      .address( "127.0.0.1" )
-      .port( 8000 )
+      .endpoint( ep )
       .loggers(
         new ConsoleLogger( LogLevel.SCAN ))
       .build();

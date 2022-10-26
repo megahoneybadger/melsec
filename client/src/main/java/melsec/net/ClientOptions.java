@@ -85,6 +85,13 @@ public class ClientOptions {
       return this;
     }
 
+    public Builder endpoint( Endpoint ep){
+      address( ep.address() );
+      port( ep.port() );
+
+      return this;
+    }
+
     public Builder loggers( IPlcLogger... arr ){
       appenders = Arrays.asList( arr );
       return this;

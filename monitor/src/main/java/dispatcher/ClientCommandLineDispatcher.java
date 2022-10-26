@@ -13,7 +13,7 @@ public class ClientCommandLineDispatcher {
   private final EquipmentClient communicator;
   private boolean run;
 
-  public ClientCommandLineDispatcher(EquipmentClient c ){
+  public ClientCommandLineDispatcher( EquipmentClient c ){
     communicator = c;
 
   }

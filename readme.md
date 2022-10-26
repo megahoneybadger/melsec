@@ -239,7 +239,7 @@ In addition to discrete IO request we can organize continuous data reading:
 
     Thread.sleep( 500 );
 
-     EquipmentScanner
+    EquipmentScanner
         .builder()
         .changed( x -> x.changes().forEach( y -> System.out.println( y ) ) )
         .binding(
@@ -252,7 +252,7 @@ In addition to discrete IO request we can organize continuous data reading:
         .region( WordDeviceCode.W, 0, 300 /*scan Wx0-Wx12b*/ )
         .timeout( 20 )
         .build( client );
-
+    
     new Scanner( System.in ).nextLine();
 
 *Example #2*
