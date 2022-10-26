@@ -35,13 +35,18 @@ public class Main {
     var client = new EquipmentClient( config );
     client.start();
 
-    var w1 = new PlcString( WordDeviceCode.D, 0, 2000, "Hello word" );
-    var w2 = new PlcU2( WordDeviceCode.D, 100, "Pressure" );
+    var st = PlcStruct
+      .builder( WordDeviceCode.W, 0x100, "Employee" )
+      .u2( "Age" )
+      .u2( "Weight" )
+      .u2( "Salary" )
+      .offset( 3 )
+      .string( 20, "Name" )
+      .build();
 
     var request = IORequest
       .builder()
-      .write( w1 )
-      .read( w2 )
+      .read( st )
       .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
       .build();
 

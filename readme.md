@@ -53,12 +53,12 @@ Every binding contains target device code and address. In addition, it may have 
 Primary object that is responsible for communication is an Equipment Client. To make it work you have to create a proper configuration which sets remote device's IP and port.
 
     var config = ClientOptions  
-      .builder()  
-      .address( "127.0.0.1" )  
-      .port( 8000 )  
-      .loggers(  
+        .builder()  
+        .address( "127.0.0.1" )  
+        .port( 8000 )  
+        .loggers(  
         new ConsoleLogger( LogLevel.DEBUG ))  
-      .build();  
+        .build();  
       
     var client = new EquipmentClient( config ); 
 
@@ -70,12 +70,12 @@ To read or/and write binding you will need to pack them into the requests. Every
 *Example #1*
 
     var config = ClientOptions  
-	    .builder()  
-	    .address( "127.0.0.1" )  
-	    .port( 8000 )  
-	    .loggers(  
-	      new ConsoleLogger( LogLevel.DEBUG ))  
-	    .build();  
+        .builder()  
+        .address( "127.0.0.1" )  
+        .port( 8000 )  
+        .loggers(  
+          new ConsoleLogger( LogLevel.DEBUG ))  
+        .build();  
       
      var client = new EquipmentClient( config );  
      client.start();  
@@ -84,10 +84,10 @@ To read or/and write binding you will need to pack them into the requests. Every
      var b = new PlcU2( WordDeviceCode.D, 200 );  
    
      var request = IORequest  
-       .builder()  
-       .read( a, b, new PlcBit( BitDeviceCode.M, 0 ) )  
-       .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
-       .build();  
+        .builder()  
+        .read( a, b, new PlcBit( BitDeviceCode.M, 0 ) )  
+        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .build();  
 
 	 // let's establish a connection	   
      Thread.sleep( 500 );  
@@ -101,19 +101,18 @@ To read or/and write binding you will need to pack them into the requests. Every
 *Example #2*
 
     // omit client creation for brevity
-
-     var b = new PlcU2( WordDeviceCode.D, -500/*bad address*/ );  
-   
-     var request = IORequest  
-       .builder()  
-       .read( b )  
-       .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
-       .build();  
-
-	 // let's establish a connection	   
-     Thread.sleep( 500 );  
-   
-     client.exec( request );  
+    var b = new PlcU2( WordDeviceCode.D, -500/*bad address*/ );  
+    
+    var request = IORequest  
+        .builder()  
+        .read( b )  
+        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .build();  
+    
+    // let's establish a connection	   
+    Thread.sleep( 500 );  
+    
+    client.exec( request );  
 
 ![](.resources/images/image2.png?raw=true)
 
@@ -125,12 +124,12 @@ To read or/and write binding you will need to pack them into the requests. Every
     var b2 = new PlcBit( BitDeviceCode.B, 501, false, "Reply Bit" );  
       
     var request = IORequest  
-      .builder()  
-      .write( w1, b1 )  
-      .read( w2 )  
-      .write( b2 )  
-      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
-      .build();
+        .builder()  
+        .write( w1, b1 )  
+        .read( w2 )  
+        .write( b2 )  
+        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .build();
       
     // let's establish a connection	   
     Thread.sleep( 500 );  
@@ -146,11 +145,11 @@ To read or/and write binding you will need to pack them into the requests. Every
     var w2 = new PlcU2( WordDeviceCode.D, 100, "Pressure" );  
       
     var request = IORequest  
-      .builder()  
-      .write( w1 )  
-      .read( w2 )  
-      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
-      .build();  
+        .builder()  
+        .write( w1 )  
+        .read( w2 )  
+        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .build();  
       
     Thread.sleep( 500 );  
       
@@ -158,3 +157,26 @@ To read or/and write binding you will need to pack them into the requests. Every
 
 ![](.resources/images/image4.png?raw=true)
 
+*Example #4*
+
+    `var st = PlcStruct
+        .builder( WordDeviceCode.W, 0x100, "Employee" )
+        .u2( "Age" )
+        .u2( "Weight" )
+        .u2( "Salary" )
+        .offset( 3 )
+        .string( 20, "Name" )
+        .build();
+
+    var request = IORequest
+        .builder()
+        .read( st )
+        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
+        .build();
+
+    Thread.sleep( 500 );
+
+    client.exec( request );
+
+![](.resources/images/image5.png?raw=true)
+![](.resources/images/image6.png?raw=true)
