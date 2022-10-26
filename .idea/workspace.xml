@@ -5,172 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b437f6a4-5a2d-498c-a881-9790ffd3e411" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/client.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/monitor/monitor.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/plc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/apache_logging_log4j_api.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/apache_logging_log4j_core.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/hamcrest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/junit_jupiter.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/eqp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/eqp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/BaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/EquipmentCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/EquipmentCommandLineDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/ResetCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/ResetCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/StartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/StopCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/UnknownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/UnknownCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/io/BaseIOCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/io/BaseIOCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/io/ReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/io/ReadCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/dispatcher/io/WriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/io/WriteCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/ChannelParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ChannelParams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/EquipmentChannel.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentChannel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/EquipmentServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/Memory.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/Memory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/ServerOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ServerOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/events/ChannelEventArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/events/ChannelEventArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/events/IClientDisconnectedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/events/IClientDisconnectedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/BaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/BaseHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/ErrorHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/ErrorHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/RequestBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/RequestBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/RequestHandlerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/RequestHandlerFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/batch/BatchReadHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/batch/BatchReadHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/multi/MultiBlockBatchReadHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/multi/MultiBlockBatchReadHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/multi/MultiBlockBatchWriteHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/multi/MultiBlockBatchWriteHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/melsec/simulation/handlers/random/RandomWriteHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/handlers/random/RandomWriteHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/melsec.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/IPlcNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/IPlcNumber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/IPlcObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/IPlcObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/IPlcWord.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/IPlcWord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcBinary.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcBinary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcBit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcI2.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcI2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcI4.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcI4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcString.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcStruct.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcStruct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcU2.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcU2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/PlcU4.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/PlcU4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/files/BindingDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingDeserializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/files/BindingReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/files/BindingSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/files/BindingValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/bindings/files/BindingXmlBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingXmlBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/CommandCoordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/CommandCoordinator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/CommandFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/CommandFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/ICommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/ICommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/batch/BatchReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/batch/BatchReadCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/multi/MultiBlockBatchBaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/multi/MultiBlockBatchBaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/multi/MultiBlockBatchReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/multi/MultiBlockBatchReadCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/multi/MultiBlockBatchWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/multi/MultiBlockBatchWriteCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/commands/random/RandomWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/random/RandomWriteCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/net/ClientOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/net/ClientOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/net/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/net/Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/net/EquipmentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/net/EquipmentClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/scanner/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/Cache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/scanner/EquipmentScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/EquipmentScanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/BitDeviceCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/BitDeviceCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/CommandCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/CommandCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/CompletionCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/CompletionCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/DataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/Endpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/Endpoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/ErrorCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/IDeviceCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/IDeviceCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/PlcCoordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/PlcCoordinate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/PlcKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/PlcKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/PlcRegion.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/PlcRegion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/WordDeviceCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/WordDeviceCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/EmptyEventArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EmptyEventArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/EventBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/EventType.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/IEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/IEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/IEventArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/IEventArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/IEventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/IEventDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/IOCompleteEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/IOCompleteEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/client/IClientStartedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/client/IClientStartedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/client/IClientStoppedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/client/IClientStoppedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/net/ConnectionEventArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/net/ConnectionEventArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/net/IConnectionConnectingEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/net/IConnectionConnectingEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/net/IConnectionDisposedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/net/IConnectionDisposedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/net/IConnectionDroppedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/net/IConnectionDroppedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/net/IConnectionEstablishedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/net/IConnectionEstablishedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/scanner/IScannerChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/scanner/IScannerChangeEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/events/scanner/ScannerEventArgs.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/scanner/ScannerEventArgs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/BadCompletionCodeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/BadCompletionCodeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/BaseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/BaseException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/BindingDeserializationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/BindingDeserializationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/BindingSerializationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/BindingSerializationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/BindingValidationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/BindingValidationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/ConnectionNotEstablishedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/ConnectionNotEstablishedException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/DecodingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/DecodingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/DriverNotRunningException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/DriverNotRunningException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/EncodingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/EncodingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/InvalidRangeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/InvalidRangeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/TooManyPointsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/TooManyPointsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/exceptions/XmlContentException.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/exceptions/XmlContentException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IOMetadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOMetadata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IORequestItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequestItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IORequestUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequestUnit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IOResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IOResponseItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOResponseItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IOResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/io/IOType.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/log/ConsoleLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/log/ConsoleLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/log/FileLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/log/FileLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/log/IPlcLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/log/IPlcLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/types/log/LogLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/log/LogLevel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/ByteConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/ByteConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/Coder.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/Coder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/Copier.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/Copier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/EndianDataInputStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/EndianDataInputStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/Stringer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/Stringer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/UtilityHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/UtilityHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/melsec/src/melsec/utils/Valuer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/utils/Valuer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/repl.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/Ideas.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Ideas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/BaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/ClientCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StopCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/UnknownCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/UnknownCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/multi/BaseMultiCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/BaseMultiCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/multi/MultiReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiReadCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/dispatcher/multi/MultiWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiWriteCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/utils/Colors.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/utils/Colors.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repl/src/utils/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/utils/Console.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests.iml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/bindings/TestStruct.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/bindings/TestStruct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadBin.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadBin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadBitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadString.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanBit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanMix.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanMix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanNumeric.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanNumeric.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanString.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBin.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI4.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteMix.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteMix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteString.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/ResettableCountDownLatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/ResettableCountDownLatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,18 +37,30 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.30229884",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/samples/maven/melsec&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.30229884&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="run-repl" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="18" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="monitor" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -227,6 +76,8 @@
       <workItem from="1666677847665" duration="60000" />
       <workItem from="1666677923737" duration="147000" />
       <workItem from="1666678094908" duration="2982000" />
+      <workItem from="1666683246066" duration="18000" />
+      <workItem from="1666744318441" duration="5507000" />
     </task>
     <servers />
   </component>

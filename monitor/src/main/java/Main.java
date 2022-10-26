@@ -13,6 +13,7 @@ import melsec.types.log.LogLevel;
 import utils.Console;
 
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import static melsec.types.WordDeviceCode.D;
 
@@ -20,6 +21,8 @@ import static melsec.types.WordDeviceCode.D;
 public class Main {
 
   public static void main(String[] args) throws UnknownHostException, InterruptedException, BindingDeserializationException {
+
+
 
     var config = ClientOptions
       .builder()
@@ -32,14 +35,33 @@ public class Main {
     var client = new EquipmentClient( config );
     client.start();
 
+    var w1 = new PlcString( WordDeviceCode.D, 0, 2000, "Hello word" );
+    var w2 = new PlcU2( WordDeviceCode.D, 100, "Pressure" );
+
+    var request = IORequest
+      .builder()
+      .write( w1 )
+      .read( w2 )
+      .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
+      .build();
+
     Thread.sleep( 500 );
+
+    client.exec( request );
 
     //addScanner( client );
 
 //    System.out.println( "before ordinary request " + Thread.currentThread().getId());
 //    client.exec( request );
 
-    new ClientCommandLineDispatcher( client ).run();
+    //new ClientCommandLineDispatcher( client ).run();
+
+    new Scanner( System.in ).nextLine();
+
+  }
+
+  public void example1(){
+
   }
 
   //
