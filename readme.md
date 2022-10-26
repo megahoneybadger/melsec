@@ -330,4 +330,4 @@ send read and write commands:
     Write [OK] I4 [D200] -6758
 
 When reading data specify device, address and binding.
-In case of writing also specify value aou want to write
+In case of writing also specify value you want to write
