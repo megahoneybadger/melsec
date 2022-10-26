@@ -10,6 +10,16 @@ Project consists of the following modules:
 - **monitor** - console application which allows to connect to a device and test read/write commands
 - **tests** - contains unit and integration tests
 
+## How to build
+Firstly get the sources:
+
+    git clone https://github.com/megahoneybadger/melsec.git
+    cd melsec
+
+Secondly compile the project (you will need maven):
+
+    mvn compile
+
 ## Main concepts
 ### Bindings
 To communicate with a remote device you will use so-called bindings: typed values that reflect and interpret memory blocks. In other words we are not working with a raw memory (words or bits). Available bindings are:
@@ -293,3 +303,31 @@ This is a sample xml file containing bindings:
         </Struct>
     
     </Bindings>
+
+## Monitor
+Project contains a monitor tool which can be used for debug purposes.
+Run the following command from the root folder:
+
+`mvn -pl monitor compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"`
+
+It will try to connect to device at 127.0.0.1:8000. If connected you can 
+send read and write commands:
+
+    [melsec][INFO ][16:29:09.009] Client started
+    [melsec][INFO ][16:29:10.010] Connection#129 established
+    read b100
+    Read [OK] bit [Bx0100] 1
+    write b100 true
+    Write [OK] bit [Bx0100] 1
+    read w10 a10, w50 i2, w70 u4
+    Read [OK] A10 [Wx0010] ring
+    Read [OK] I2 [Wx0050]
+    Read [OK] U4 [Wx0070]
+    write b100 true, b200 false, d150 u2 456, d200 i4 -6758
+    Write [OK] bit [Bx0100] 1
+    Write [OK] bit [Bx0200] 0
+    Write [OK] U2 [D150] 456
+    Write [OK] I4 [D200] -6758
+
+When reading data specify device, address and binding.
+In case of writing also specify value aou want to write
