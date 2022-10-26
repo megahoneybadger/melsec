@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b437f6a4-5a2d-498c-a881-9790ffd3e411" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/commands/CommandFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/CommandFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/net/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/net/Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/net/EquipmentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/net/EquipmentClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IOResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +76,7 @@
       <workItem from="1666677923737" duration="147000" />
       <workItem from="1666678094908" duration="2982000" />
       <workItem from="1666683246066" duration="18000" />
-      <workItem from="1666744318441" duration="13480000" />
+      <workItem from="1666744318441" duration="14096000" />
     </task>
     <servers />
   </component>

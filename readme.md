@@ -50,14 +50,14 @@ Every binding contains target device code and address. In addition, it may have 
 
 
 ### Equipment client
-Primary object that is responsible for communication is an Equipment Client. To make it work you have to create a proper configuration which sets remote device's IP and port.
+Primary object responsible for communication is an Equipment Client. To make it work you have to create a proper configuration which sets remote device's IP and port.
 
     var config = ClientOptions  
         .builder()  
         .address( "127.0.0.1" )  
         .port( 8000 )  
         .loggers(  
-        new ConsoleLogger( LogLevel.DEBUG ))  
+            new ConsoleLogger( LogLevel.DEBUG ))  
         .build();  
       
     var client = new EquipmentClient( config ); 
@@ -65,7 +65,7 @@ Primary object that is responsible for communication is an Equipment Client. To 
 	// This line initiates connection
     client.start();
 ### IO Requests
-To read or/and write binding you will need to pack them into the requests. Every request may contain a chain of IO operations. Then complete you will receive a response with detailed result information for every binding.
+To read and write bindings you will need to pack them into the requests. Every request may contain a chain of IO operations. Then complete you will receive a response with detailed result information for every binding.
 
 *Example #1*
 
@@ -157,9 +157,9 @@ To read or/and write binding you will need to pack them into the requests. Every
 
 ![](.resources/images/image4.png?raw=true)
 
-*Example #4*
+*Example #5*
 
-    `var st = PlcStruct
+    var st = PlcStruct
         .builder( WordDeviceCode.W, 0x100, "Employee" )
         .u2( "Age" )
         .u2( "Weight" )
@@ -207,7 +207,7 @@ Hence, if you want to guarantee that you are sending requests only after establi
 
     var client = new EquipmentClient( config );
 
-    client.events().subscribe( ( IConnectionConnectingEvent ) x -> {
+    client.events().subscribe( ( IConnectionEstablishedEvent ) x -> {
       client.exec( IORequest
         .builder()
         .read( new PlcBit( BitDeviceCode.M, 0 ) )
@@ -219,7 +219,7 @@ Hence, if you want to guarantee that you are sending requests only after establi
 
 ### Equipment Scanner
 In addition to discrete IO request we can organize continuous data reading:
-1. Define interested region within a memory
+1. Define interested regions within a memory
 2. Specify timeout between consecutive reads
 3. Provide bindings for specified regions
 4. When binding changes you will be notified via event
