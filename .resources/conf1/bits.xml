@@ -1,29 +1,26 @@
 <Bindings>
 
 	<Bit device="M" address="200" />
-	<Bit device="M" address="201" />
-	<Bit device="M" address="202" />
-	<Bit device="M" address="203" />
-	<Bit device="M" address="204" />
-	<Bit device="M" address="205" />
 	
-	<Bit device="M" address="100" />
-	<Bit device="M" address="101" />
-	<Bit device="M" address="102" />
-	<Bit device="M" address="103" />
-	<Bit device="M" address="104" />
-	<Bit device="M" address="105" />
-	<Bit device="M" address="106" />
-	<Bit device="M" address="107" />
-	<Bit device="M" address="108" />
-	<Bit device="M" address="109" />
-	<Bit device="M" address="110" />
-	<Bit device="M" address="111" />
-	<Bit device="M" address="112" />
-	<Bit device="M" address="113" />
+	<I2 device="w" address="0x2000" value="-4568" id="temperature" />
 	
+	<I4 device="d" address="20" id="pressure" />	
 	
+	<String device="w" address="300" size="10" value="hello-world" />
 	
-	
+	<Struct id="HOST_GLASS_DATA_REQUEST_STRUCT" device="d" address="500">
+		<U2 id="CST_SEQ_NO" />
+		<U2 id="CHIP_POSITION" />
+		<U2 id="PRODUCT_TYPE" />
+		<U2 id="SUBSTRATE_TYPE" />
+		<U2 id="CIM_MODE" />
+		<U2 id="CST_OPERATION_MODE" />
+		<U2 id="JOB_TYPE" />
+		<U2 id="DUMMY_TYPE" />
+		<U2 id="JOB_JUDGE" />
+		<U2 id="JOB_GRADE" />
+		<String id="PPID" size="25" />
+		<String id="GLASS_CHIP_ID" size="8" />
+	</Struct>
 
 </Bindings>

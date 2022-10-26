@@ -4,11 +4,11 @@ import melsec.commands.CommandFactory;
 import melsec.commands.ICommand;
 import melsec.types.events.IEventDispatcher;
 
+import melsec.types.exceptions.ConnectionNotEstablishedException;
 import melsec.types.io.IORequest;
 import melsec.types.events.EventDispatcher;
-import melsec.utils.UtilityHelper;
+import melsec.types.io.IOResponse;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 
 import static melsec.types.events.EventType.*;
@@ -113,7 +113,11 @@ public class EquipmentClient {
 //      if( !run )
 //        throw new DriverNotRunningException();
 
-      connection.enqueue( toCommands( r ) );
+      if( null != connection ){
+        connection.enqueue( toCommands( r ) );
+      } else {
+        r.fail( new ConnectionNotEstablishedException( config.endpoint() ) );
+      }
     }
   }
   /**
@@ -122,13 +126,13 @@ public class EquipmentClient {
    * @return
    */
   private Iterable<ICommand> toCommands( IORequest r ){
-    var commands = cache.get( r.getId() );
+    var commands = cache.get( r.id() );
 
     if( null == commands ){
       // This is optimization step for scanning:
       // avoid splitting the same request
       commands = new CommandFactory().toCommands( r );
-      cache.put( r.getId(), commands );
+      cache.put( r.id(), commands );
     }
 
     return commands;

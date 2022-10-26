@@ -20,4 +20,13 @@ public record IOResponse( Iterable<IOResponseItem> items ) {
 
     return new IOResponse( list );
   }
+
+  public static IOResponse fromError( IORequest req, Throwable t ){
+    var list = UtilityHelper
+      .toStream( req.items() )
+      .map( x -> x.toResponse( t ) )
+      .toList();
+
+    return new IOResponse( list );
+  }
 }

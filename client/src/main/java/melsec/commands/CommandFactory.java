@@ -9,7 +9,6 @@ import melsec.types.CommandCode;
 import melsec.types.io.IORequest;
 import melsec.types.io.IORequestItem;
 import melsec.types.io.IORequestUnit;
-import melsec.types.io.IOType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +57,8 @@ public class CommandFactory {
     IORequestItem prev = null;
     var items = new ArrayList<IORequestItem>();
 
-    var source = request.getItems();
-    var completeHandler = request.getCompleteHandler();
+    var source = request.items();
+    var completeHandler = request.completeHandler();
 
 
     for( var item: source ){

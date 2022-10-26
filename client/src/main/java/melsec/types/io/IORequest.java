@@ -2,6 +2,8 @@ package melsec.types.io;
 
 import melsec.bindings.IPlcObject;
 import melsec.types.events.IOCompleteEvent;
+import melsec.types.exceptions.ConnectionNotEstablishedException;
+import melsec.types.exceptions.InvalidRangeException;
 import melsec.utils.UtilityHelper;
 
 import java.util.ArrayList;
@@ -27,14 +29,14 @@ public class IORequest {
    *
    * @return
    */
-  public IOCompleteEvent getCompleteHandler(){
+  public IOCompleteEvent completeHandler(){
     return completeHandler;
   }
   /**
    *
    * @return
    */
-  public Iterable<IORequestItem> getItems(){
+  public Iterable<IORequestItem> items(){
     return new ArrayList<>( list );
   }
   /**
@@ -48,8 +50,26 @@ public class IORequest {
    *
    * @return
    */
-  public String getId() {
+  public String id() {
     return id;
+  }
+  //endregion
+
+  //region Class utility methods
+  /**
+   *
+   * @param t
+   * @throws InvalidRangeException
+   */
+  public void fail( Throwable t )  {
+    if( null != completeHandler ){
+      try {
+        completeHandler.complete( IOResponse.fromError( this, t ) );
+      }
+      catch( InvalidRangeException e ) {
+
+      }
+    }
   }
   //endregion
 

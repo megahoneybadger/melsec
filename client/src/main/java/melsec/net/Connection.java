@@ -435,7 +435,6 @@ public class Connection {
     }
 
     coordinator.complete( c, e );
-    //c.complete( e );
   }
   /**
    *
