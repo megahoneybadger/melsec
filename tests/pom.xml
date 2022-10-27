@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>hb.drivers.plc</groupId>
+        <groupId>io.github.megahoneybadger</groupId>
         <artifactId>melsec</artifactId>
         <version>0.1</version>
     </parent>

@@ -5,33 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b437f6a4-5a2d-498c-a881-9790ffd3e411" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/net/EquipmentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/EquipmentClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/EquipmentScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/EquipmentScanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventDispatcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eqp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/EquipmentCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/EquipmentCommandLineDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ServerOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ServerOptions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monitor/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/BaseCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StopCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/BaseMultiCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/BaseMultiCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiReadCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiWriteCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/IOTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/IOTestFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +51,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.30229884",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "settings.editor.selected.configurable": "MavenSettings"
   }
 }]]></component>
   <component name="RunManager" selected="JUnit.ReadBitTest">
@@ -200,7 +179,8 @@
       <workItem from="1666678094908" duration="2982000" />
       <workItem from="1666683246066" duration="18000" />
       <workItem from="1666744318441" duration="14308000" />
-      <workItem from="1666766469736" duration="10262000" />
+      <workItem from="1666766469736" duration="10636000" />
+      <workItem from="1666837883376" duration="640000" />
     </task>
     <servers />
   </component>
