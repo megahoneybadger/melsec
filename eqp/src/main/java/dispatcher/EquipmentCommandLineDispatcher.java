@@ -50,7 +50,7 @@ public class EquipmentCommandLineDispatcher implements Runnable {
 
     new StartCommand( server ).exec( null );
 
-    while( run ){
+    while( run && scanner.hasNextLine() ){
       var line = scanner
         .nextLine()
         .trim();

@@ -2,7 +2,7 @@ package melsec.io;
 
 import melsec.bindings.BaseTest;
 import melsec.net.ClientOptions;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.simulation.EquipmentServer;
 import melsec.simulation.ServerOptions;
 import melsec.types.events.net.IConnectionEstablishedEvent;
@@ -79,10 +79,11 @@ public class BaseIOTest extends BaseTest {
    *
    * @return
    */
-  protected EquipmentServer createServer(){
+  protected EquipmentServer createServer() throws UnknownHostException {
     return new EquipmentServer(ServerOptions
       .builder()
       .port(PORT)
+      .address("127.0.0.1")
       .logger(false)
       .build());
   }

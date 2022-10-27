@@ -330,4 +330,40 @@ send read and write commands:
     Write [OK] I4 [D200] -6758
 
 When reading data specify device, address and binding.
-In case of writing also specify value you want to write
+In case of writing also specify value you want to write.
+
+## Equipment simulator
+In case if you do not have a physical PLC device you can play around 
+with equipment simulator.
+Run two terminals from the root folder.
+
+The first one will be a server:
+
+`mvn -pl eqp compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"`
+
+The second one will be a server:
+
+`mvn -pl monitor compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"`
+
+
+For the sake of simplicity let's set a few values on the server
+first and after that try to read  it from the client (you can read/write data on client/server in any order). 
+
+Server terminal:
+
+    [eqp.sim][DEBUG][10:58:31.031] Equipment is listening at 127.0.0.1:8000
+    [eqp.sim][DEBUG][10:58:52.052] Client#660 connected
+    write b100 true
+    write w200 a100 hello-world-long-string
+
+Client terminal:
+
+    [melsec][INFO ][10:59:10.010] Client started  
+    [melsec][INFO ][10:59:10.010] Connection#770 established  
+    read b100  
+    Read [OK] bit [Bx0100] 1  
+    read b101  
+    Read [OK] bit [Bx0101] 0  
+    read w200 a10  
+    Read [OK] A10 [Wx0200] hello-worl  
+    

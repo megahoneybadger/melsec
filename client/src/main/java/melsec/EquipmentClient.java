@@ -1,7 +1,9 @@
-package melsec.net;
+package melsec;
 
 import melsec.commands.CommandFactory;
 import melsec.commands.ICommand;
+import melsec.net.ClientOptions;
+import melsec.net.Connection;
 import melsec.types.events.IEventDispatcher;
 
 import melsec.types.exceptions.ConnectionNotEstablishedException;
@@ -101,6 +103,19 @@ public class EquipmentClient {
     }
 
     events.enqueue(ClientStopped);
+  }
+  /**
+   *
+   */
+  public void dispose(){
+    synchronized( syncObject ){
+      if( null != connection ) {
+        connection.dispose();
+        connection = null;
+      }
+
+      events.dispose();
+    }
   }
   /**
    * @param r

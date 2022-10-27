@@ -1,5 +1,7 @@
 package melsec.simulation;
 
+import melsec.net.ClientOptions;
+import melsec.types.Endpoint;
 import melsec.types.log.ConsoleLogger;
 import melsec.types.log.LogLevel;
 import melsec.simulation.events.IClientDisconnectedEvent;
@@ -9,9 +11,11 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.channels.AsynchronousSocketChannel;
 
 public record ServerOptions(Memory memory,
+                            InetAddress address,
                             int port,
                             boolean useLogger) {
 
@@ -53,6 +57,23 @@ public record ServerOptions(Memory memory,
       return this;
     }
 
+    public Builder address( InetAddress addr) {
+      address = addr;
+
+      return this;
+    }
+
+    public Builder address( String s) throws UnknownHostException {
+      return address(InetAddress.getByName(s));
+    }
+
+    public Builder endpoint( Endpoint ep){
+      address( ep.address() );
+      port( ep.port() );
+
+      return this;
+    }
+
     public Builder memory(Memory m) {
       memory = m;
       return this;
@@ -83,7 +104,7 @@ public record ServerOptions(Memory memory,
     public ServerOptions build() {
       initLog4J();
 
-      return new ServerOptions(memory, port, useLogger);
+      return new ServerOptions(memory, address, port, useLogger);
     }
   }
 }

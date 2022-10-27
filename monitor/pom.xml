@@ -8,7 +8,7 @@
     <parent>
         <groupId>hb.drivers.plc</groupId>
         <artifactId>melsec</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
 
     <artifactId>melsec-monitor</artifactId>
@@ -17,11 +17,10 @@
     <name>Melsec monitor tool</name>
 
     <dependencies>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>melsec-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
 
     </dependencies>

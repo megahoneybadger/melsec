@@ -1,6 +1,6 @@
 package melsec.utils;
 
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.bindings.IPlcObject;
 import melsec.types.exceptions.InvalidRangeException;
 import melsec.types.io.IORequest;
@@ -10,7 +10,6 @@ import melsec.types.io.IOResult;
 import melsec.types.io.IOType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

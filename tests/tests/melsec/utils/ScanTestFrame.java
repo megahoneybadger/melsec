@@ -1,7 +1,7 @@
 package melsec.utils;
 
 import melsec.bindings.IPlcObject;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.scanner.EquipmentScanner;
 import melsec.simulation.EquipmentServer;
 

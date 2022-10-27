@@ -72,11 +72,12 @@ public class EquipmentServer {
 
       run = true;
 
-      logger().debug( "Equipment is listening at {}", options.port() );
+      logger().debug( "Equipment is listening at {}:{}",
+        options.address().getHostAddress(), options.port() );
 
       server = AsynchronousServerSocketChannel
         .open()
-        .bind( new InetSocketAddress( options.port() ));
+        .bind( new InetSocketAddress( options.address(), options.port() ));
 
       acceptClientAsync();
     }

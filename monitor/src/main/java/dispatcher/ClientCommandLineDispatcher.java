@@ -2,7 +2,7 @@ package dispatcher;
 
 import dispatcher.multi.MultiReadCommand;
 import dispatcher.multi.MultiWriteCommand;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.Scanner;
 
 public class ClientCommandLineDispatcher {
 
-  private final EquipmentClient communicator;
+  private final EquipmentClient client;
   private boolean run;
 
   public ClientCommandLineDispatcher( EquipmentClient c ){
-    communicator = c;
+    client = c;
 
   }
 
@@ -22,7 +22,7 @@ public class ClientCommandLineDispatcher {
     run = true;
     var scanner = new Scanner( System.in );
 
-    while( run ){
+    while( run && scanner.hasNextLine() ){
       var line = scanner
         .nextLine()
         .trim();
@@ -42,12 +42,14 @@ public class ClientCommandLineDispatcher {
 
       var res = switch ( command.toLowerCase() )
       {
-        case StartCommand.COMMAND -> new StartCommand( communicator );
-        case StopCommand.COMMAND -> new StopCommand( communicator );
-        case MultiReadCommand.COMMAND -> new MultiReadCommand( communicator );
-        case MultiWriteCommand.COMMAND -> new MultiWriteCommand( communicator );
+        case StartCommand.COMMAND -> new StartCommand( client );
+        case StopCommand.COMMAND -> new StopCommand( client );
+        case MultiReadCommand.COMMAND -> new MultiReadCommand( client );
+        case MultiWriteCommand.COMMAND -> new MultiWriteCommand( client );
         case "quit" -> {
           run = false;
+          client.stop();
+          client.dispose();
           yield null;
 
         }

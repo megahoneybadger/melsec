@@ -5,8 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b437f6a4-5a2d-498c-a881-9790ffd3e411" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/net/EquipmentClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/EquipmentClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/EquipmentScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/scanner/EquipmentScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/events/EventDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eqp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/EquipmentCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/dispatcher/EquipmentCommandLineDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/EquipmentServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ServerOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/src/main/java/melsec/simulation/ServerOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/BaseCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/BaseCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StartCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StopCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/StopCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/BaseMultiCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/BaseMultiCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiReadCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiReadCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/dispatcher/multi/MultiWriteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/BaseIOTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/net/ConnectionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/IOTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/IOTestFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/utils/ScanTestFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,20 +61,29 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/projects/hb/plc/client/src&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.30229884&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/projects/hb/plc/client/src",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.30229884",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="JUnit.ReadBitTest">
+    <configuration name="run-eqp" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="eqp" />
+      <option name="PROGRAM_PARAMETERS" value="127.0.0.2:7000" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="run-repl" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="18" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -59,6 +93,95 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ReadBitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="melsec.io.read.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="melsec.io.read" />
+      <option name="MAIN_CLASS_NAME" value="melsec.io.read.ReadBitTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="melsec in tests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="melsec.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="melsec" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="melsec.bindings in tests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="melsec.bindings.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="melsec.bindings" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="melsec.io.read in tests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="melsec.io.read.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="melsec.io.read" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="melsec.net in tests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="melsec.net.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="melsec.net" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.run-repl" />
+      <item itemvalue="Application.run-eqp" />
+      <item itemvalue="JUnit.ReadBitTest" />
+      <item itemvalue="JUnit.melsec in tests" />
+      <item itemvalue="JUnit.melsec.bindings in tests" />
+      <item itemvalue="JUnit.melsec.io.read in tests" />
+      <item itemvalue="JUnit.melsec.net in tests" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.ReadBitTest" />
+        <item itemvalue="JUnit.melsec.io.read in tests" />
+        <item itemvalue="JUnit.melsec in tests" />
+        <item itemvalue="JUnit.melsec.net in tests" />
+        <item itemvalue="JUnit.melsec.bindings in tests" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -77,7 +200,7 @@
       <workItem from="1666678094908" duration="2982000" />
       <workItem from="1666683246066" duration="18000" />
       <workItem from="1666744318441" duration="14308000" />
-      <workItem from="1666766469736" duration="3770000" />
+      <workItem from="1666766469736" duration="10262000" />
     </task>
     <servers />
   </component>
@@ -107,21 +230,11 @@
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java</url>
-          <line>34</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/monitor/src/main/java/dispatcher/ClientCommandLineDispatcher.java</url>
-          <line>49</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="options.address()" />
+        <watch expression="options.address()" />
+      </configuration>
       <configuration name="Application">
         <watch expression="ip" language="JAVA" />
         <watch expression="ip" language="JAVA" />

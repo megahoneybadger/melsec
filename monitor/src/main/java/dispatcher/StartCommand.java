@@ -1,6 +1,6 @@
 package dispatcher;
 
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 
 import java.util.List;
 

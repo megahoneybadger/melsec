@@ -1,5 +1,6 @@
 package melsec.net;
 
+import melsec.EquipmentClient;
 import melsec.bindings.BaseTest;
 import melsec.types.events.EventType;
 import melsec.types.events.client.IClientStartedEvent;

@@ -3,7 +3,7 @@ package melsec.scanner;
 import melsec.bindings.IPlcObject;
 import melsec.bindings.PlcBinary;
 import melsec.commands.batch.BatchReadCommand;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.types.*;
 import melsec.types.events.EventType;
 import melsec.types.events.scanner.IScannerChangeEvent;
@@ -15,7 +15,6 @@ import melsec.utils.Stringer;
 import melsec.utils.UtilityHelper;
 import org.apache.logging.log4j.LogManager;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

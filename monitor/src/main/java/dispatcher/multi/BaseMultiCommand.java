@@ -1,7 +1,7 @@
 package dispatcher.multi;
 
 import dispatcher.BaseCommand;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.bindings.*;
 import melsec.types.BitDeviceCode;
 import melsec.types.IDeviceCode;

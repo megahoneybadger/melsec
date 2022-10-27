@@ -82,6 +82,15 @@ public final class EventDispatcher implements IEventDispatcher  {
     thread = new Thread( () -> processor() );
     thread.start();
   }
+  /**
+   *
+   */
+  public void dispose(){
+    synchronized( syncObject ){
+      run = false;
+      syncObject.notifyAll();
+    }
+  }
   //endregion
 
   //region Class 'Subscription' methods

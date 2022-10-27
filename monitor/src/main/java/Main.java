@@ -1,7 +1,7 @@
 import dispatcher.ClientCommandLineDispatcher;
 import melsec.bindings.files.BindingDeserializer;
 import melsec.net.ClientOptions;
-import melsec.net.EquipmentClient;
+import melsec.EquipmentClient;
 import melsec.scanner.EquipmentScanner;
 import melsec.types.BitDeviceCode;
 import melsec.types.Endpoint;
