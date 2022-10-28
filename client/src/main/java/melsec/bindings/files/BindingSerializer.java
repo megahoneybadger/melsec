@@ -41,7 +41,8 @@ public class BindingSerializer extends BindingXmlBase {
   /**
    *
    * @param path
-   * @return
+   * @param items
+   * @throws BindingSerializationException
    */
   public static void write( String path, Iterable<IPlcObject> items ) throws BindingSerializationException {
     new BindingSerializer( path, items );

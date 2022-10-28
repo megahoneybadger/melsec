@@ -59,7 +59,6 @@ public class IORequest {
   /**
    *
    * @param t
-   * @throws InvalidRangeException
    */
   public void fail( Throwable t )  {
     if( null != completeHandler ){

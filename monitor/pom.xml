@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.megahoneybadger</groupId>
         <artifactId>melsec</artifactId>
-        <version>0.1</version>
+        <version>0.2</version>
     </parent>
 
     <artifactId>melsec-monitor</artifactId>
@@ -20,10 +20,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>melsec-client</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
         </dependency>
 
     </dependencies>
+
+
 
 
 </project>

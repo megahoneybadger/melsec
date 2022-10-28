@@ -124,7 +124,7 @@ public final class MultiBlockBatchWriteCommand extends MultiBlockBatchBaseComman
    *
    * @param w
    * @param o
-   * @return
+   * @throws IOException
    */
   protected void encodeItemBody( DataOutput w, IPlcObject o ) throws IOException {
     var buffer = switch( o.type() ){

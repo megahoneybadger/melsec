@@ -6,11 +6,27 @@
   <component name="ChangeListManager">
     <list default="true" id="b437f6a4-5a2d-498c-a881-9790ffd3e411" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eqp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/eqp/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/bindings/files/BindingSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/commands/multi/MultiBlockBatchWriteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/commands/multi/MultiBlockBatchWriteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/melsec/types/io/IORequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monitor/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitor/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/monitor/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadI2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadI2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadI4.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadI4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadNumeric.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadNumeric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadString.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadString.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadStruct.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadStruct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadU2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadU2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadU4.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/read/ReadU4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanBit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanNumeric.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/scan/ScanNumeric.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBit.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteBit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI4.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteI4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU2.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU4.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/tests/melsec/io/write/WriteU4.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,20 +56,21 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/projects/hb/plc/client/src",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.30229884",
-    "settings.editor.selected.configurable": "MavenSettings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/projects/hb/plc/client/src&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.30229884&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="JUnit.ReadBitTest">
     <configuration name="run-eqp" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -180,7 +197,10 @@
       <workItem from="1666683246066" duration="18000" />
       <workItem from="1666744318441" duration="14308000" />
       <workItem from="1666766469736" duration="10636000" />
-      <workItem from="1666837883376" duration="640000" />
+      <workItem from="1666837883376" duration="780000" />
+      <workItem from="1666850311470" duration="806000" />
+      <workItem from="1666852921416" duration="185000" />
+      <workItem from="1666853125157" duration="27000" />
     </task>
     <servers />
   </component>

@@ -21,6 +21,7 @@ public class Main {
       Endpoint.getDefault() );
 
     //mvn -pl monitor compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"
+    //https://central.sonatype.org/publish/publish-maven/
     var config = ClientOptions
       .builder()
       .endpoint( ep )

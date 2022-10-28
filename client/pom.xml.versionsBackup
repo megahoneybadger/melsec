@@ -8,23 +8,12 @@
     <parent>
         <groupId>io.github.megahoneybadger</groupId>
         <artifactId>melsec</artifactId>
-        <version>0.2</version>
+        <version>0.1</version>
     </parent>
 
-    <artifactId>melsec-eqp-simulator</artifactId>
+    <artifactId>melsec-client</artifactId>
 
     <packaging>jar</packaging>
-    <name>Melsec equipment simulator</name>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>melsec-client</artifactId>
-            <version>0.2</version>
-        </dependency>
-
-    </dependencies>
-
+    <name>Melsec client library</name>
 
 </project>

@@ -2,7 +2,15 @@
 ## General
 A java library which implements MELSEC Communication protocol (QnA compatible 3E Binary).
 
-## Project content
+Releases are available via Maven central. To add a dependency to melsec-client, use:
+
+    <dependency>
+        <groupId>io.github.megahoneybadger</groupId>
+        <artifactId>melsec-client</artifactId>
+        <version>0.1</version>
+    </dependency>
+
+## Content
 Project consists of the following modules:
 
 - **client** - the main library you need to communicate with PLC device
@@ -96,7 +104,7 @@ To read and write bindings you will need to pack them into the requests. Every r
      var request = IORequest  
         .builder()  
         .read( a, b, new PlcBit( BitDeviceCode.M, 0 ) )  
-        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .complete( x -> x.items().forEach( y -> System.out.println( y ) ) )  
         .build();  
 
 	 // let's establish a connection	   
@@ -106,17 +114,27 @@ To read and write bindings you will need to pack them into the requests. Every r
 
      new Scanner( System.in ).nextLine();
 
-![](.resources/images/image1.png?raw=true)
+*Output #1*
+
+    [melsec][INFO ][10:45:51.051] Client started
+    [melsec][DEBUG][10:45:51.051] Connection#234 trying to connect to 127.0.0.1:8000
+    [melsec][INFO ][10:45:51.051] Connection#234 established
+    [melsec][DEBUG][10:45:52.052] Enqueue mbbr#762 [2w|1b]
+    [melsec][DEBUG][10:45:52.052] Process mbbr#762 [2w|1b]
+    [melsec][DEBUG][10:45:52.052] Complete mbbr#762 [2w|1b]
+    Read [OK] U2 [D100]  125
+    Read [OK] U2 [D200] 231
+    Read [OK] bit [M0] 1
+        
 
 *Example #2*
 
-    // omit client creation for brevity
-    var b = new PlcU2( WordDeviceCode.D, -500/*bad address*/ );  
+    // omit client creation for brevity...
     
     var request = IORequest  
         .builder()  
-        .read( b )  
-        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .read( new PlcU2( WordDeviceCode.D, -500/*bad address*/ ) )  
+        .complete( x -> x.items().forEach( y -> System.out.println( y ) ) )  
         .build();  
     
     // let's establish a connection	   
@@ -124,9 +142,21 @@ To read and write bindings you will need to pack them into the requests. Every r
     
     client.exec( request );  
 
-![](.resources/images/image2.png?raw=true)
+*Output #2*
+
+    [melsec][INFO ][10:53:06.006] Client started
+    [melsec][DEBUG][10:53:06.006] Connection#816 trying to connect to 127.0.0.1:8000
+    [melsec][INFO ][10:53:06.006] Connection#816 established
+    [melsec][DEBUG][10:53:06.006] Enqueue mbbr#50b [1w]
+    [melsec][DEBUG][10:53:06.006] Process mbbr#50b [1w]
+    [melsec][ERROR][10:53:06.006] Failed to complete mbbr#50b [1w]. Failed to encode mbbr#50b [1w]. Invalid device address
+    Read [NG] U2 [D-500] -> Failed to encode mbbr#50b [1w]. Invalid device address
+
+
 
 *Example #3*
+
+    // omit client creation for brevity...
 
     var w1 = new PlcString( WordDeviceCode.D, 0, 10, "Hello word" );  
     var b1 = new PlcBit( BitDeviceCode.B, 500, true );  
@@ -135,10 +165,12 @@ To read and write bindings you will need to pack them into the requests. Every r
       
     var request = IORequest  
         .builder()  
+        // we want the client to stick to
+        // the order: write -> read -> write
         .write( w1, b1 )  
         .read( w2 )  
         .write( b2 )  
-        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .complete( x -> x.items().forEach( y -> System.out.println( y ) ) )  
         .build();
       
     // let's establish a connection	   
@@ -146,8 +178,24 @@ To read and write bindings you will need to pack them into the requests. Every r
   
     client.exec( request ); 
 
+*Output #3*
 
-![](.resources/images/image3.png?raw=true)
+    [melsec][INFO ][10:56:05.005] Client started
+    [melsec][DEBUG][10:56:05.005] Connection#635 trying to connect to 127.0.0.1:8000
+    [melsec][INFO ][10:56:05.005] Connection#635 established
+    [melsec][DEBUG][10:56:06.006] Enqueue mbbw#2d0 [1w], rw#261 [1], mbbr#9d7 [1w], rw#b53 [1]
+    [melsec][DEBUG][10:56:06.006] Process mbbw#2d0 [1w]
+    [melsec][DEBUG][10:56:06.006] Complete mbbw#2d0 [1w]
+    [melsec][DEBUG][10:56:06.006] Process rw#261 [1]
+    [melsec][DEBUG][10:56:06.006] Complete rw#261 [1]
+    [melsec][DEBUG][10:56:06.006] Process mbbr#9d7 [1w]
+    [melsec][DEBUG][10:56:06.006] Complete mbbr#9d7 [1w]
+    [melsec][DEBUG][10:56:06.006] Process rw#b53 [1]
+    [melsec][DEBUG][10:56:06.006] Complete rw#b53 [1]
+    Write [OK] A10 [D0] Hello word
+    Write [OK] bit [Bx01F4] 1
+    Read [OK] U2 [D100 Pressure] 2500
+    Write [OK] bit [Bx01F5 Reply Bit] 0
 
 *Example #4*
 
@@ -158,14 +206,25 @@ To read and write bindings you will need to pack them into the requests. Every r
         .builder()  
         .write( w1 )  
         .read( w2 )  
-        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )  
+        .complete( x -> x.items().forEach( y -> System.out.println( y ) ) )  
         .build();  
       
     Thread.sleep( 500 );  
       
     client.exec( request );
 
-![](.resources/images/image4.png?raw=true)
+*Output #4*
+
+    [melsec][INFO ][10:58:59.059] Client started
+    [melsec][DEBUG][10:58:59.059] Connection#816 trying to connect to 127.0.0.1:8000
+    [melsec][INFO ][10:58:59.059] Connection#816 established
+    [melsec][DEBUG][10:58:59.059] Enqueue mbbw#5ca [1w], mbbr#9d9 [1w]
+    [melsec][DEBUG][10:58:59.059] Process mbbw#5ca [1w]
+    [melsec][ERROR][10:58:59.059] Failed to complete mbbw#5ca [1w]. Failed to encode mbbw#5ca [1w]. Too many points
+    [melsec][DEBUG][10:58:59.059] Process mbbr#9d9 [1w]
+    [melsec][DEBUG][10:58:59.059] Complete mbbr#9d9 [1w]
+    Write [NG] A2000 [D0] Hello word -> Failed to encode mbbw#5ca [1w]. Too many points
+    Read [OK] U2 [D100 Pressure]
 
 *Example #5*
 
@@ -174,6 +233,7 @@ To read and write bindings you will need to pack them into the requests. Every r
         .u2( "Age" )
         .u2( "Weight" )
         .u2( "Salary" )
+        // pay attention to the offset between fields
         .offset( 3 )
         .string( 20, "Name" )
         .build();
@@ -181,14 +241,27 @@ To read and write bindings you will need to pack them into the requests. Every r
     var request = IORequest
         .builder()
         .read( st )
-        .complete( x -> x.items().forEach( y -> Console.print( y ) ) )
+        .complete( x -> x.items().forEach( y -> System.out.println( y ) ) )
         .build();
 
     Thread.sleep( 500 );
 
     client.exec( request );
 
-![](.resources/images/image5.png?raw=true)
+*Output #5*
+
+    [melsec][INFO ][11:00:37.037] Client started
+    [melsec][DEBUG][11:00:38.038] Connection#402 trying to connect to 127.0.0.1:8000
+    [melsec][INFO ][11:00:38.038] Connection#402 established
+    [melsec][DEBUG][11:00:38.038] Enqueue mbbr#69b [1w]
+    [melsec][DEBUG][11:00:38.038] Process mbbr#69b [1w]
+    [melsec][DEBUG][11:00:38.038] Complete mbbr#69b [1w]
+    Read [OK] struct [Wx0100 Employee]
+    	U2 [Wx0100 Age] 25
+    	U2 [Wx0101 Weight] 75
+    	U2 [Wx0102 Salary] 1000
+    	A20 [Wx0106] John Smith
+
 ![](.resources/images/image6.png?raw=true)
 
 ### Events
