@@ -17,9 +17,6 @@ public class ReadNumeric extends BaseIOTest {
 
   //region Class 'Numeric' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Read_Numeric_1() throws InvalidRangeException, InterruptedException {

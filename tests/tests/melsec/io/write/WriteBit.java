@@ -20,9 +20,6 @@ public class WriteBit extends BaseIOTest {
 
   //region Class 'Bit' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Write_Bit_1() throws InvalidRangeException, InterruptedException {

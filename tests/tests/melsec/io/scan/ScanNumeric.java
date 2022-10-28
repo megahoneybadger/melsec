@@ -14,9 +14,6 @@ public class ScanNumeric extends BaseScanTest {
 
   //region Class 'Numeric' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Scan_Numerics_1() throws InvalidRangeException, InterruptedException {

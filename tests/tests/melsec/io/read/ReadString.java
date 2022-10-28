@@ -20,9 +20,6 @@ public class ReadString extends BaseIOTest {
 
   //region Class 'String' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Read_String_1() throws InvalidRangeException, InterruptedException {

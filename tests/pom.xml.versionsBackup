@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.megahoneybadger</groupId>
         <artifactId>melsec</artifactId>
-        <version>0.2</version>
+        <version>0.1</version>
     </parent>
 
     <artifactId>melsec-client-tests</artifactId>
@@ -19,21 +19,21 @@
         <sourceDirectory>tests</sourceDirectory>
         <testSourceDirectory>tests</testSourceDirectory>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <configuration>
-                    <includes>*</includes>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.extensions.autodetection.enabled = true
-                        </configurationParameters>
-                    </properties>
-                </configuration>
-            </plugin>
-        </plugins>
+        <!-- <plugins> -->
+            <!-- <plugin> -->
+                <!-- <groupId>org.apache.maven.plugins</groupId> -->
+                <!-- <artifactId>maven-surefire-plugin</artifactId> -->
+                <!-- <version>3.0.0-M1</version> -->
+                <!-- <configuration> -->
+                    <!-- <includes>*</includes> -->
+                    <!-- <properties> -->
+                        <!-- <configurationParameters> -->
+                            <!-- junit.jupiter.extensions.autodetection.enabled = true -->
+                        <!-- </configurationParameters> -->
+                    <!-- </properties> -->
+                <!-- </configuration> -->
+            <!-- </plugin> -->
+        <!-- </plugins> -->
     </build>
 
     <dependencies>
@@ -41,13 +41,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>melsec-client</artifactId>
-            <version>0.2</version>
+            <version>0.1</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>melsec-eqp-simulator</artifactId>
-            <version>0.2</version>
+            <version>0.1</version>
         </dependency>
 
         <dependency>

@@ -21,9 +21,6 @@ public class ReadI4 extends BaseIOTest {
 
   //region Class 'I4' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Read_I4_1() throws InvalidRangeException, InterruptedException {

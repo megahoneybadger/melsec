@@ -17,9 +17,6 @@ public class ScanBit extends BaseScanTest {
 
   //region Class 'Bit' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Scan_Bits_1() throws InvalidRangeException, InterruptedException {

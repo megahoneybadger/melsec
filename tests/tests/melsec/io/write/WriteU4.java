@@ -22,9 +22,6 @@ public class WriteU4 extends BaseIOTest {
 
   //region Class 'U4' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Write_U4_1() throws InvalidRangeException, InterruptedException {

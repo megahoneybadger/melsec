@@ -24,9 +24,6 @@ public class WriteI2 extends BaseIOTest {
 
   //region Class 'I2' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Write_I2_1() throws InvalidRangeException, InterruptedException {

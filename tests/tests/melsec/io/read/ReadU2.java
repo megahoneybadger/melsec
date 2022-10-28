@@ -21,9 +21,6 @@ public class ReadU2 extends BaseIOTest {
 
   //region Class 'U2' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Read_U2_1() throws InvalidRangeException, InterruptedException {

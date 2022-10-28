@@ -20,9 +20,6 @@ public class ReadStruct extends BaseIOTest {
 
   //region Class 'Struct' methods
   /**
-   * @throws IOException
-   * @throws InvalidRangeException
-   * @throws InterruptedException
    */
   @Test
   public void Should_Read_Struct_1() throws InvalidRangeException, InterruptedException {
