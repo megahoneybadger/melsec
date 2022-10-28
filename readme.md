@@ -68,7 +68,10 @@ Every binding contains target device code and address. In addition, it may have 
 
 
 ### Equipment client
-Primary object responsible for communication is an Equipment Client. To make it work you have to create a proper configuration which sets remote device's IP and port.
+Primary object responsible for communication is an Equipment Client.
+To make it work you have to create a proper configuration which sets remote device's IP and port.
+
+_If you do not have a physical PLC device you can use [simulator](#eqp)._  
 
     var config = ClientOptions  
         .builder()  
@@ -294,7 +297,7 @@ Hence, if you want to guarantee that you are sending requests only after establi
       client.exec( IORequest
         .builder()
         .read( new PlcBit( BitDeviceCode.M, 0 ) )
-        .complete( y -> y.items().forEach( z -> Console.print( z ) ) )
+        .complete( y -> y.items().forEach( z -> System.out.println( z ) ) )
         .build());
     } );
 
@@ -404,6 +407,8 @@ send read and write commands:
 
 When reading data specify device, address and binding.
 In case of writing also specify value you want to write.
+
+<div id="eqp"></div>
 
 ## Equipment simulator
 In case if you do not have a physical PLC device you can play around 
