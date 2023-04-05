@@ -419,7 +419,7 @@ The first one will be a server:
 
 `mvn -pl eqp compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"`
 
-The second one will be a server:
+The second one will be a client:
 
 `mvn -pl monitor compile exec:java -Dexec.mainClass="Main" -Dexec.arguments="127.0.0.1:8000"`
 
